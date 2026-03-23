@@ -6,35 +6,33 @@ const audiences = [
     id: 'learners',
     label: 'Learners',
     tagline: 'Skip the boring. Learn by doing.',
-    cards: [
-      { title: 'Micro-Credentials', desc: '15-minute lessons that fit your flow. Stack real skills — not just degrees.' },
-      { title: 'Creator-Led', desc: 'Learn from TikTokers, DJs, and event creators who actually do this stuff IRL.' },
-      { title: 'Side Hustle Ready', desc: 'Turn skills into gigs — bartend a festival, MC a wedding, shoot content for brands.' },
-      { title: 'Gamified & Fun', desc: 'XP, badges, and streaks that make learning feel like leveling up in your favorite game.' },
-      { title: 'Community First', desc: 'Cohort-based learning with peers who get it. Discord vibes, university-level rigor.' },
-      { title: 'Early Career Boost', desc: 'Build a portfolio before you even need a résumé. Get ahead of the curve.' },
+    people: [
+      { name: 'Amara Osei', role: 'Event Coordinator, Accra', image: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=400&fit=crop', quote: 'Spark gave me skills my degree never did.' },
+      { name: 'Jabari Mensah', role: 'Freelance MC & Host', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop', quote: 'I booked 3 gigs within a month of completing The Voice.' },
+      { name: 'Nia Abrams', role: 'Content Creator', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop', quote: 'The Narrator program changed how I shoot events forever.' },
+      { name: 'Kwesi Appiah', role: 'Bartender & Mixologist', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop', quote: 'From amateur to head bartender in 10 weeks.' },
     ],
   },
   {
     id: 'partners',
     label: 'Training Partners',
     tagline: 'Scale your impact. We handle the platform.',
-    cards: [
-      { title: 'White-Label Ready', desc: "Deploy your curriculum on Spark's infrastructure. Your brand, our tech." },
-      { title: 'Revenue Share', desc: 'Fair, transparent revenue splits. Grow your reach without the overhead.' },
-      { title: 'Analytics Dashboard', desc: 'Track learner outcomes, completion rates, and engagement — in real-time.' },
-      { title: 'Global Distribution', desc: 'Access 40+ cities and FIFA host city markets instantly.' },
+    people: [
+      { name: 'Dr. Fatima Diallo', role: 'Dean, West African Hospitality Institute', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop', quote: 'Spark lets us reach students we never could before.' },
+      { name: 'Michael Okonkwo', role: 'CEO, Lagos Events Group', image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop', quote: 'Our staff upskilling costs dropped 60% with Spark.' },
+      { name: 'Sarah Chen', role: 'Director, Pan-African Tourism Board', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop', quote: 'FIFA readiness training across 12 cities — seamless.' },
+      { name: 'James Kariuki', role: 'VP Training, Serena Hotels', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop', quote: 'Custom upskilling tracks that actually match our needs.' },
     ],
   },
   {
     id: 'experts',
     label: 'Leading Experts',
     tagline: 'Your knowledge deserves a bigger stage.',
-    cards: [
-      { title: 'Teach Your Way', desc: 'Record once, earn forever. We handle production, distribution, and learner support.' },
-      { title: 'Expert Branding', desc: 'Get featured as a verified Spark expert. Build your personal brand alongside us.' },
-      { title: 'Flexible Commitment', desc: 'Guest lecture, build a full course, or mentor 1-on-1. You set the terms.' },
-      { title: 'Impact Metrics', desc: "See exactly how many careers you're shaping. Real data, real outcomes." },
+    people: [
+      { name: 'DJ Spinall', role: 'Grammy-Nominated DJ & Producer', image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop', quote: 'Teaching the next generation of selectors is my legacy.' },
+      { name: 'Chef Zola Nene', role: 'Celebrity Chef & TV Host', image: 'https://images.unsplash.com/photo-1595257841889-eca2678571c0?w=400&h=400&fit=crop', quote: 'Spark lets me reach aspiring chefs across the continent.' },
+      { name: 'Aisha Mohammed', role: 'Award-winning Photographer', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop', quote: 'My visual storytelling course has 2,000+ enrolled learners.' },
+      { name: 'Tunde Ednut', role: 'MC & Entertainment Mogul', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop', quote: 'Record once, impact thousands. That\'s the Spark model.' },
     ],
   },
 ];
@@ -84,18 +82,33 @@ export const SparkAudience = () => {
         >
           <p className="text-2xl md:text-3xl font-light text-gray-400 mb-10">{current.tagline}</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {current.cards.map((card, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {current.people.map((person, i) => (
               <motion.div
-                key={card.title}
+                key={person.name}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: i * 0.08 }}
-                whileHover={{ y: -5, boxShadow: '0 20px 40px -15px rgba(204,255,0,0.15)' }}
-                className="group bg-gray-50 border border-gray-100 p-8 rounded-2xl hover:bg-[#CCFF00]/5 hover:border-[#CCFF00]/30 transition-all cursor-pointer"
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+                whileHover={{ y: -8 }}
+                className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-[#CCFF00]/10 transition-all cursor-pointer"
               >
-                <h3 className="text-lg font-bold mb-2 group-hover:text-[#65A300] transition-colors text-gray-900">{card.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{card.desc}</p>
+                <div className="relative h-52 overflow-hidden">
+                  <motion.img
+                    src={person.image}
+                    alt={person.name}
+                    className="w-full h-full object-cover"
+                    whileHover={{ scale: 1.08 }}
+                    transition={{ duration: 0.6 }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-3 left-4 right-4">
+                    <h3 className="text-white font-bold text-sm">{person.name}</h3>
+                    <p className="text-white/60 text-[11px]">{person.role}</p>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <p className="text-sm text-gray-500 leading-relaxed italic">"{person.quote}"</p>
+                </div>
               </motion.div>
             ))}
           </div>
