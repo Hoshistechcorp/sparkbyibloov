@@ -56,11 +56,9 @@ export const EventCountdown: React.FC<EventCountdownProps> = ({
 
   if (status === 'happening') {
     return (
-      <RotatingBadge 
-        text="LIVE" 
-        showIcon={false}
-        className="relative w-[80px] h-[80px] md:w-[100px] md:h-[100px] lg:w-[120px] lg:h-[120px]"
-      />
+      <div className="relative w-[80px] h-[80px] md:w-[100px] md:h-[100px] lg:w-[120px] lg:h-[120px] rounded-full bg-red-500 flex items-center justify-center animate-pulse">
+        <span className="text-white font-bold text-sm md:text-base">LIVE</span>
+      </div>
     );
   }
 
