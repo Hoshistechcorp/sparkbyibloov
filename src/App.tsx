@@ -10,6 +10,8 @@ import MyEvents from "./pages/MyEvents";
 import CreateEvent from "./pages/CreateEvent";
 import EditEvent from "./pages/EditEvent";
 import Spark from "./pages/Spark";
+import SparkPrograms from "./pages/SparkPrograms";
+import SparkMedia from "./pages/SparkMedia";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -25,6 +27,8 @@ const App = () => (
       <Route path="/auth" element={<Auth />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/spark" element={<Spark />} />
+      <Route path="/spark/programs" element={<SparkPrograms />} />
+      <Route path="/spark/media" element={<SparkMedia />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>

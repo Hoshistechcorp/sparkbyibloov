@@ -4,11 +4,11 @@ import sparkLogo from '@/assets/spark-logo.svg';
 import { SparkHero } from '@/components/spark/SparkHero';
 import { SparkMarquee } from '@/components/spark/SparkMarquee';
 import { SparkAudience } from '@/components/spark/SparkAudience';
-import { SparkPrograms } from '@/components/spark/SparkPrograms';
 import { SparkDNA } from '@/components/spark/SparkDNA';
 import { SparkPartners } from '@/components/spark/SparkPartners';
 import { SparkCTA } from '@/components/spark/SparkCTA';
 import { SparkFooter } from '@/components/spark/SparkFooter';
+import { Link } from 'react-router-dom';
 
 const Spark = () => {
   return (
@@ -22,8 +22,21 @@ const Spark = () => {
         <SparkNav />
         <SparkHero />
         <SparkMarquee />
+
+        {/* Programs teaser */}
+        <section className="py-20 px-6 md:px-12 max-w-7xl mx-auto text-center">
+          <span className="text-[11px] tracking-[0.3em] uppercase text-[#65A300] font-bold mb-3 block">Programs</span>
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-4">8 programs. Zero fluff.</h2>
+          <p className="text-lg text-gray-400 max-w-xl mx-auto mb-8">Stackable micro-credentials in hospitality, events & tourism. Each one designed to be your unfair advantage.</p>
+          <Link
+            to="/spark/programs"
+            className="inline-block bg-[#CCFF00] text-gray-900 font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-[#B8E600] transition-all shadow-lg shadow-[#CCFF00]/25 hover:scale-105"
+          >
+            Explore All Programs →
+          </Link>
+        </section>
+
         <SparkAudience />
-        <SparkPrograms />
         <SparkDNA />
         <SparkPartners />
         <SparkCTA />
@@ -41,10 +54,11 @@ const SparkNav = () => (
       <span className="text-[10px] text-gray-400 tracking-wider uppercase ml-1">by iBloov</span>
     </div>
     <div className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.12em] uppercase text-gray-500 font-semibold">
-      <a href="#programs" className="hover:text-[#65A300] transition-colors">Programs</a>
+      <Link to="/spark/programs" className="hover:text-[#65A300] transition-colors">Programs</Link>
       <a href="#audiences" className="hover:text-[#65A300] transition-colors">For You</a>
       <a href="#partners" className="hover:text-[#65A300] transition-colors">Partners</a>
       <a href="#dna" className="hover:text-[#65A300] transition-colors">Why Spark</a>
+      <Link to="/spark/media" className="hover:text-[#65A300] transition-colors">Media</Link>
     </div>
     <button className="bg-[#CCFF00] text-gray-900 text-[11px] font-extrabold tracking-[0.12em] uppercase px-5 py-2.5 rounded-full hover:bg-[#B8E600] transition-colors shadow-sm">
       Get Started
