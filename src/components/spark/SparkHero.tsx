@@ -132,7 +132,7 @@ export const SparkHero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 1 }}
-          className="text-base md:text-lg text-gray-500 max-w-xl mx-auto mb-10 leading-relaxed"
+          className="text-base md:text-lg text-white/70 max-w-xl mx-auto mb-10 leading-relaxed"
         >
           World-class education meets real-world skills. Stackable credentials for the next generation of industry leaders.
         </motion.p>
