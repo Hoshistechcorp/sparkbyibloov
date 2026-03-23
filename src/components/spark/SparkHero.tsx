@@ -101,7 +101,7 @@ export const SparkHero = () => {
       </div>
 
       {/* Light frosted overlay for text readability */}
-      <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 bg-black/30" />
 
       {/* Content */}
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
@@ -120,7 +120,7 @@ export const SparkHero = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.7 }}
-          className="text-5xl md:text-7xl lg:text-[5.5rem] font-extrabold leading-[0.92] tracking-tight mb-8 text-gray-900"
+          className="text-5xl md:text-7xl lg:text-[5.5rem] font-extrabold leading-[0.92] tracking-tight mb-8 text-white"
         >
           Learn what<br />
           <span className="bg-gradient-to-r from-[#CCFF00] via-[#7BFF60] to-[#00C896] bg-clip-text text-transparent">
@@ -132,7 +132,7 @@ export const SparkHero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 1 }}
-          className="text-base md:text-lg text-gray-500 max-w-xl mx-auto mb-10 leading-relaxed"
+          className="text-base md:text-lg text-white/70 max-w-xl mx-auto mb-10 leading-relaxed"
         >
           World-class education meets real-world skills. Stackable credentials for the next generation of industry leaders.
         </motion.p>
@@ -153,7 +153,7 @@ export const SparkHero = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="border-2 border-gray-200 text-gray-600 font-bold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-gray-50 transition-all"
+            className="border-2 border-white/30 text-white/80 font-bold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-white/10 transition-all"
           >
             Partner With Us
           </motion.button>
