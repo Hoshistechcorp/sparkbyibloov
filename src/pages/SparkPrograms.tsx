@@ -144,29 +144,30 @@ const SparkPrograms = () => {
                 onMouseEnter={() => setHoveredId(p.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
-                {/* Background image */}
+                {/* Background image with continuous Ken Burns animation */}
                 <div className="absolute inset-0">
                   <img
                     src={p.image}
                     alt={p.coolName}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover"
+                    style={{ animation: `kenburns ${15 + Number(p.id) * 2}s ease-in-out infinite alternate` }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20 transition-all duration-500 group-hover:from-black/95 group-hover:via-black/70 group-hover:to-black/40" />
                 </div>
 
-                {/* Content */}
+                {/* Content — pinned to bottom */}
                 <div className="relative z-10 h-full flex flex-col justify-end p-8">
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="text-[9px] tracking-[0.2em] uppercase font-extrabold px-3 py-1 rounded-full border text-white/80" style={{ borderColor: p.color + '80', backgroundColor: p.color + '20' }}>
+                    <span className="text-[9px] tracking-[0.2em] uppercase font-extrabold px-3 py-1 rounded-full border text-white" style={{ borderColor: p.color + '80', backgroundColor: p.color + '30' }}>
                       {p.tag}
                     </span>
-                    <span className="text-[10px] text-white/40 tracking-wider">{p.duration} · {p.lessons} lessons</span>
+                    <span className="text-[10px] text-white/60 tracking-wider font-semibold">{p.duration} · {p.lessons} lessons</span>
                   </div>
 
-                  <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-1 leading-tight">{p.coolName}</h2>
-                  <p className="text-xs uppercase tracking-[0.15em] text-white/40 mb-3">{p.realName}</p>
+                  <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-1 leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">{p.coolName}</h2>
+                  <p className="text-xs uppercase tracking-[0.15em] text-white/60 mb-3 font-bold">{p.realName}</p>
 
-                  <p className={`text-sm text-white/60 leading-relaxed max-w-md transition-all duration-500 ${hoveredId === p.id ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                  <p className={`text-sm text-white/80 leading-relaxed max-w-md transition-all duration-500 ${hoveredId === p.id ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                     {p.desc}
                   </p>
 
@@ -174,14 +175,14 @@ const SparkPrograms = () => {
                     <button className="text-[10px] tracking-[0.12em] uppercase font-extrabold px-5 py-2.5 rounded-full transition-colors" style={{ backgroundColor: p.color, color: p.color === '#CCFF00' ? '#1a1a1a' : '#fff' }}>
                       Enroll Now
                     </button>
-                    <button className="text-[10px] tracking-[0.12em] uppercase font-bold px-5 py-2.5 rounded-full border border-white/20 text-white/70 hover:bg-white/10 transition-colors">
+                    <button className="text-[10px] tracking-[0.12em] uppercase font-bold px-5 py-2.5 rounded-full border border-white/30 text-white/90 hover:bg-white/10 transition-colors">
                       Syllabus
                     </button>
                   </div>
                 </div>
 
                 {/* Number */}
-                <div className="absolute top-6 right-6 text-6xl font-extrabold text-white/10 z-10">
+                <div className="absolute top-6 right-6 text-6xl font-extrabold text-white/15 z-10">
                   0{p.id}
                 </div>
               </div>
