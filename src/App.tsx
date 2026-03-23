@@ -9,6 +9,7 @@ import Admin from "./pages/Admin";
 import MyEvents from "./pages/MyEvents";
 import CreateEvent from "./pages/CreateEvent";
 import EditEvent from "./pages/EditEvent";
+import Spark from "./pages/Spark";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
