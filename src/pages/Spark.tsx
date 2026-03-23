@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Navbar } from '@/components/Navbar';
+import React from 'react';
 import { SEOHead } from '@/components/SEOHead';
 import sparkLogo from '@/assets/spark-logo.svg';
 import { SparkHero } from '@/components/spark/SparkHero';
@@ -16,10 +15,10 @@ const Spark = () => {
     <>
       <SEOHead
         title="Spark — Learn What Actually Matters"
-        description="Spark by iBloov Learning combines world-class education with real-world hospitality, events & tourism skills. Micro-credentials for Gen Z, Gen Alpha, and industry leaders."
-        keywords="spark, ibloov, learning, hospitality, events, tourism, micro-credentials, gen z, gen alpha"
+        description="Spark by iBloov Learning combines world-class education with real-world hospitality, events & tourism skills. Micro-credentials for the next generation of industry leaders."
+        keywords="spark, ibloov, learning, hospitality, events, tourism, micro-credentials"
       />
-      <div className="bg-[#0A0A0A] text-white min-h-screen overflow-x-hidden font-sans">
+      <div className="bg-white text-gray-900 min-h-screen overflow-x-hidden font-[Nunito]">
         <SparkNav />
         <SparkHero />
         <SparkMarquee />
@@ -35,19 +34,19 @@ const Spark = () => {
 };
 
 const SparkNav = () => (
-  <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 bg-[#0A0A0A]/90 backdrop-blur-xl border-b border-white/5">
+  <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 bg-white/90 backdrop-blur-xl border-b border-gray-100">
     <div className="flex items-center gap-3">
       <img src={sparkLogo} alt="Spark" className="h-8 w-8" />
-      <span className="text-sm font-semibold tracking-[0.2em] uppercase">Spark</span>
-      <span className="text-[10px] text-white/40 tracking-wider uppercase ml-1">by iBloov</span>
+      <span className="text-sm font-extrabold tracking-[0.15em] uppercase text-gray-900">Spark</span>
+      <span className="text-[10px] text-gray-400 tracking-wider uppercase ml-1">by iBloov</span>
     </div>
-    <div className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.15em] uppercase text-white/60">
-      <a href="#programs" className="hover:text-white transition-colors">Programs</a>
-      <a href="#audiences" className="hover:text-white transition-colors">For You</a>
-      <a href="#partners" className="hover:text-white transition-colors">Partners</a>
-      <a href="#dna" className="hover:text-white transition-colors">Why Spark</a>
+    <div className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.12em] uppercase text-gray-500 font-semibold">
+      <a href="#programs" className="hover:text-[#65A300] transition-colors">Programs</a>
+      <a href="#audiences" className="hover:text-[#65A300] transition-colors">For You</a>
+      <a href="#partners" className="hover:text-[#65A300] transition-colors">Partners</a>
+      <a href="#dna" className="hover:text-[#65A300] transition-colors">Why Spark</a>
     </div>
-    <button className="bg-[#CCFF00] text-black text-[11px] font-bold tracking-[0.15em] uppercase px-5 py-2.5 hover:bg-[#B8E600] transition-colors">
+    <button className="bg-[#CCFF00] text-gray-900 text-[11px] font-extrabold tracking-[0.12em] uppercase px-5 py-2.5 rounded-full hover:bg-[#B8E600] transition-colors shadow-sm">
       Get Started
     </button>
   </nav>
