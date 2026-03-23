@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const audiences = [
   {
@@ -44,15 +45,23 @@ export const SparkAudience = () => {
 
   return (
     <section id="audiences" className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
-      <div className="mb-12">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="mb-12"
+      >
         <span className="text-[11px] tracking-[0.3em] uppercase text-[#65A300] font-bold mb-3 block">Built for everyone</span>
         <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900">Who is Spark for?</h2>
-      </div>
+      </motion.div>
 
       <div className="flex flex-wrap gap-2 mb-10">
         {audiences.map((a) => (
-          <button
+          <motion.button
             key={a.id}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setActive(a.id)}
             className={`text-[12px] tracking-[0.1em] uppercase px-5 py-2.5 rounded-full font-bold transition-all ${
               active === a.id
@@ -61,23 +70,37 @@ export const SparkAudience = () => {
             }`}
           >
             {a.label}
-          </button>
+          </motion.button>
         ))}
       </div>
 
-      <p className="text-2xl md:text-3xl font-light text-gray-400 mb-10">{current.tagline}</p>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={active}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.4 }}
+        >
+          <p className="text-2xl md:text-3xl font-light text-gray-400 mb-10">{current.tagline}</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {current.cards.map((card) => (
-          <div
-            key={card.title}
-            className="group bg-gray-50 border border-gray-100 p-8 rounded-2xl hover:bg-[#CCFF00]/5 hover:border-[#CCFF00]/30 transition-all hover:shadow-lg hover:shadow-[#CCFF00]/5"
-          >
-            <h3 className="text-lg font-bold mb-2 group-hover:text-[#65A300] transition-colors text-gray-900">{card.title}</h3>
-            <p className="text-sm text-gray-500 leading-relaxed">{card.desc}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {current.cards.map((card, i) => (
+              <motion.div
+                key={card.title}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                whileHover={{ y: -5, boxShadow: '0 20px 40px -15px rgba(204,255,0,0.15)' }}
+                className="group bg-gray-50 border border-gray-100 p-8 rounded-2xl hover:bg-[#CCFF00]/5 hover:border-[#CCFF00]/30 transition-all cursor-pointer"
+              >
+                <h3 className="text-lg font-bold mb-2 group-hover:text-[#65A300] transition-colors text-gray-900">{card.title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{card.desc}</p>
+              </motion.div>
+            ))}
           </div>
-        ))}
-      </div>
+        </motion.div>
+      </AnimatePresence>
     </section>
   );
 };
