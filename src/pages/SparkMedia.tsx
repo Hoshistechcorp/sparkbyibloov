@@ -74,6 +74,8 @@ const SparkMedia = () => {
           <div className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.12em] uppercase text-gray-500 font-semibold">
             <Link to="/spark" className="hover:text-[#65A300] transition-colors">Home</Link>
             <Link to="/spark/programs" className="hover:text-[#65A300] transition-colors">Programs</Link>
+            <Link to="/spark/events" className="hover:text-[#65A300] transition-colors">Events</Link>
+            <Link to="/spark/news" className="hover:text-[#65A300] transition-colors">News</Link>
           </div>
           <Link to="/spark" className="bg-[#CCFF00] text-gray-900 text-[11px] font-extrabold tracking-[0.12em] uppercase px-5 py-2.5 rounded-full hover:bg-[#B8E600] transition-colors shadow-sm">
             Back to Spark
