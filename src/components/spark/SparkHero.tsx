@@ -101,7 +101,7 @@ export const SparkHero = () => {
       </div>
 
       {/* Light frosted overlay for text readability */}
-      <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 bg-black/30" />
 
       {/* Content */}
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
