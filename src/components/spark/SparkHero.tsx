@@ -101,7 +101,7 @@ export const SparkHero = () => {
       </div>
 
       {/* Light frosted overlay for text readability */}
-      <div className="absolute inset-0 bg-white/55" />
+      <div className="absolute inset-0 bg-white/70" />
 
       {/* Content */}
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
@@ -120,7 +120,7 @@ export const SparkHero = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.7 }}
-          className="text-5xl md:text-7xl lg:text-[5.5rem] font-extrabold leading-[0.92] tracking-tight mb-8 text-gray-900 drop-shadow-[0_2px_10px_rgba(255,255,255,0.8)]"
+          className="text-5xl md:text-7xl lg:text-[5.5rem] font-black leading-[0.92] tracking-tight mb-8 text-gray-900"
         >
           Learn what<br />
           <span className="bg-gradient-to-r from-[#CCFF00] via-[#7BFF60] to-[#00C896] bg-clip-text text-transparent">
@@ -132,7 +132,7 @@ export const SparkHero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 1 }}
-          className="text-base md:text-lg text-gray-600 max-w-xl mx-auto mb-10 leading-relaxed drop-shadow-[0_1px_6px_rgba(255,255,255,0.9)]"
+          className="text-base md:text-lg text-gray-700 font-medium max-w-xl mx-auto mb-10 leading-relaxed"
         >
           World-class education meets real-world skills. Stackable credentials for the next generation of industry leaders.
         </motion.p>
