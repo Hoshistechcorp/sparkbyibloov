@@ -112,6 +112,8 @@ const SparkPrograms = () => {
           </Link>
           <div className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.12em] uppercase text-gray-500 font-semibold">
             <Link to="/spark" className="hover:text-[#65A300] transition-colors">Home</Link>
+            <Link to="/spark/events" className="hover:text-[#65A300] transition-colors">Events</Link>
+            <Link to="/spark/news" className="hover:text-[#65A300] transition-colors">News</Link>
             <Link to="/spark/media" className="hover:text-[#65A300] transition-colors">Media</Link>
           </div>
           <Link to="/spark" className="bg-[#CCFF00] text-gray-900 text-[11px] font-extrabold tracking-[0.12em] uppercase px-5 py-2.5 rounded-full hover:bg-[#B8E600] transition-colors shadow-sm">
@@ -127,7 +129,7 @@ const SparkPrograms = () => {
             <span className="bg-gradient-to-r from-[#CCFF00] via-[#7BFF60] to-[#00C896] bg-clip-text text-transparent">Zero fluff.</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed">
-            Each program is a stackable micro-credential — learn at your pace, earn real certifications, and build a career portfolio that speaks louder than any degree.
+            Each program is a stackable micro-credential — learn at your pace, earn real certifications, and build a career portfolio that speaks louder than any degree. <span className="text-gray-300">These are just a few of our programs — more are launching soon.</span>
           </p>
         </section>
 

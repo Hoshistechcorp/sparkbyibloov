@@ -12,6 +12,9 @@ import EditEvent from "./pages/EditEvent";
 import Spark from "./pages/Spark";
 import SparkPrograms from "./pages/SparkPrograms";
 import SparkMedia from "./pages/SparkMedia";
+import SparkEvents from "./pages/SparkEvents";
+import SparkNews from "./pages/SparkNews";
+import SparkAdmin from "./pages/SparkAdmin";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -29,6 +32,9 @@ const App = () => (
       <Route path="/spark" element={<Spark />} />
       <Route path="/spark/programs" element={<SparkPrograms />} />
       <Route path="/spark/media" element={<SparkMedia />} />
+      <Route path="/spark/events" element={<SparkEvents />} />
+      <Route path="/spark/news" element={<SparkNews />} />
+      <Route path="/spark/admin" element={<SparkAdmin />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>
