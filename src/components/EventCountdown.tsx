@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { RotatingBadge } from './RotatingBadge';
 interface TimeLeft {
   days: number;
   hours: number;
