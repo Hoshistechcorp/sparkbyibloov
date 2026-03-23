@@ -16,8 +16,6 @@ const images = [
   'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&h=600&fit=crop&q=80',
 ];
 
-// Grid cell definitions — Harvard Online style asymmetric mosaic
-// Each cell: { col, row, colSpan, rowSpan } on a 6-column, 4-row grid
 const gridCells = [
   { col: 1, row: 1, colSpan: 2, rowSpan: 2 },
   { col: 3, row: 1, colSpan: 1, rowSpan: 1 },
@@ -34,33 +32,24 @@ const gridCells = [
 ];
 
 export const SparkHero = () => {
-  // Each cell tracks which image index it's showing
   const [cellImages, setCellImages] = useState<number[]>(
     gridCells.map((_, i) => i % images.length)
   );
   const [swappingCell, setSwappingCell] = useState<number | null>(null);
 
-  // Continuously swap one random cell's image every 2.5 seconds
   const swapRandomCell = useCallback(() => {
     const cellIndex = Math.floor(Math.random() * gridCells.length);
     setSwappingCell(cellIndex);
 
     setCellImages(prev => {
       const usedImages = new Set(prev);
-      const availableImages = images
-        .map((_, i) => i)
-        .filter(i => !usedImages.has(i));
-
+      const availableImages = images.map((_, i) => i).filter(i => !usedImages.has(i));
       let newImageIndex: number;
       if (availableImages.length > 0) {
         newImageIndex = availableImages[Math.floor(Math.random() * availableImages.length)];
       } else {
-        // All images used, just pick a different one
-        do {
-          newImageIndex = Math.floor(Math.random() * images.length);
-        } while (newImageIndex === prev[cellIndex] && images.length > 1);
+        do { newImageIndex = Math.floor(Math.random() * images.length); } while (newImageIndex === prev[cellIndex] && images.length > 1);
       }
-
       const next = [...prev];
       next[cellIndex] = newImageIndex;
       return next;
@@ -75,11 +64,11 @@ export const SparkHero = () => {
   }, [swapRandomCell]);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gray-950">
-      {/* Animated image mosaic grid — full bleed background */}
-      <div className="absolute inset-0 opacity-40">
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white">
+      {/* Full-bleed image mosaic grid */}
+      <div className="absolute inset-0">
         <div
-          className="w-full h-full grid gap-1.5 p-1.5"
+          className="w-full h-full grid gap-2 p-2"
           style={{
             gridTemplateColumns: 'repeat(6, 1fr)',
             gridTemplateRows: 'repeat(4, 1fr)',
@@ -88,7 +77,7 @@ export const SparkHero = () => {
           {gridCells.map((cell, i) => (
             <div
               key={i}
-              className="relative overflow-hidden rounded-lg"
+              className="relative overflow-hidden rounded-xl"
               style={{
                 gridColumn: `${cell.col} / span ${cell.colSpan}`,
                 gridRow: `${cell.row} / span ${cell.rowSpan}`,
@@ -100,39 +89,19 @@ export const SparkHero = () => {
                   src={images[cellImages[i]]}
                   alt=""
                   className="absolute inset-0 w-full h-full object-cover"
-                  initial={swappingCell === i ? { opacity: 0, scale: 1.1 } : { opacity: 1, scale: 1 }}
+                  initial={swappingCell === i ? { opacity: 0, scale: 1.08 } : { opacity: 1, scale: 1 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.8, ease: 'easeInOut' }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  transition={{ duration: 0.9, ease: 'easeInOut' }}
                 />
               </AnimatePresence>
-              {/* Subtle Ken Burns drift */}
-              <motion.div
-                className="absolute inset-0"
-                animate={{
-                  scale: [1, 1.06, 1],
-                }}
-                transition={{
-                  duration: 20 + i * 3,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              />
             </div>
           ))}
         </div>
       </div>
 
-      {/* Dark gradient overlays for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/70 to-gray-950/50" />
-      <div className="absolute inset-0 bg-gradient-to-r from-gray-950/80 via-transparent to-gray-950/80" />
-
-      {/* Lime accent glow */}
-      <motion.div
-        animate={{ opacity: [0.15, 0.25, 0.15], scale: [1, 1.1, 1] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-[#CCFF00]/10 blur-[150px]"
-      />
+      {/* Light frosted overlay for text readability */}
+      <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px]" />
 
       {/* Content */}
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
@@ -142,7 +111,7 @@ export const SparkHero = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mb-6"
         >
-          <span className="text-[11px] tracking-[0.4em] uppercase text-[#CCFF00] font-bold">
+          <span className="text-[11px] tracking-[0.4em] uppercase text-[#65A300] font-bold">
             Micro-Credentials · Hospitality · Events · Tourism
           </span>
         </motion.div>
@@ -151,7 +120,7 @@ export const SparkHero = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.7 }}
-          className="text-5xl md:text-7xl lg:text-[5.5rem] font-extrabold leading-[0.92] tracking-tight mb-8 text-white"
+          className="text-5xl md:text-7xl lg:text-[5.5rem] font-extrabold leading-[0.92] tracking-tight mb-8 text-gray-900"
         >
           Learn what<br />
           <span className="bg-gradient-to-r from-[#CCFF00] via-[#7BFF60] to-[#00C896] bg-clip-text text-transparent">
@@ -163,7 +132,7 @@ export const SparkHero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 1 }}
-          className="text-base md:text-lg text-white/50 max-w-xl mx-auto mb-10 leading-relaxed"
+          className="text-base md:text-lg text-gray-500 max-w-xl mx-auto mb-10 leading-relaxed"
         >
           World-class education meets real-world skills. Stackable credentials for the next generation of industry leaders.
         </motion.p>
@@ -184,15 +153,12 @@ export const SparkHero = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="border border-white/20 text-white/70 font-bold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-white/5 hover:border-white/30 transition-all"
+            className="border-2 border-gray-200 text-gray-600 font-bold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-gray-50 transition-all"
           >
             Partner With Us
           </motion.button>
         </motion.div>
       </div>
-
-      {/* Bottom fade to white (since rest of page is white) */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
     </section>
   );
 };
