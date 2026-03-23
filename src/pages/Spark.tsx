@@ -86,8 +86,8 @@ const SparkNav = () => (
     className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 bg-white/90 backdrop-blur-xl border-b border-gray-100"
   >
     <div className="flex items-center gap-3">
-      <img src={sparkLogo} alt="Spark" className="h-8 w-8" />
-      <span className="text-sm font-extrabold tracking-[0.15em] uppercase text-gray-900">Spark</span>
+      <img src={sparkLogo} alt="Spark" className="h-10 w-10" />
+      <span className="text-base font-black tracking-[0.15em] uppercase text-gray-900">Spark</span>
     </div>
     <div className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.12em] uppercase text-gray-500 font-semibold">
       <Link to="/spark/programs" className="hover:text-[#65A300] transition-colors">Programs</Link>
