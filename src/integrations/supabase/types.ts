@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      blog_posts: {
+        Row: {
+          author_name: string
+          category: string
+          content: string
+          cover_image_url: string | null
+          created_at: string
+          created_by: string | null
+          excerpt: string | null
+          id: string
+          published: boolean
+          published_at: string | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_name?: string
+          category?: string
+          content: string
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          excerpt?: string | null
+          id?: string
+          published?: boolean
+          published_at?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_name?: string
+          category?: string
+          content?: string
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          excerpt?: string | null
+          id?: string
+          published?: boolean
+          published_at?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       event_registrations: {
         Row: {
           event_id: string
@@ -103,6 +151,57 @@ export type Database = {
           id?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      spark_events: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          created_by: string | null
+          date: string
+          description: string | null
+          end_date: string | null
+          event_type: string
+          id: string
+          is_virtual: boolean
+          location: string | null
+          published: boolean
+          registration_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          date: string
+          description?: string | null
+          end_date?: string | null
+          event_type?: string
+          id?: string
+          is_virtual?: boolean
+          location?: string | null
+          published?: boolean
+          registration_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          date?: string
+          description?: string | null
+          end_date?: string | null
+          event_type?: string
+          id?: string
+          is_virtual?: boolean
+          location?: string | null
+          published?: boolean
+          registration_url?: string | null
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
