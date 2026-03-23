@@ -91,9 +91,9 @@ const SparkNav = () => (
     </div>
     <div className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.12em] uppercase text-gray-500 font-semibold">
       <Link to="/spark/programs" className="hover:text-[#65A300] transition-colors">Programs</Link>
+      <Link to="/spark/events" className="hover:text-[#65A300] transition-colors">Events</Link>
       <a href="#audiences" className="hover:text-[#65A300] transition-colors">For You</a>
-      <a href="#partners" className="hover:text-[#65A300] transition-colors">Partners</a>
-      <a href="#dna" className="hover:text-[#65A300] transition-colors">Why Spark</a>
+      <Link to="/spark/news" className="hover:text-[#65A300] transition-colors">News</Link>
       <Link to="/spark/media" className="hover:text-[#65A300] transition-colors">Media</Link>
     </div>
     <motion.button
