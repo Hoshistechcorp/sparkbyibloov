@@ -25,7 +25,7 @@ const Spark = () => {
         <SparkMarquee />
 
         {/* Programs teaser */}
-        <section className="py-20 px-6 md:px-12 max-w-7xl mx-auto text-center">
+        <section className="py-12 md:py-20 px-4 md:px-12 max-w-7xl mx-auto text-center">
           <motion.span
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -40,7 +40,7 @@ const Spark = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-4"
+            className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-4"
           >
             8 programs. Zero fluff.
           </motion.h2>
@@ -49,7 +49,7 @@ const Spark = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg text-gray-400 max-w-xl mx-auto mb-8"
+            className="text-base md:text-lg text-gray-400 max-w-xl mx-auto mb-6 md:mb-8"
           >
             Stackable micro-credentials in hospitality, events & tourism. Each one designed to be your unfair advantage.
           </motion.p>
@@ -61,7 +61,7 @@ const Spark = () => {
           >
             <Link
               to="/spark/programs"
-              className="inline-block bg-[#CCFF00] text-gray-900 font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-[#B8E600] transition-all shadow-lg shadow-[#CCFF00]/25 hover:scale-105"
+              className="inline-block bg-[#CCFF00] text-gray-900 font-extrabold text-sm tracking-[0.08em] uppercase px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-[#B8E600] transition-all shadow-lg shadow-[#CCFF00]/25 hover:scale-105"
             >
               Explore All Programs →
             </Link>
@@ -78,34 +78,84 @@ const Spark = () => {
   );
 };
 
-const SparkNav = () => (
-  <motion.nav
-    initial={{ y: -100 }}
-    animate={{ y: 0 }}
-    transition={{ duration: 0.6, ease: 'easeOut' }}
-    className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 bg-white/90 backdrop-blur-xl border-b border-gray-100"
-  >
-    <div className="flex items-center gap-3">
-      <img src={sparkLogo} alt="Spark" className="h-10 w-10" />
-      <span className="text-base font-black tracking-[0.15em] uppercase text-gray-900">Spark</span>
-    </div>
-    <div className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.12em] uppercase text-gray-500 font-semibold">
-      <Link to="/spark/programs" className="hover:text-[#65A300] transition-colors">Programs</Link>
-      <Link to="/spark/events" className="hover:text-[#65A300] transition-colors">Events</Link>
-      <a href="#audiences" className="hover:text-[#65A300] transition-colors">For You</a>
-      <Link to="/spark/news" className="hover:text-[#65A300] transition-colors">News</Link>
-      <Link to="/spark/media" className="hover:text-[#65A300] transition-colors">Media</Link>
-    </div>
-    <Link to="/spark/auth">
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="bg-[#CCFF00] text-gray-900 text-[11px] font-extrabold tracking-[0.12em] uppercase px-5 py-2.5 rounded-full hover:bg-[#B8E600] transition-colors shadow-sm"
+const SparkNav = () => {
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  return (
+    <>
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-12 py-3 md:py-4 bg-white/90 backdrop-blur-xl border-b border-gray-100"
       >
-        Get Started
-      </motion.button>
-    </Link>
-  </motion.nav>
-);
+        <div className="flex items-center gap-2 md:gap-3">
+          <img src={sparkLogo} alt="Spark" className="h-8 w-8 md:h-10 md:w-10" />
+          <span className="text-sm md:text-base font-black tracking-[0.15em] uppercase text-gray-900">Spark</span>
+        </div>
+        <div className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.12em] uppercase text-gray-500 font-semibold">
+          <Link to="/spark/programs" className="hover:text-[#65A300] transition-colors">Programs</Link>
+          <Link to="/spark/events" className="hover:text-[#65A300] transition-colors">Events</Link>
+          <a href="#audiences" className="hover:text-[#65A300] transition-colors">For You</a>
+          <Link to="/spark/news" className="hover:text-[#65A300] transition-colors">News</Link>
+          <Link to="/spark/media" className="hover:text-[#65A300] transition-colors">Media</Link>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link to="/spark/auth">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-[#CCFF00] text-gray-900 text-[10px] md:text-[11px] font-extrabold tracking-[0.12em] uppercase px-4 md:px-5 py-2 md:py-2.5 rounded-full hover:bg-[#B8E600] transition-colors shadow-sm"
+            >
+              Get Started
+            </motion.button>
+          </Link>
+          <button onClick={() => setMobileOpen(true)} className="md:hidden p-1 text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          </button>
+        </div>
+      </motion.nav>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-[100] bg-white flex flex-col"
+        >
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+            <div className="flex items-center gap-2">
+              <img src={sparkLogo} alt="Spark" className="h-8 w-8" />
+              <span className="text-sm font-black tracking-[0.15em] uppercase text-gray-900">Spark</span>
+            </div>
+            <button onClick={() => setMobileOpen(false)} className="p-2 text-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+          <div className="flex-1 flex flex-col items-center justify-center gap-6">
+            {[
+              { to: '/spark/programs', label: 'Programs' },
+              { to: '/spark/events', label: 'Events' },
+              { to: '/spark/news', label: 'News' },
+              { to: '/spark/media', label: 'Media' },
+              { to: '/spark/partners', label: 'Partners' },
+            ].map((link, i) => (
+              <motion.div key={link.to} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
+                <Link to={link.to} onClick={() => setMobileOpen(false)} className="text-2xl font-bold tracking-wide text-gray-900">
+                  {link.label}
+                </Link>
+              </motion.div>
+            ))}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+              <Link to="/spark/auth" onClick={() => setMobileOpen(false)} className="mt-4 inline-block bg-[#CCFF00] text-gray-900 font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-3 rounded-full">
+                Get Started
+              </Link>
+            </motion.div>
+          </div>
+        </motion.div>
+      )}
+    </>
+  );
+};
 
 export default Spark;

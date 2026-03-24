@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 export const SparkCTA = () => (
-  <section className="py-32 px-6 text-center relative overflow-hidden">
+  <section className="py-20 md:py-32 px-4 md:px-6 text-center relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-b from-white via-[#F8FFE8] to-white" />
     <motion.div
       animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
@@ -17,7 +17,7 @@ export const SparkCTA = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7 }}
-        className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-gray-900"
+        className="text-3xl md:text-6xl font-extrabold tracking-tight mb-4 md:mb-6 text-gray-900"
       >
         The industry is changing.<br />
         <span className="bg-gradient-to-r from-[#CCFF00] to-[#00C896] bg-clip-text text-transparent">Are you?</span>
@@ -27,7 +27,7 @@ export const SparkCTA = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="text-lg text-gray-400 mb-10 max-w-xl mx-auto"
+        className="text-base md:text-lg text-gray-400 mb-8 md:mb-10 max-w-xl mx-auto"
       >
         Join thousands of learners, hundreds of experts, and dozens of cities already building the future of hospitality and events with Spark.
       </motion.p>

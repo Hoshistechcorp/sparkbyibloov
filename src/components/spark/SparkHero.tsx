@@ -68,13 +68,15 @@ export const SparkHero = () => {
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white">
       {/* Full-bleed image mosaic grid */}
       <div className="absolute inset-0">
-        <div
-          className="w-full h-full grid gap-2 p-2"
-          style={{
-            gridTemplateColumns: 'repeat(6, 1fr)',
-            gridTemplateRows: 'repeat(4, 1fr)',
-          }}
-        >
+        {/* Mobile: simple grid, Desktop: complex mosaic */}
+        <div className="w-full h-full grid gap-1 p-1 md:hidden" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(4, 1fr)' }}>
+          {images.slice(0, 12).map((img, i) => (
+            <div key={i} className="relative overflow-hidden rounded-lg">
+              <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover" />
+            </div>
+          ))}
+        </div>
+        <div className="w-full h-full hidden md:grid gap-2 p-2" style={{ gridTemplateColumns: 'repeat(6, 1fr)', gridTemplateRows: 'repeat(4, 1fr)' }}>
           {gridCells.map((cell, i) => (
             <div
               key={i}
@@ -121,7 +123,7 @@ export const SparkHero = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.7 }}
-          className="text-5xl md:text-7xl lg:text-[5.5rem] font-black leading-[0.92] tracking-tight mb-8 text-gray-900"
+          className="text-3xl md:text-5xl lg:text-[5.5rem] font-black leading-[0.92] tracking-tight mb-6 md:mb-8 text-gray-900"
         >
           Learn what<br />
           <span className="bg-gradient-to-r from-[#CCFF00] via-[#7BFF60] to-[#00C896] bg-clip-text text-transparent">
@@ -133,7 +135,7 @@ export const SparkHero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 1 }}
-          className="text-base md:text-lg text-gray-700 font-medium max-w-xl mx-auto mb-10 leading-relaxed"
+          className="text-sm md:text-lg text-gray-700 font-medium max-w-xl mx-auto mb-8 md:mb-10 leading-relaxed px-2"
         >
           World-class education meets real-world skills. Stackable credentials for the next generation of industry leaders.
         </motion.p>

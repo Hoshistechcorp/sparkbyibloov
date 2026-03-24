@@ -42,7 +42,7 @@ export const SparkAudience = () => {
   const current = audiences.find((a) => a.id === active)!;
 
   return (
-    <section id="audiences" className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
+    <section id="audiences" className="py-16 md:py-24 px-4 md:px-12 max-w-7xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -51,7 +51,7 @@ export const SparkAudience = () => {
         className="mb-12"
       >
         <span className="text-[11px] tracking-[0.3em] uppercase text-[#65A300] font-bold mb-3 block">Built for everyone</span>
-        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900">Who is Spark for?</h2>
+        <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900">Who is Spark for?</h2>
       </motion.div>
 
       <div className="flex flex-wrap gap-2 mb-10">
@@ -80,9 +80,9 @@ export const SparkAudience = () => {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4 }}
         >
-          <p className="text-2xl md:text-3xl font-light text-gray-400 mb-10">{current.tagline}</p>
+          <p className="text-xl md:text-3xl font-light text-gray-400 mb-8 md:mb-10">{current.tagline}</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
             {current.people.map((person, i) => (
               <motion.div
                 key={person.name}
@@ -92,7 +92,7 @@ export const SparkAudience = () => {
                 whileHover={{ y: -8 }}
                 className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-[#CCFF00]/10 transition-all cursor-pointer"
               >
-                <div className="relative h-52 overflow-hidden">
+                <div className="relative h-36 md:h-52 overflow-hidden">
                   <motion.img
                     src={person.image}
                     alt={person.name}
@@ -102,12 +102,12 @@ export const SparkAudience = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                   <div className="absolute bottom-3 left-4 right-4">
-                    <h3 className="text-white font-bold text-sm">{person.name}</h3>
-                    <p className="text-white/60 text-[11px]">{person.role}</p>
+                    <h3 className="text-white font-bold text-xs md:text-sm">{person.name}</h3>
+                    <p className="text-white/60 text-[10px] md:text-[11px] truncate">{person.role}</p>
                   </div>
                 </div>
-                <div className="p-5">
-                  <p className="text-sm text-gray-500 leading-relaxed italic">"{person.quote}"</p>
+                <div className="p-3 md:p-5">
+                  <p className="text-xs md:text-sm text-gray-500 leading-relaxed italic">"{person.quote}"</p>
                 </div>
               </motion.div>
             ))}

@@ -9,7 +9,7 @@ const partnerTypes = [
 ];
 
 export const SparkPartners = () => (
-  <section id="partners" className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
+  <section id="partners" className="py-16 md:py-24 px-4 md:px-12 max-w-7xl mx-auto">
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -18,11 +18,11 @@ export const SparkPartners = () => (
       className="mb-12"
     >
       <span className="text-[11px] tracking-[0.3em] uppercase text-[#65A300] font-bold mb-3 block">Partnerships</span>
-      <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-gray-900">Build with us.</h2>
-      <p className="text-lg text-gray-400 max-w-2xl">Spark is an ecosystem, not just a platform. We partner with institutions, employers, icons, and cities to create real impact.</p>
+      <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 text-gray-900">Build with us.</h2>
+      <p className="text-base md:text-lg text-gray-400 max-w-2xl">Spark is an ecosystem, not just a platform. We partner with institutions, employers, icons, and cities to create real impact.</p>
     </motion.div>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
       {partnerTypes.map((p, i) => (
         <motion.div
           key={p.type}
@@ -31,7 +31,7 @@ export const SparkPartners = () => (
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: i * 0.1 }}
           whileHover={{ y: -6 }}
-          className="bg-white border border-gray-100 p-8 rounded-2xl flex flex-col hover:border-gray-200 transition-all group hover:shadow-xl cursor-pointer"
+          className="bg-white border border-gray-100 p-5 md:p-8 rounded-2xl flex flex-col hover:border-gray-200 transition-all group hover:shadow-xl cursor-pointer"
         >
           <motion.div
             initial={{ scale: 0 }}
