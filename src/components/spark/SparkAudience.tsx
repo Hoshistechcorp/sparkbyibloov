@@ -51,7 +51,7 @@ export const SparkAudience = () => {
         className="mb-12"
       >
         <span className="text-[11px] tracking-[0.3em] uppercase text-[#65A300] font-bold mb-3 block">Built for everyone</span>
-        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900">Who is Spark for?</h2>
+        <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900">Who is Spark for?</h2>
       </motion.div>
 
       <div className="flex flex-wrap gap-2 mb-10">
