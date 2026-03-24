@@ -23,6 +23,8 @@ const App = () => (
       <Route path="/spark/events" element={<SparkEvents />} />
       <Route path="/spark/news" element={<SparkNews />} />
       <Route path="/spark/admin" element={<SparkAdmin />} />
+      <Route path="/spark/auth" element={<SparkAuth />} />
+      <Route path="/spark/partners" element={<SparkPartners />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>
