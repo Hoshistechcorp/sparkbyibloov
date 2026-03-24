@@ -18,8 +18,8 @@ export const SparkPartners = () => (
       className="mb-12"
     >
       <span className="text-[11px] tracking-[0.3em] uppercase text-[#65A300] font-bold mb-3 block">Partnerships</span>
-      <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-gray-900">Build with us.</h2>
-      <p className="text-lg text-gray-400 max-w-2xl">Spark is an ecosystem, not just a platform. We partner with institutions, employers, icons, and cities to create real impact.</p>
+      <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 text-gray-900">Build with us.</h2>
+      <p className="text-base md:text-lg text-gray-400 max-w-2xl">Spark is an ecosystem, not just a platform. We partner with institutions, employers, icons, and cities to create real impact.</p>
     </motion.div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
