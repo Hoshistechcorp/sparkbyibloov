@@ -92,7 +92,7 @@ export const SparkAudience = () => {
                 whileHover={{ y: -8 }}
                 className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-[#CCFF00]/10 transition-all cursor-pointer"
               >
-                <div className="relative h-52 overflow-hidden">
+                <div className="relative h-36 md:h-52 overflow-hidden">
                   <motion.img
                     src={person.image}
                     alt={person.name}
