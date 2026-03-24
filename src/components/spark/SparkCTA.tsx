@@ -27,7 +27,7 @@ export const SparkCTA = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="text-lg text-gray-400 mb-10 max-w-xl mx-auto"
+        className="text-base md:text-lg text-gray-400 mb-8 md:mb-10 max-w-xl mx-auto"
       >
         Join thousands of learners, hundreds of experts, and dozens of cities already building the future of hospitality and events with Spark.
       </motion.p>

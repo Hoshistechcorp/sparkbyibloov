@@ -31,7 +31,7 @@ export const SparkPartners = () => (
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: i * 0.1 }}
           whileHover={{ y: -6 }}
-          className="bg-white border border-gray-100 p-8 rounded-2xl flex flex-col hover:border-gray-200 transition-all group hover:shadow-xl cursor-pointer"
+          className="bg-white border border-gray-100 p-5 md:p-8 rounded-2xl flex flex-col hover:border-gray-200 transition-all group hover:shadow-xl cursor-pointer"
         >
           <motion.div
             initial={{ scale: 0 }}

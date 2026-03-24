@@ -9,7 +9,7 @@ export const SparkFooter = () => (
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
-      className="max-w-7xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8"
+      className="max-w-7xl mx-auto flex flex-col md:flex-row items-start justify-between gap-6 md:gap-8"
     >
       <div>
         <div className="flex items-center gap-3 mb-3">

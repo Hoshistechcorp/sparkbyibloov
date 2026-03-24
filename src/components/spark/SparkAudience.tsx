@@ -106,8 +106,8 @@ export const SparkAudience = () => {
                     <p className="text-white/60 text-[10px] md:text-[11px] truncate">{person.role}</p>
                   </div>
                 </div>
-                <div className="p-5">
-                  <p className="text-sm text-gray-500 leading-relaxed italic">"{person.quote}"</p>
+                <div className="p-3 md:p-5">
+                  <p className="text-xs md:text-sm text-gray-500 leading-relaxed italic">"{person.quote}"</p>
                 </div>
               </motion.div>
             ))}

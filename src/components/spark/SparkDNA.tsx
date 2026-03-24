@@ -35,7 +35,7 @@ export const SparkDNA = () => (
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: i * 0.1 }}
             whileHover={{ y: -8, boxShadow: '0 25px 50px -15px rgba(0,0,0,0.08)' }}
-            className="bg-white border border-gray-100 p-8 rounded-2xl hover:border-[#CCFF00]/40 transition-all group cursor-pointer relative overflow-hidden"
+            className="bg-white border border-gray-100 p-5 md:p-8 rounded-2xl hover:border-[#CCFF00]/40 transition-all group cursor-pointer relative overflow-hidden"
           >
             {/* Accent line */}
             <motion.div
