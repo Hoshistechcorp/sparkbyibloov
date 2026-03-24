@@ -69,9 +69,9 @@ export const SparkHero = () => {
       {/* Full-bleed image mosaic grid */}
       <div className="absolute inset-0">
         <div
-          className="w-full h-full grid gap-2 p-2"
+          className="w-full h-full grid gap-1 md:gap-2 p-1 md:p-2"
           style={{
-            gridTemplateColumns: 'repeat(6, 1fr)',
+            gridTemplateColumns: 'repeat(3, 1fr)',
             gridTemplateRows: 'repeat(4, 1fr)',
           }}
         >
