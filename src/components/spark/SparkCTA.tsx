@@ -38,20 +38,24 @@ export const SparkCTA = () => (
         transition={{ duration: 0.5, delay: 0.4 }}
         className="flex flex-col sm:flex-row items-center gap-4 justify-center"
       >
-        <motion.button
-          whileHover={{ scale: 1.08, boxShadow: '0 0 40px rgba(204,255,0,0.4)' }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-[#CCFF00] text-gray-900 font-extrabold text-sm tracking-[0.08em] uppercase px-10 py-4 rounded-full hover:bg-[#B8E600] transition-all shadow-lg shadow-[#CCFF00]/25"
-        >
-          Start Learning Free
-        </motion.button>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="border-2 border-gray-200 text-gray-600 font-bold text-sm tracking-[0.08em] uppercase px-10 py-4 rounded-full hover:bg-gray-50 transition-all"
-        >
-          Talk to Our Team
-        </motion.button>
+        <Link to="/spark/auth">
+          <motion.button
+            whileHover={{ scale: 1.08, boxShadow: '0 0 40px rgba(204,255,0,0.4)' }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-[#CCFF00] text-gray-900 font-extrabold text-sm tracking-[0.08em] uppercase px-10 py-4 rounded-full hover:bg-[#B8E600] transition-all shadow-lg shadow-[#CCFF00]/25"
+          >
+            Start Learning Free
+          </motion.button>
+        </Link>
+        <Link to="/spark/partners">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="border-2 border-gray-200 text-gray-600 font-bold text-sm tracking-[0.08em] uppercase px-10 py-4 rounded-full hover:bg-gray-50 transition-all"
+          >
+            Talk to Our Team
+          </motion.button>
+        </Link>
       </motion.div>
     </div>
   </section>
