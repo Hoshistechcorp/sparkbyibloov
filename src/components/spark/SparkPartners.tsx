@@ -22,7 +22,7 @@ export const SparkPartners = () => (
       <p className="text-base md:text-lg text-gray-400 max-w-2xl">Spark is an ecosystem, not just a platform. We partner with institutions, employers, icons, and cities to create real impact.</p>
     </motion.div>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
       {partnerTypes.map((p, i) => (
         <motion.div
           key={p.type}
