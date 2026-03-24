@@ -26,7 +26,7 @@ export const SparkDNA = () => (
         <p className="text-base md:text-lg text-gray-400 max-w-2xl">We studied what makes the world's best learning platforms great — then built something purpose-made for hospitality, events & tourism.</p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
         {pillars.map((p, i) => (
           <motion.div
             key={p.source}
