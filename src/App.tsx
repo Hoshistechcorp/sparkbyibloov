@@ -8,8 +8,9 @@ import SparkMedia from "./pages/SparkMedia";
 import SparkEvents from "./pages/SparkEvents";
 import SparkNews from "./pages/SparkNews";
 import SparkAdmin from "./pages/SparkAdmin";
+import SparkAuth from "./pages/SparkAuth";
+import SparkPartners from "./pages/SparkPartners";
 import NotFound from "./pages/NotFound";
-
 const App = () => (
   <TooltipProvider>
     <Toaster />
