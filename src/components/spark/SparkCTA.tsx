@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 export const SparkCTA = () => (
   <section className="py-32 px-6 text-center relative overflow-hidden">
