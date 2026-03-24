@@ -8,8 +8,9 @@ import SparkMedia from "./pages/SparkMedia";
 import SparkEvents from "./pages/SparkEvents";
 import SparkNews from "./pages/SparkNews";
 import SparkAdmin from "./pages/SparkAdmin";
+import SparkAuth from "./pages/SparkAuth";
+import SparkPartners from "./pages/SparkPartners";
 import NotFound from "./pages/NotFound";
-
 const App = () => (
   <TooltipProvider>
     <Toaster />
@@ -22,6 +23,8 @@ const App = () => (
       <Route path="/spark/events" element={<SparkEvents />} />
       <Route path="/spark/news" element={<SparkNews />} />
       <Route path="/spark/admin" element={<SparkAdmin />} />
+      <Route path="/spark/auth" element={<SparkAuth />} />
+      <Route path="/spark/partners" element={<SparkPartners />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>

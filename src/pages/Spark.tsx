@@ -96,13 +96,15 @@ const SparkNav = () => (
       <Link to="/spark/news" className="hover:text-[#65A300] transition-colors">News</Link>
       <Link to="/spark/media" className="hover:text-[#65A300] transition-colors">Media</Link>
     </div>
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className="bg-[#CCFF00] text-gray-900 text-[11px] font-extrabold tracking-[0.12em] uppercase px-5 py-2.5 rounded-full hover:bg-[#B8E600] transition-colors shadow-sm"
-    >
-      Get Started
-    </motion.button>
+    <Link to="/spark/auth">
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="bg-[#CCFF00] text-gray-900 text-[11px] font-extrabold tracking-[0.12em] uppercase px-5 py-2.5 rounded-full hover:bg-[#B8E600] transition-colors shadow-sm"
+      >
+        Get Started
+      </motion.button>
+    </Link>
   </motion.nav>
 );
 

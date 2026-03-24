@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const images = [
   'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=600&fit=crop&q=80',
@@ -143,20 +144,24 @@ export const SparkHero = () => {
           transition={{ duration: 0.6, delay: 1.2 }}
           className="flex flex-col sm:flex-row items-center gap-4 justify-center"
         >
-          <motion.button
-            whileHover={{ scale: 1.06, boxShadow: '0 0 50px rgba(204,255,0,0.3)' }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-[#CCFF00] text-gray-900 font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-[#B8E600] transition-all shadow-lg shadow-[#CCFF00]/20"
-          >
-            Start Learning Free →
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="border-2 border-gray-300 text-gray-700 font-bold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-white/60 transition-all"
-          >
-            Partner With Us
-          </motion.button>
+          <Link to="/spark/auth">
+            <motion.button
+              whileHover={{ scale: 1.06, boxShadow: '0 0 50px rgba(204,255,0,0.3)' }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-[#CCFF00] text-gray-900 font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-[#B8E600] transition-all shadow-lg shadow-[#CCFF00]/20"
+            >
+              Start Learning Free →
+            </motion.button>
+          </Link>
+          <Link to="/spark/partners">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="border-2 border-gray-300 text-gray-700 font-bold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-white/60 transition-all"
+            >
+              Partner With Us
+            </motion.button>
+          </Link>
         </motion.div>
       </div>
     </section>
