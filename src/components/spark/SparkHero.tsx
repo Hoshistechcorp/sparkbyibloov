@@ -68,13 +68,15 @@ export const SparkHero = () => {
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white">
       {/* Full-bleed image mosaic grid */}
       <div className="absolute inset-0">
-        <div
-          className="w-full h-full grid gap-1 md:gap-2 p-1 md:p-2"
-          style={{
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gridTemplateRows: 'repeat(4, 1fr)',
-          }}
-        >
+        {/* Mobile: simple grid, Desktop: complex mosaic */}
+        <div className="w-full h-full grid gap-1 p-1 md:hidden" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(4, 1fr)' }}>
+          {images.slice(0, 12).map((img, i) => (
+            <div key={i} className="relative overflow-hidden rounded-lg">
+              <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover" />
+            </div>
+          ))}
+        </div>
+        <div className="w-full h-full hidden md:grid gap-2 p-2" style={{ gridTemplateColumns: 'repeat(6, 1fr)', gridTemplateRows: 'repeat(4, 1fr)' }}>
           {gridCells.map((cell, i) => (
             <div
               key={i}
