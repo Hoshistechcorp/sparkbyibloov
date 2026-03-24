@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 export const SparkCTA = () => (
-  <section className="py-32 px-6 text-center relative overflow-hidden">
+  <section className="py-20 md:py-32 px-4 md:px-6 text-center relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-b from-white via-[#F8FFE8] to-white" />
     <motion.div
       animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
