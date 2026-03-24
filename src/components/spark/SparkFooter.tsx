@@ -3,7 +3,7 @@ import sparkLogo from '@/assets/spark-logo.svg';
 import { motion } from 'framer-motion';
 
 export const SparkFooter = () => (
-  <footer className="border-t border-gray-100 py-12 px-6 md:px-12 bg-gray-50">
+  <footer className="border-t border-gray-100 py-8 md:py-12 px-4 md:px-12 bg-gray-50">
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
