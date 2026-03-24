@@ -19,11 +19,11 @@ export const SparkDNA = () => (
         className="mb-12"
       >
         <span className="text-[11px] tracking-[0.3em] uppercase text-[#65A300] font-bold mb-3 block">Platform DNA</span>
-        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-gray-900">
+        <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 text-gray-900">
           Four giants.<br />
           <span className="text-gray-300">One Spark.</span>
         </h2>
-        <p className="text-lg text-gray-400 max-w-2xl">We studied what makes the world's best learning platforms great — then built something purpose-made for hospitality, events & tourism.</p>
+        <p className="text-base md:text-lg text-gray-400 max-w-2xl">We studied what makes the world's best learning platforms great — then built something purpose-made for hospitality, events & tourism.</p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
