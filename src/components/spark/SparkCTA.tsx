@@ -17,7 +17,7 @@ export const SparkCTA = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7 }}
-        className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-gray-900"
+        className="text-3xl md:text-6xl font-extrabold tracking-tight mb-4 md:mb-6 text-gray-900"
       >
         The industry is changing.<br />
         <span className="bg-gradient-to-r from-[#CCFF00] to-[#00C896] bg-clip-text text-transparent">Are you?</span>
