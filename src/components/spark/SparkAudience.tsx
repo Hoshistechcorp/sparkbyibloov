@@ -82,7 +82,7 @@ export const SparkAudience = () => {
         >
           <p className="text-xl md:text-3xl font-light text-gray-400 mb-8 md:mb-10">{current.tagline}</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
             {current.people.map((person, i) => (
               <motion.div
                 key={person.name}
