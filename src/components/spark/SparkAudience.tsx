@@ -80,7 +80,7 @@ export const SparkAudience = () => {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4 }}
         >
-          <p className="text-2xl md:text-3xl font-light text-gray-400 mb-10">{current.tagline}</p>
+          <p className="text-xl md:text-3xl font-light text-gray-400 mb-8 md:mb-10">{current.tagline}</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {current.people.map((person, i) => (
