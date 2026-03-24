@@ -102,8 +102,8 @@ export const SparkAudience = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                   <div className="absolute bottom-3 left-4 right-4">
-                    <h3 className="text-white font-bold text-sm">{person.name}</h3>
-                    <p className="text-white/60 text-[11px]">{person.role}</p>
+                    <h3 className="text-white font-bold text-xs md:text-sm">{person.name}</h3>
+                    <p className="text-white/60 text-[10px] md:text-[11px] truncate">{person.role}</p>
                   </div>
                 </div>
                 <div className="p-5">
