@@ -25,7 +25,7 @@ const Spark = () => {
         <SparkMarquee />
 
         {/* Programs teaser */}
-        <section className="py-20 px-6 md:px-12 max-w-7xl mx-auto text-center">
+        <section className="py-12 md:py-20 px-4 md:px-12 max-w-7xl mx-auto text-center">
           <motion.span
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -40,7 +40,7 @@ const Spark = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-4"
+            className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-4"
           >
             8 programs. Zero fluff.
           </motion.h2>
@@ -49,7 +49,7 @@ const Spark = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg text-gray-400 max-w-xl mx-auto mb-8"
+            className="text-base md:text-lg text-gray-400 max-w-xl mx-auto mb-6 md:mb-8"
           >
             Stackable micro-credentials in hospitality, events & tourism. Each one designed to be your unfair advantage.
           </motion.p>
@@ -61,7 +61,7 @@ const Spark = () => {
           >
             <Link
               to="/spark/programs"
-              className="inline-block bg-[#CCFF00] text-gray-900 font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-[#B8E600] transition-all shadow-lg shadow-[#CCFF00]/25 hover:scale-105"
+              className="inline-block bg-[#CCFF00] text-gray-900 font-extrabold text-sm tracking-[0.08em] uppercase px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-[#B8E600] transition-all shadow-lg shadow-[#CCFF00]/25 hover:scale-105"
             >
               Explore All Programs →
             </Link>
