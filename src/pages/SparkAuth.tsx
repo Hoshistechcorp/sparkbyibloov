@@ -29,8 +29,8 @@ const SparkAuth = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!interest) {
-      toast.error('Please select your interest');
+    if (interests.length === 0) {
+      toast.error('Please select at least one interest');
       return;
     }
     if (!country.trim()) {
