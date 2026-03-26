@@ -221,6 +221,7 @@ const SparkAuth = () => {
             )}
           </AnimatePresence>
         </div>
+      <SparkReferDialog open={referOpen} onClose={() => setReferOpen(false)} />
       </div>
     </>
   );

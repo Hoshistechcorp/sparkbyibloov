@@ -83,10 +83,22 @@ const SparkPrograms = () => {
         <section className="py-16 md:py-20 px-4 md:px-6 text-center bg-gray-50">
           <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-4">Can't decide?</h2>
           <p className="text-gray-400 mb-8 max-w-lg mx-auto">Take our 2-minute quiz to find the perfect program for your goals, schedule, and vibe.</p>
-          <button className="bg-[#ec9f00] text-white font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-[#d48e00] transition-all shadow-lg shadow-[#ec9f00]/25">
-            Find My Program →
-          </button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button className="bg-[#ec9f00] text-white font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-[#d48e00] transition-all shadow-lg shadow-[#ec9f00]/25">
+              Find My Program →
+            </button>
+            <button
+              onClick={() => setReferOpen(true)}
+              className="border-2 border-gray-200 text-gray-600 font-bold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-gray-50 transition-all flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+              </svg>
+              Refer a Friend
+            </button>
+          </div>
         </section>
+        <SparkReferDialog open={referOpen} onClose={() => setReferOpen(false)} />
         <SparkFooter />
       </div>
     </>
