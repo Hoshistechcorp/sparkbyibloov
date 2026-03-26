@@ -20,7 +20,7 @@ const INTEREST_OPTIONS = [
 
 const SparkAuth = () => {
   const [email, setEmail] = useState('');
-  const [interest, setInterest] = useState('');
+  const [interests, setInterests] = useState<string[]>([]);
   const [otherInterest, setOtherInterest] = useState('');
   const [country, setCountry] = useState('');
   const [loading, setLoading] = useState(false);
