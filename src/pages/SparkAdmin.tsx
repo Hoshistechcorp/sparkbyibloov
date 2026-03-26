@@ -561,96 +561,307 @@ const BlogTab = () => {
   );
 };
 
-/* ─── PROGRAMS ─── */
-const programsList = [
-  { name: 'The Architect', real: 'Advanced Event Planning', enrolled: 245, status: 'active', color: '#ec9f00', youtube: 'https://youtube.com/@spark-architect' },
-  { name: 'Da Plotter', real: 'Professional Tourist Guide', enrolled: 189, status: 'active', color: '#7B61FF', youtube: 'https://youtube.com/@spark-plotter' },
-  { name: 'The Alchemist', real: 'Mixology & Bartending', enrolled: 312, status: 'active', color: '#FF6B35', youtube: 'https://youtube.com/@spark-alchemist' },
-  { name: 'The Gatekeeper', real: 'Concierge & Waitstaff', enrolled: 156, status: 'active', color: '#00C896', youtube: 'https://youtube.com/@spark-gatekeeper' },
-  { name: 'The Voice', real: 'MC Bootcamp', enrolled: 278, status: 'active', color: '#FF3366', youtube: 'https://youtube.com/@spark-voice' },
-  { name: 'The Narrator', real: 'TikTok Content', enrolled: 420, status: 'active', color: '#ec9f00', youtube: 'https://youtube.com/@spark-narrator' },
-  { name: 'The Lens', real: 'Photo & Video', enrolled: 198, status: 'active', color: '#7B61FF', youtube: 'https://youtube.com/@spark-lens' },
-  { name: 'The Selector', real: 'DJ Arts & Music', enrolled: 267, status: 'active', color: '#FF6B35', youtube: 'https://youtube.com/@spark-selector' },
-];
+/* ─── PROGRAMS (Full CRUD from DB) ─── */
+const ProgramsTab = () => {
+  const queryClient = useQueryClient();
+  const [showForm, setShowForm] = useState(false);
+  const [editingProgram, setEditingProgram] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [form, setForm] = useState({ cool_name: '', real_name: '', tag: 'CORE', description: '', duration: '', lessons: 0, color: '#ec9f00', image_url: '', youtube_url: '', sort_order: 0, status: 'active', published: true });
 
-const ProgramsTab = () => (
-  <div className="space-y-4">
-    <div>
-      <h2 className="text-xl font-extrabold text-white">Programs</h2>
-      <p className="text-sm text-gray-500">8 active micro-credential programs</p>
-    </div>
-    <div className="space-y-1.5">
-      {programsList.map((p, i) => (
-        <div key={p.name} className="bg-[#1c1c26] rounded-xl px-4 py-4 border border-white/5 flex items-center justify-between gap-4 hover:border-white/10 transition-colors">
-          <div className="flex items-center gap-4">
-            <span className="text-[11px] text-gray-600 font-mono w-5">0{i + 1}</span>
-            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: p.color }} />
-            <div>
-              <p className="text-sm font-bold text-white">{p.name}</p>
-              <p className="text-[11px] text-gray-500">{p.real}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <a href={p.youtube} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.1em] font-bold text-[#ec9f00] hover:text-[#f0b840] transition-colors">
-              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-              About
-            </a>
-            <div className="text-right">
-              <p className="text-sm font-bold text-white">{p.enrolled}</p>
-              <p className="text-[10px] text-gray-500">enrolled</p>
-            </div>
-            <span className="text-[9px] uppercase tracking-[0.1em] font-bold text-emerald-400 bg-emerald-400/10 px-2.5 py-1 rounded-full">Active</span>
-          </div>
+  const { data: programs = [] } = useQuery({
+    queryKey: ['admin-spark-programs'],
+    queryFn: async () => {
+      const { data } = await supabase.from('spark_programs').select('*').order('sort_order', { ascending: true });
+      return data || [];
+    },
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const payload = { ...form, lessons: Number(form.lessons), sort_order: Number(form.sort_order) };
+      if (editingProgram) {
+        const { error } = await supabase.from('spark_programs').update(payload).eq('id', editingProgram.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('spark_programs').insert(payload);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-spark-programs'] }); setShowForm(false); setEditingProgram(null); resetForm(); toast.success('Program saved!'); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => { const { error } = await supabase.from('spark_programs').delete().eq('id', id); if (error) throw error; },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-spark-programs'] }); toast.success('Program deleted'); },
+  });
+
+  const togglePublish = useMutation({
+    mutationFn: async ({ id, published }: { id: string; published: boolean }) => {
+      const { error } = await supabase.from('spark_programs').update({ published: !published }).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-spark-programs'] }); toast.success('Status updated'); },
+  });
+
+  const resetForm = () => setForm({ cool_name: '', real_name: '', tag: 'CORE', description: '', duration: '', lessons: 0, color: '#ec9f00', image_url: '', youtube_url: '', sort_order: 0, status: 'active', published: true });
+
+  const openEdit = (p: any) => {
+    setEditingProgram(p);
+    setForm({ cool_name: p.cool_name, real_name: p.real_name, tag: p.tag, description: p.description || '', duration: p.duration || '', lessons: p.lessons || 0, color: p.color, image_url: p.image_url || '', youtube_url: p.youtube_url || '', sort_order: p.sort_order, status: p.status, published: p.published });
+    setShowForm(true);
+  };
+
+  const filtered = programs.filter((p: any) => p.cool_name?.toLowerCase().includes(searchQuery.toLowerCase()) || p.real_name?.toLowerCase().includes(searchQuery.toLowerCase()));
+
+  const inputCls = "px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-gray-600 focus:border-[#ec9f00]/50 outline-none w-full";
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-extrabold text-white">Programs</h2>
+          <p className="text-sm text-gray-500">{programs.length} micro-credential programs</p>
         </div>
-      ))}
-    </div>
-  </div>
-);
-
-/* ─── MEDIA ─── */
-const MediaTab = () => (
-  <div className="space-y-4">
-    <div className="flex items-center justify-between">
-      <div>
-        <h2 className="text-xl font-extrabold text-white">Media Gallery</h2>
-        <p className="text-sm text-gray-500">Manage photos and videos</p>
+        <button onClick={() => { resetForm(); setEditingProgram(null); setShowForm(true); }} className="flex items-center gap-2 bg-[#ec9f00] text-gray-900 text-[11px] font-extrabold tracking-[0.08em] uppercase px-4 py-2.5 rounded-lg hover:bg-[#d48e00] transition-colors">
+          <Plus className="w-4 h-4" /> New Program
+        </button>
       </div>
-      <button className="flex items-center gap-2 bg-[#ec9f00] text-gray-900 text-[11px] font-extrabold tracking-[0.08em] uppercase px-4 py-2.5 rounded-lg hover:bg-[#d48e00] transition-colors">
-        <Plus className="w-4 h-4" /> Upload
-      </button>
-    </div>
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {[
-        'https://images.unsplash.com/photo-1511578314322-379afb476865?w=300&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=300&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=300&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=300&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=300&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=300&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=300&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=300&h=300&fit=crop',
-      ].map((src, i) => (
-        <div key={i} className="group relative aspect-square rounded-xl overflow-hidden bg-[#1c1c26] border border-white/5 hover:border-[#ec9f00]/30 transition-colors cursor-pointer">
-          <img src={src} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-              <button className="p-2 bg-white/20 backdrop-blur rounded-lg hover:bg-white/30"><Pencil className="w-4 h-4 text-white" /></button>
-              <button className="p-2 bg-white/20 backdrop-blur rounded-lg hover:bg-red-500/50"><Trash2 className="w-4 h-4 text-white" /></button>
+
+      <div className="flex items-center gap-2 bg-[#1c1c26] rounded-lg px-3 py-2 border border-white/5">
+        <Search className="w-4 h-4 text-gray-500" />
+        <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search programs..." className="bg-transparent text-sm text-white outline-none flex-1 placeholder:text-gray-600" />
+      </div>
+
+      {showForm && (
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-[#1c1c26] rounded-xl p-5 border border-white/5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold text-sm text-white">{editingProgram ? 'Edit Program' : 'Create Program'}</h3>
+            <button onClick={() => { setShowForm(false); setEditingProgram(null); }} className="text-gray-500 hover:text-white"><X className="w-5 h-5" /></button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Cool Name</label>
+              <input placeholder="e.g. The Architect" value={form.cool_name} onChange={e => setForm({ ...form, cool_name: e.target.value })} className={inputCls} />
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Real Name</label>
+              <input placeholder="e.g. Advanced Event Planning" value={form.real_name} onChange={e => setForm({ ...form, real_name: e.target.value })} className={inputCls} />
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Tag</label>
+              <select value={form.tag} onChange={e => setForm({ ...form, tag: e.target.value })} className={inputCls}>
+                <option value="FLAGSHIP">Flagship</option><option value="CORE">Core</option><option value="ESSENTIAL">Essential</option>
+                <option value="SIGNATURE">Signature</option><option value="TRENDING">Trending</option><option value="CREATIVE">Creative</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Color</label>
+              <div className="flex items-center gap-2">
+                <input type="color" value={form.color} onChange={e => setForm({ ...form, color: e.target.value })} className="w-10 h-10 rounded-lg border border-white/10 bg-transparent cursor-pointer" />
+                <input value={form.color} onChange={e => setForm({ ...form, color: e.target.value })} className={inputCls} />
+              </div>
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Duration</label>
+              <input placeholder="e.g. 12 weeks" value={form.duration} onChange={e => setForm({ ...form, duration: e.target.value })} className={inputCls} />
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Lessons</label>
+              <input type="number" value={form.lessons} onChange={e => setForm({ ...form, lessons: parseInt(e.target.value) || 0 })} className={inputCls} />
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Cover Image URL</label>
+              <input placeholder="https://..." value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })} className={inputCls} />
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">
+                <span className="flex items-center gap-1.5"><Play className="w-3 h-3" /> About Video URL (YouTube)</span>
+              </label>
+              <input placeholder="https://youtube.com/..." value={form.youtube_url} onChange={e => setForm({ ...form, youtube_url: e.target.value })} className={inputCls} />
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Sort Order</label>
+              <input type="number" value={form.sort_order} onChange={e => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} className={inputCls} />
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Status</label>
+              <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} className={inputCls}>
+                <option value="active">Active</option><option value="draft">Draft</option><option value="archived">Archived</option>
+              </select>
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Description</label>
+              <textarea placeholder="Program description..." value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className={inputCls} rows={3} />
+            </div>
+            <label className="flex items-center gap-2 text-sm text-gray-400"><input type="checkbox" checked={form.published} onChange={e => setForm({ ...form, published: e.target.checked })} className="rounded accent-[#ec9f00]" /> Published</label>
+          </div>
+          <div className="flex gap-3 mt-4">
+            <button onClick={() => saveMutation.mutate()} disabled={!form.cool_name || !form.real_name} className="bg-[#ec9f00] text-gray-900 text-[11px] font-extrabold tracking-[0.08em] uppercase px-6 py-2.5 rounded-lg hover:bg-[#d48e00] transition-colors disabled:opacity-50">
+              {editingProgram ? 'Update' : 'Create'}
+            </button>
+            <button onClick={() => { setShowForm(false); setEditingProgram(null); }} className="text-gray-500 text-[11px] font-bold uppercase px-4 py-2.5 hover:text-white">Cancel</button>
+          </div>
+        </motion.div>
+      )}
+
+      <div className="space-y-1.5">
+        {filtered.map((p: any, i: number) => (
+          <div key={p.id} className="bg-[#1c1c26] rounded-xl px-4 py-4 border border-white/5 flex items-center justify-between gap-4 hover:border-white/10 transition-colors group">
+            <div className="flex items-center gap-4 min-w-0">
+              <span className="text-[11px] text-gray-600 font-mono w-5 flex-shrink-0">0{i + 1}</span>
+              <button onClick={() => togglePublish.mutate({ id: p.id, published: p.published })} className="flex-shrink-0">
+                {p.published ? <Eye className="w-4 h-4 text-emerald-400" /> : <EyeOff className="w-4 h-4 text-gray-600" />}
+              </button>
+              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: p.color }} />
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-white truncate">{p.cool_name}</p>
+                <p className="text-[11px] text-gray-500 truncate">{p.real_name} · {p.duration} · {p.lessons} lessons</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 flex-shrink-0">
+              {p.youtube_url && (
+                <a href={p.youtube_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.1em] font-bold text-[#ec9f00] hover:text-[#f0b840] transition-colors">
+                  <Play className="w-3.5 h-3.5" /> About
+                </a>
+              )}
+              <span className={`text-[9px] uppercase tracking-[0.1em] font-bold px-2.5 py-1 rounded-full ${p.status === 'active' ? 'text-emerald-400 bg-emerald-400/10' : p.status === 'draft' ? 'text-yellow-400 bg-yellow-400/10' : 'text-gray-400 bg-gray-400/10'}`}>
+                {p.status}
+              </span>
+              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onClick={() => openEdit(p)} className="p-2 hover:bg-white/5 rounded-lg transition-colors"><Pencil className="w-4 h-4 text-gray-400" /></button>
+                <button onClick={() => { if (confirm('Delete this program?')) deleteMutation.mutate(p.id); }} className="p-2 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 className="w-4 h-4 text-red-400" /></button>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+        {filtered.length === 0 && <p className="text-center text-gray-600 py-12 text-sm">No programs found.</p>}
+      </div>
     </div>
-    <div className="bg-[#1c1c26] rounded-xl p-8 border border-white/5 border-dashed text-center cursor-pointer hover:border-[#ec9f00]/30 transition-colors">
-      <Image className="w-10 h-10 text-gray-600 mx-auto mb-2" />
-      <p className="text-sm text-gray-500">Drop files here or click to upload</p>
-      <p className="text-[11px] text-gray-600">JPG, PNG, MP4 up to 50MB</p>
-    </div>
-  </div>
-);
+  );
+};
 
-/* ─── USERS ─── */
+/* ─── MEDIA (Full CRUD with DB) ─── */
+const MediaTab = () => {
+  const queryClient = useQueryClient();
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ title: '', file_url: '', file_type: 'image' });
+
+  const { data: media = [] } = useQuery({
+    queryKey: ['admin-spark-media'],
+    queryFn: async () => {
+      const { data } = await supabase.from('spark_media').select('*').order('created_at', { ascending: false });
+      return data || [];
+    },
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from('spark_media').insert(form);
+      if (error) throw error;
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-spark-media'] }); setShowForm(false); setForm({ title: '', file_url: '', file_type: 'image' }); toast.success('Media added!'); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => { const { error } = await supabase.from('spark_media').delete().eq('id', id); if (error) throw error; },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-spark-media'] }); toast.success('Media deleted'); },
+  });
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const ext = file.name.split('.').pop();
+    const path = `media/${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from('event-images').upload(path, file);
+    if (error) { toast.error('Upload failed'); return; }
+    const { data: { publicUrl } } = supabase.storage.from('event-images').getPublicUrl(path);
+    const fileType = file.type.startsWith('video') ? 'video' : 'image';
+    await supabase.from('spark_media').insert({ title: file.name, file_url: publicUrl, file_type: fileType, file_size: file.size });
+    queryClient.invalidateQueries({ queryKey: ['admin-spark-media'] });
+    toast.success('File uploaded!');
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-extrabold text-white">Media Gallery</h2>
+          <p className="text-sm text-gray-500">{media.length} files</p>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={() => setShowForm(true)} className="flex items-center gap-2 bg-white/5 text-white text-[11px] font-extrabold tracking-[0.08em] uppercase px-4 py-2.5 rounded-lg hover:bg-white/10 transition-colors border border-white/10">
+            <LinkIcon className="w-4 h-4" /> Add URL
+          </button>
+          <label className="flex items-center gap-2 bg-[#ec9f00] text-gray-900 text-[11px] font-extrabold tracking-[0.08em] uppercase px-4 py-2.5 rounded-lg hover:bg-[#d48e00] transition-colors cursor-pointer">
+            <Upload className="w-4 h-4" /> Upload
+            <input type="file" accept="image/*,video/*" onChange={handleFileUpload} className="hidden" />
+          </label>
+        </div>
+      </div>
+
+      {showForm && (
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-[#1c1c26] rounded-xl p-5 border border-white/5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold text-sm text-white">Add Media from URL</h3>
+            <button onClick={() => setShowForm(false)} className="text-gray-500 hover:text-white"><X className="w-5 h-5" /></button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <input placeholder="Title (optional)" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-gray-600 focus:border-[#ec9f00]/50 outline-none" />
+            <input placeholder="File URL" value={form.file_url} onChange={e => setForm({ ...form, file_url: e.target.value })} className="px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-gray-600 focus:border-[#ec9f00]/50 outline-none" />
+            <select value={form.file_type} onChange={e => setForm({ ...form, file_type: e.target.value })} className="px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:border-[#ec9f00]/50 outline-none">
+              <option value="image">Image</option><option value="video">Video</option>
+            </select>
+          </div>
+          <div className="flex gap-3 mt-4">
+            <button onClick={() => saveMutation.mutate()} disabled={!form.file_url} className="bg-[#ec9f00] text-gray-900 text-[11px] font-extrabold tracking-[0.08em] uppercase px-6 py-2.5 rounded-lg hover:bg-[#d48e00] transition-colors disabled:opacity-50">Add</button>
+            <button onClick={() => setShowForm(false)} className="text-gray-500 text-[11px] font-bold uppercase px-4 py-2.5 hover:text-white">Cancel</button>
+          </div>
+        </motion.div>
+      )}
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {media.map((m: any) => (
+          <div key={m.id} className="group relative aspect-square rounded-xl overflow-hidden bg-[#1c1c26] border border-white/5 hover:border-[#ec9f00]/30 transition-colors cursor-pointer">
+            {m.file_type === 'video' ? (
+              <div className="w-full h-full flex items-center justify-center bg-[#1c1c26]">
+                <Play className="w-10 h-10 text-gray-500" />
+              </div>
+            ) : (
+              <img src={m.file_url} alt={m.title || ''} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            )}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors flex flex-col items-center justify-center">
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center gap-2">
+                <div className="flex gap-2">
+                  <a href={m.file_url} target="_blank" rel="noopener noreferrer" className="p-2 bg-white/20 backdrop-blur rounded-lg hover:bg-white/30"><ExternalLink className="w-4 h-4 text-white" /></a>
+                  <button onClick={() => { if (confirm('Delete this file?')) deleteMutation.mutate(m.id); }} className="p-2 bg-white/20 backdrop-blur rounded-lg hover:bg-red-500/50"><Trash2 className="w-4 h-4 text-white" /></button>
+                </div>
+                {m.title && <p className="text-[10px] text-white/80 font-semibold mt-1 truncate max-w-[90%]">{m.title}</p>}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {media.length === 0 && (
+        <label className="block bg-[#1c1c26] rounded-xl p-8 border border-white/5 border-dashed text-center cursor-pointer hover:border-[#ec9f00]/30 transition-colors">
+          <Image className="w-10 h-10 text-gray-600 mx-auto mb-2" />
+          <p className="text-sm text-gray-500">Drop files here or click to upload</p>
+          <p className="text-[11px] text-gray-600">JPG, PNG, MP4 up to 50MB</p>
+          <input type="file" accept="image/*,video/*" onChange={handleFileUpload} className="hidden" />
+        </label>
+      )}
+    </div>
+  );
+};
+
+/* ─── USERS (with role management) ─── */
 const UsersTab = () => {
+  const queryClient = useQueryClient();
+  const [searchQuery, setSearchQuery] = useState('');
+
   const { data: profiles = [] } = useQuery({
     queryKey: ['admin-profiles'],
     queryFn: async () => {
@@ -659,82 +870,147 @@ const UsersTab = () => {
     },
   });
 
+  const { data: roles = [] } = useQuery({
+    queryKey: ['admin-user-roles'],
+    queryFn: async () => {
+      const { data } = await supabase.from('user_roles').select('*');
+      return data || [];
+    },
+  });
+
+  const toggleAdmin = useMutation({
+    mutationFn: async ({ userId, isCurrentlyAdmin }: { userId: string; isCurrentlyAdmin: boolean }) => {
+      if (isCurrentlyAdmin) {
+        const { error } = await supabase.from('user_roles').delete().eq('user_id', userId).eq('role', 'admin');
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('user_roles').insert({ user_id: userId, role: 'admin' });
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-user-roles'] }); toast.success('Role updated'); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const getUserRole = (userId: string) => roles.some((r: any) => r.user_id === userId && r.role === 'admin');
+
+  const filtered = profiles.filter((p: any) => (p.display_name || '').toLowerCase().includes(searchQuery.toLowerCase()));
+
   return (
     <div className="space-y-4">
       <div>
         <h2 className="text-xl font-extrabold text-white">Users</h2>
         <p className="text-sm text-gray-500">{profiles.length} registered users</p>
       </div>
+
+      <div className="flex items-center gap-2 bg-[#1c1c26] rounded-lg px-3 py-2 border border-white/5">
+        <Search className="w-4 h-4 text-gray-500" />
+        <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search users..." className="bg-transparent text-sm text-white outline-none flex-1 placeholder:text-gray-600" />
+      </div>
+
       <div className="bg-[#1c1c26] rounded-xl border border-white/5 overflow-hidden">
-        <div className="grid grid-cols-[1fr_1fr_auto] md:grid-cols-[1fr_1fr_1fr_auto] gap-4 px-4 py-3 border-b border-white/5 text-[10px] uppercase tracking-wider font-bold text-gray-500">
+        <div className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 px-4 py-3 border-b border-white/5 text-[10px] uppercase tracking-wider font-bold text-gray-500">
           <span>Name</span>
-          <span className="hidden md:block">User ID</span>
           <span>Joined</span>
-          <span>Status</span>
+          <span>Role</span>
+          <span>Actions</span>
         </div>
-        {profiles.map((p: any) => (
-          <div key={p.id} className="grid grid-cols-[1fr_1fr_auto] md:grid-cols-[1fr_1fr_1fr_auto] gap-4 px-4 py-3 border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors items-center">
-            <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-full bg-[#ec9f00]/15 flex items-center justify-center text-[10px] font-bold text-[#ec9f00]">
-                {(p.display_name || 'U')[0].toUpperCase()}
+        {filtered.map((p: any) => {
+          const isAdmin = getUserRole(p.user_id);
+          return (
+            <div key={p.id} className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 px-4 py-3 border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-full bg-[#ec9f00]/15 flex items-center justify-center text-[10px] font-bold text-[#ec9f00]">
+                  {(p.display_name || 'U')[0].toUpperCase()}
+                </div>
+                <span className="text-sm font-semibold text-white truncate">{p.display_name || 'Anonymous'}</span>
               </div>
-              <span className="text-sm font-semibold text-white truncate">{p.display_name || 'Anonymous'}</span>
+              <span className="text-[11px] text-gray-500">{format(new Date(p.created_at), 'MMM dd, yyyy')}</span>
+              <span className={`text-[9px] uppercase tracking-[0.1em] font-bold px-2.5 py-1 rounded-full ${isAdmin ? 'text-[#ec9f00] bg-[#ec9f00]/10' : 'text-gray-400 bg-gray-400/10'}`}>
+                {isAdmin ? 'Admin' : 'User'}
+              </span>
+              <button onClick={() => toggleAdmin.mutate({ userId: p.user_id, isCurrentlyAdmin: isAdmin })}
+                className={`flex items-center gap-1.5 text-[10px] uppercase tracking-[0.1em] font-bold px-3 py-1.5 rounded-lg transition-colors ${isAdmin ? 'text-red-400 hover:bg-red-400/10' : 'text-emerald-400 hover:bg-emerald-400/10'}`}>
+                <Shield className="w-3 h-3" />
+                {isAdmin ? 'Remove Admin' : 'Make Admin'}
+              </button>
             </div>
-            <span className="hidden md:block text-[11px] text-gray-500 font-mono truncate">{p.user_id?.slice(0, 8)}...</span>
-            <span className="text-[11px] text-gray-500">{format(new Date(p.created_at), 'MMM dd, yyyy')}</span>
-            <span className="text-[9px] uppercase tracking-[0.1em] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-full text-center">Active</span>
-          </div>
-        ))}
-        {profiles.length === 0 && <p className="text-center text-gray-600 py-12 text-sm">No users registered yet.</p>}
+          );
+        })}
+        {filtered.length === 0 && <p className="text-center text-gray-600 py-12 text-sm">No users found.</p>}
       </div>
     </div>
   );
 };
 
 /* ─── SETTINGS ─── */
-const SettingsTab = () => (
-  <div className="space-y-6">
-    <div>
-      <h2 className="text-xl font-extrabold text-white">Settings</h2>
-      <p className="text-sm text-gray-500">Configure your Spark admin panel</p>
-    </div>
+const SettingsTab = () => {
+  const [siteName, setSiteName] = useState('Spark by iBloov');
+  const [contactEmail, setContactEmail] = useState('hello@spark.ibloov.com');
+  const [notifications, setNotifications] = useState({ registrations: true, events: true, comments: false, analytics: true });
+  const [saved, setSaved] = useState(false);
 
-    <div className="space-y-4">
-      <div className="bg-[#1c1c26] rounded-xl p-5 border border-white/5">
-        <h3 className="text-sm font-bold text-white mb-4">General</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-[11px] uppercase tracking-wider font-bold text-gray-500 mb-1.5">Site Name</label>
-            <input defaultValue="Spark by iBloov" className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:border-[#ec9f00]/50 outline-none" />
-          </div>
-          <div>
-            <label className="block text-[11px] uppercase tracking-wider font-bold text-gray-500 mb-1.5">Contact Email</label>
-            <input defaultValue="hello@spark.ibloov.com" className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:border-[#ec9f00]/50 outline-none" />
+  const handleSave = () => {
+    setSaved(true);
+    toast.success('Settings saved!');
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-extrabold text-white">Settings</h2>
+          <p className="text-sm text-gray-500">Configure your Spark admin panel</p>
+        </div>
+        <button onClick={handleSave} className="bg-[#ec9f00] text-gray-900 text-[11px] font-extrabold tracking-[0.08em] uppercase px-6 py-2.5 rounded-lg hover:bg-[#d48e00] transition-colors">
+          {saved ? '✓ Saved' : 'Save Changes'}
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        <div className="bg-[#1c1c26] rounded-xl p-5 border border-white/5">
+          <h3 className="text-sm font-bold text-white mb-4">General</h3>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-[11px] uppercase tracking-wider font-bold text-gray-500 mb-1.5">Site Name</label>
+              <input value={siteName} onChange={e => setSiteName(e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:border-[#ec9f00]/50 outline-none" />
+            </div>
+            <div>
+              <label className="block text-[11px] uppercase tracking-wider font-bold text-gray-500 mb-1.5">Contact Email</label>
+              <input value={contactEmail} onChange={e => setContactEmail(e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:border-[#ec9f00]/50 outline-none" />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="bg-[#1c1c26] rounded-xl p-5 border border-white/5">
-        <h3 className="text-sm font-bold text-white mb-4">Notifications</h3>
-        <div className="space-y-3">
-          {['New user registrations', 'Event sign-ups', 'Blog post comments', 'Weekly analytics digest'].map(item => (
-            <label key={item} className="flex items-center justify-between">
-              <span className="text-sm text-gray-400">{item}</span>
-              <div className="w-10 h-5 bg-white/10 rounded-full relative cursor-pointer">
-                <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-[#ec9f00] rounded-full transition-transform" />
-              </div>
-            </label>
-          ))}
+        <div className="bg-[#1c1c26] rounded-xl p-5 border border-white/5">
+          <h3 className="text-sm font-bold text-white mb-4">Notifications</h3>
+          <div className="space-y-3">
+            {([
+              ['registrations', 'New user registrations'],
+              ['events', 'Event sign-ups'],
+              ['comments', 'Blog post comments'],
+              ['analytics', 'Weekly analytics digest'],
+            ] as const).map(([key, label]) => (
+              <label key={key} className="flex items-center justify-between cursor-pointer group">
+                <span className="text-sm text-gray-400">{label}</span>
+                <button onClick={() => setNotifications(n => ({ ...n, [key]: !n[key as keyof typeof n] }))}
+                  className={`w-10 h-5 rounded-full relative transition-colors ${notifications[key as keyof typeof notifications] ? 'bg-[#ec9f00]' : 'bg-white/10'}`}>
+                  <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${notifications[key as keyof typeof notifications] ? 'left-[22px]' : 'left-0.5'}`} />
+                </button>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-[#1c1c26] rounded-xl p-5 border border-red-500/10">
+          <h3 className="text-sm font-bold text-red-400 mb-2">Danger Zone</h3>
+          <p className="text-[12px] text-gray-500 mb-4">Irreversible actions that affect your entire Spark instance.</p>
+          <button className="text-[11px] tracking-[0.08em] uppercase font-bold px-4 py-2 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors">Reset All Data</button>
         </div>
       </div>
-
-      <div className="bg-[#1c1c26] rounded-xl p-5 border border-red-500/10">
-        <h3 className="text-sm font-bold text-red-400 mb-2">Danger Zone</h3>
-        <p className="text-[12px] text-gray-500 mb-4">Irreversible actions that affect your entire Spark instance.</p>
-        <button className="text-[11px] tracking-[0.08em] uppercase font-bold px-4 py-2 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors">Reset All Data</button>
-      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default SparkAdmin;
