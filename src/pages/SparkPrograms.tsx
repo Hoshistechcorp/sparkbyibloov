@@ -66,8 +66,8 @@ const SparkPrograms = () => {
                       style={{ backgroundColor: p.color, color: '#fff' }}>
                       Enroll Now
                     </button>
-                    <button className="text-[10px] tracking-[0.12em] uppercase font-bold px-4 md:px-5 py-2 md:py-2.5 rounded-full border border-white/30 text-white/90 hover:bg-white/10 transition-colors">
-                      Syllabus
+                    <a href={p.youtube} target="_blank" rel="noopener noreferrer" className="text-[10px] tracking-[0.12em] uppercase font-bold px-4 md:px-5 py-2 md:py-2.5 rounded-full border border-white/30 text-white/90 hover:bg-white/10 transition-colors">
+                      About
                     </button>
                   </div>
                 </div>
