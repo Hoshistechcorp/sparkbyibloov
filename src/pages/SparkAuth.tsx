@@ -27,7 +27,6 @@ const SparkAuth = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [referOpen, setReferOpen] = useState(false);
-  const [referOpen, setReferOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
