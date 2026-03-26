@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { SparkSubNav } from '@/components/spark/SparkSubNav';
 import { SparkFooter } from '@/components/spark/SparkFooter';
+import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
 
 const SparkPrograms = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
