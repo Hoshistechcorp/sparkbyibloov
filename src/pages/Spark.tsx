@@ -99,6 +99,7 @@ const SparkNav = () => {
           <a href="#audiences" className="hover:text-[#65A300] transition-colors">For You</a>
           <Link to="/spark/news" className="hover:text-[#65A300] transition-colors">News</Link>
           <Link to="/spark/media" className="hover:text-[#65A300] transition-colors">Media</Link>
+          <Link to="/spark/admin" className="hover:text-[#65A300] transition-colors">Admin</Link>
         </div>
         <div className="flex items-center gap-3">
           <Link to="/spark/auth">
