@@ -42,7 +42,7 @@ const Spark = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-4"
           >
-            8 programs. Zero fluff.
+            Spark Programs. Zero fluff.
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
