@@ -39,7 +39,7 @@ const SparkAuth = () => {
     }
     setLoading(true);
     try {
-      const selectedInterest = interest === 'Other (Please specify below)' ? otherInterest : interest;
+      const selectedInterests = interests.map(i => i === 'Other (Please specify below)' ? otherInterest : i).filter(Boolean);
       const { error } = await supabase.auth.signUp({
         email,
         password: crypto.randomUUID(),
