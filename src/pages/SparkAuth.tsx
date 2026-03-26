@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import sparkLogo from '@/assets/spark-logo.svg';
+import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
 
 const INTEREST_OPTIONS = [
   'Advanced Event Planning and Management with Creative Event Organizing',
@@ -25,7 +26,7 @@ const SparkAuth = () => {
   const [country, setCountry] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [referralCopied, setReferralCopied] = useState(false);
+  const [referOpen, setReferOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,17 +59,7 @@ const SparkAuth = () => {
   };
 
   const handleReferFriend = () => {
-    const referralLink = `${window.location.origin}/spark/auth`;
-    const text = `Join Spark and start learning skills that actually matter! Sign up here: ${referralLink}`;
-    if (navigator.share) {
-      navigator.share({ title: 'Join Spark', text, url: referralLink }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(text).then(() => {
-        setReferralCopied(true);
-        toast.success('Referral link copied!');
-        setTimeout(() => setReferralCopied(false), 3000);
-      });
-    }
+    setReferOpen(true);
   };
 
   return (
@@ -216,7 +207,7 @@ const SparkAuth = () => {
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                   </svg>
-                  {referralCopied ? 'Link Copied!' : 'Refer a Friend'}
+                  Refer a Friend
                 </motion.button>
 
                 <Link
@@ -229,6 +220,7 @@ const SparkAuth = () => {
             )}
           </AnimatePresence>
         </div>
+      <SparkReferDialog open={referOpen} onClose={() => setReferOpen(false)} />
       </div>
     </>
   );
