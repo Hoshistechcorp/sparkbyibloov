@@ -205,6 +205,93 @@ export type Database = {
         }
         Relationships: []
       }
+      spark_media: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          file_size: number | null
+          file_type: string
+          file_url: string
+          id: string
+          title: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          file_size?: number | null
+          file_type?: string
+          file_url: string
+          id?: string
+          title?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          file_size?: number | null
+          file_type?: string
+          file_url?: string
+          id?: string
+          title?: string | null
+        }
+        Relationships: []
+      }
+      spark_programs: {
+        Row: {
+          color: string
+          cool_name: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          duration: string | null
+          id: string
+          image_url: string | null
+          lessons: number | null
+          published: boolean
+          real_name: string
+          sort_order: number
+          status: string
+          tag: string
+          updated_at: string
+          youtube_url: string | null
+        }
+        Insert: {
+          color?: string
+          cool_name: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration?: string | null
+          id?: string
+          image_url?: string | null
+          lessons?: number | null
+          published?: boolean
+          real_name: string
+          sort_order?: number
+          status?: string
+          tag?: string
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Update: {
+          color?: string
+          cool_name?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration?: string | null
+          id?: string
+          image_url?: string | null
+          lessons?: number | null
+          published?: boolean
+          real_name?: string
+          sort_order?: number
+          status?: string
+          tag?: string
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
