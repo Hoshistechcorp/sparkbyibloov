@@ -43,8 +43,9 @@ export const SparkPrograms = () => {
                   <button className="text-[10px] tracking-[0.12em] uppercase font-extrabold px-5 py-2.5 bg-[#ec9f00] text-white rounded-full hover:bg-[#d48e00] transition-colors shadow-sm">
                     Enroll Now
                   </button>
-                   <a href="https://youtube.com/@spark-programs" target="_blank" rel="noopener noreferrer" className="text-[10px] tracking-[0.12em] uppercase font-bold px-5 py-2.5 border border-gray-200 text-gray-400 rounded-full hover:border-gray-300 transition-colors">
-                     About
+                   <a href="https://youtube.com/@spark-programs" target="_blank" rel="noopener noreferrer" className="group/btn flex items-center gap-2 text-[10px] tracking-[0.12em] uppercase font-bold px-5 py-2.5 border border-gray-200 text-gray-400 rounded-full hover:border-gray-300 transition-all">
+                     <svg className="w-3.5 h-3.5 group-hover/btn:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                     Watch About
                    </a>
                 </div>
               </div>
