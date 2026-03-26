@@ -40,9 +40,28 @@ const Spark = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-4"
+            className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4"
           >
-            Spark Programs. Zero fluff.
+            <motion.span
+              className="inline-block bg-gradient-to-r from-[#ec9f00] via-[#f59e0b] to-[#ef4444] bg-clip-text text-transparent"
+              animate={{
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+              style={{ backgroundSize: '200% 200%' }}
+            >
+              Spark Programs.
+            </motion.span>{' '}
+            <motion.span
+              className="inline-block bg-gradient-to-r from-gray-900 via-[#ec9f00] to-gray-900 bg-clip-text text-transparent"
+              animate={{
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+              }}
+              transition={{ duration: 5, repeat: Infinity, ease: 'linear', delay: 0.5 }}
+              style={{ backgroundSize: '200% 200%' }}
+            >
+              Zero fluff.
+            </motion.span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
