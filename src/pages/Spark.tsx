@@ -99,6 +99,7 @@ const SparkNav = () => {
           <a href="#audiences" className="hover:text-[#65A300] transition-colors">For You</a>
           <Link to="/spark/news" className="hover:text-[#65A300] transition-colors">News</Link>
           <Link to="/spark/media" className="hover:text-[#65A300] transition-colors">Media</Link>
+          <Link to="/spark/admin" className="hover:text-[#65A300] transition-colors">Admin</Link>
         </div>
         <div className="flex items-center gap-3">
           <Link to="/spark/auth">
@@ -139,6 +140,7 @@ const SparkNav = () => {
               { to: '/spark/news', label: 'News' },
               { to: '/spark/media', label: 'Media' },
               { to: '/spark/partners', label: 'Partners' },
+              { to: '/spark/admin', label: 'Admin' },
             ].map((link, i) => (
               <motion.div key={link.to} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
                 <Link to={link.to} onClick={() => setMobileOpen(false)} className="text-2xl font-bold tracking-wide text-gray-900">
