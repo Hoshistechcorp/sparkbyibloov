@@ -562,14 +562,14 @@ const BlogTab = () => {
 
 /* ─── PROGRAMS ─── */
 const programsList = [
-  { name: 'The Architect', real: 'Advanced Event Planning', enrolled: 245, status: 'active', color: '#ec9f00' },
-  { name: 'Da Plotter', real: 'Professional Tourist Guide', enrolled: 189, status: 'active', color: '#7B61FF' },
-  { name: 'The Alchemist', real: 'Mixology & Bartending', enrolled: 312, status: 'active', color: '#FF6B35' },
-  { name: 'The Gatekeeper', real: 'Concierge & Waitstaff', enrolled: 156, status: 'active', color: '#00C896' },
-  { name: 'The Voice', real: 'MC Bootcamp', enrolled: 278, status: 'active', color: '#FF3366' },
-  { name: 'The Narrator', real: 'TikTok Content', enrolled: 420, status: 'active', color: '#ec9f00' },
-  { name: 'The Lens', real: 'Photo & Video', enrolled: 198, status: 'active', color: '#7B61FF' },
-  { name: 'The Selector', real: 'DJ Arts & Music', enrolled: 267, status: 'active', color: '#FF6B35' },
+  { name: 'The Architect', real: 'Advanced Event Planning', enrolled: 245, status: 'active', color: '#ec9f00', youtube: 'https://youtube.com/@spark-architect' },
+  { name: 'Da Plotter', real: 'Professional Tourist Guide', enrolled: 189, status: 'active', color: '#7B61FF', youtube: 'https://youtube.com/@spark-plotter' },
+  { name: 'The Alchemist', real: 'Mixology & Bartending', enrolled: 312, status: 'active', color: '#FF6B35', youtube: 'https://youtube.com/@spark-alchemist' },
+  { name: 'The Gatekeeper', real: 'Concierge & Waitstaff', enrolled: 156, status: 'active', color: '#00C896', youtube: 'https://youtube.com/@spark-gatekeeper' },
+  { name: 'The Voice', real: 'MC Bootcamp', enrolled: 278, status: 'active', color: '#FF3366', youtube: 'https://youtube.com/@spark-voice' },
+  { name: 'The Narrator', real: 'TikTok Content', enrolled: 420, status: 'active', color: '#ec9f00', youtube: 'https://youtube.com/@spark-narrator' },
+  { name: 'The Lens', real: 'Photo & Video', enrolled: 198, status: 'active', color: '#7B61FF', youtube: 'https://youtube.com/@spark-lens' },
+  { name: 'The Selector', real: 'DJ Arts & Music', enrolled: 267, status: 'active', color: '#FF6B35', youtube: 'https://youtube.com/@spark-selector' },
 ];
 
 const ProgramsTab = () => (
@@ -590,6 +590,10 @@ const ProgramsTab = () => (
             </div>
           </div>
           <div className="flex items-center gap-4">
+            <a href={p.youtube} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.1em] font-bold text-[#ec9f00] hover:text-[#f0b840] transition-colors">
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              About
+            </a>
             <div className="text-right">
               <p className="text-sm font-bold text-white">{p.enrolled}</p>
               <p className="text-[10px] text-gray-500">enrolled</p>

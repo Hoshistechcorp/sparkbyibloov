@@ -66,8 +66,9 @@ const SparkPrograms = () => {
                       style={{ backgroundColor: p.color, color: '#fff' }}>
                       Enroll Now
                     </button>
-                    <a href={p.youtube} target="_blank" rel="noopener noreferrer" className="text-[10px] tracking-[0.12em] uppercase font-bold px-4 md:px-5 py-2 md:py-2.5 rounded-full border border-white/30 text-white/90 hover:bg-white/10 transition-colors">
-                      About
+                    <a href={p.youtube} target="_blank" rel="noopener noreferrer" className="group/btn flex items-center gap-2 text-[10px] tracking-[0.12em] uppercase font-bold px-4 md:px-5 py-2 md:py-2.5 rounded-full border border-white/30 text-white/90 hover:bg-white/10 hover:border-white/50 transition-all">
+                      <svg className="w-3.5 h-3.5 group-hover/btn:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                      Watch About
                     </a>
                   </div>
                 </div>
