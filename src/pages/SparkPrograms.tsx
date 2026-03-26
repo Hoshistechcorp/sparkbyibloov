@@ -8,6 +8,7 @@ import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
 
 const SparkPrograms = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [referOpen, setReferOpen] = useState(false);
 
   const { data: programs = [] } = useQuery({
     queryKey: ['spark-programs'],
