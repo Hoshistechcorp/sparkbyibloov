@@ -60,17 +60,7 @@ const SparkAuth = () => {
   };
 
   const handleReferFriend = () => {
-    const referralLink = `${window.location.origin}/spark/auth`;
-    const text = `Join Spark and start learning skills that actually matter! Sign up here: ${referralLink}`;
-    if (navigator.share) {
-      navigator.share({ title: 'Join Spark', text, url: referralLink }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(text).then(() => {
-        setReferralCopied(true);
-        toast.success('Referral link copied!');
-        setTimeout(() => setReferralCopied(false), 3000);
-      });
-    }
+    setReferOpen(true);
   };
 
   return (
