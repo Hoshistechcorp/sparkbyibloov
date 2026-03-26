@@ -137,7 +137,7 @@ const SparkAuth = () => {
                     </div>
                   </div>
 
-                  {interest === 'Other (Please specify below)' && (
+                  {interests.includes('Other (Please specify below)') && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} transition={{ duration: 0.3 }}>
                       <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Please specify</label>
                       <input
