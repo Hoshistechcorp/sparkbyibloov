@@ -52,10 +52,12 @@ const SparkPartners = () => {
                     </li>
                   ))}
                 </ul>
-                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-2 bg-gray-900 text-white font-bold text-sm tracking-wide uppercase px-5 md:px-6 py-2.5 md:py-3 rounded-full group-hover:bg-[#ec9f00] group-hover:text-white transition-all w-full md:w-auto justify-center md:justify-start">
-                  {partner.cta}<ArrowRight className="w-4 h-4" />
-                </motion.button>
+                <a href="https://forms.gle/fkqsJ9qLvT5wHnTf6" target="_blank" rel="noopener noreferrer">
+                  <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                    className="flex items-center gap-2 bg-gray-900 text-white font-bold text-sm tracking-wide uppercase px-5 md:px-6 py-2.5 md:py-3 rounded-full group-hover:bg-[#ec9f00] group-hover:text-white transition-all w-full md:w-auto justify-center md:justify-start">
+                    {partner.cta}<ArrowRight className="w-4 h-4" />
+                  </motion.button>
+                </a>
               </motion.div>
             ))}
           </div>
