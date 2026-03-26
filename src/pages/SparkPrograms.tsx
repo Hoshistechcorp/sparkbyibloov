@@ -28,7 +28,7 @@ const SparkPrograms = () => {
         <section className="pt-24 md:pt-32 pb-10 md:pb-16 px-4 md:px-12 max-w-7xl mx-auto">
           <span className="text-[11px] tracking-[0.3em] uppercase text-[#c48500] font-bold mb-4 block">Micro-Credential Programs</span>
           <h1 className="text-3xl md:text-5xl lg:text-7xl font-extrabold tracking-tight mb-4 md:mb-6 text-gray-900 leading-[0.95]">
-            8 programs.<br />
+            Spark Programs.<br />
             <span className="bg-gradient-to-r from-[#ec9f00] via-[#f0b840] to-[#00C896] bg-clip-text text-transparent">Zero fluff.</span>
           </h1>
           <p className="text-base md:text-xl text-gray-400 max-w-2xl leading-relaxed">
