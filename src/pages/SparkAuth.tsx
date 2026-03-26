@@ -117,23 +117,36 @@ const SparkAuth = () => {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">What interests you? <span className="normal-case font-normal text-gray-400">(select all that apply)</span></label>
-                    <div className="space-y-2 border-2 border-gray-200 rounded-xl p-4 max-h-56 overflow-y-auto">
-                      {INTEREST_OPTIONS.map(opt => (
-                        <label key={opt} className="flex items-start gap-3 cursor-pointer group">
-                          <input
-                            type="checkbox"
-                            checked={interests.includes(opt)}
-                            onChange={() => {
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">What interests you? <span className="normal-case font-normal text-gray-400">(select all that apply)</span></label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {INTEREST_OPTIONS.map(opt => {
+                        const selected = interests.includes(opt);
+                        return (
+                          <button
+                            key={opt}
+                            type="button"
+                            onClick={() => {
                               setInterests(prev =>
                                 prev.includes(opt) ? prev.filter(i => i !== opt) : [...prev, opt]
                               );
                             }}
-                            className="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#ec9f00] accent-[#ec9f00] focus:ring-[#ec9f00]"
-                          />
-                          <span className="text-sm text-gray-700 group-hover:text-gray-900 transition-colors leading-snug">{opt}</span>
-                        </label>
-                      ))}
+                            className={`relative text-left px-3 py-2.5 rounded-xl border-2 transition-all text-xs leading-snug font-medium ${
+                              selected
+                                ? 'border-[#ec9f00] bg-[#ec9f00]/10 text-gray-900 shadow-sm'
+                                : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50'
+                            }`}
+                          >
+                            {selected && (
+                              <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-[#ec9f00] flex items-center justify-center">
+                                <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                              </span>
+                            )}
+                            {opt}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
