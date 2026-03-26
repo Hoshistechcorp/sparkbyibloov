@@ -10,7 +10,8 @@ import { format } from 'date-fns';
 import {
   Plus, Pencil, Trash2, Eye, EyeOff, Calendar, FileText, Image,
   BarChart3, Users, BookOpen, X, Menu, LogOut, Settings, TrendingUp,
-  Globe, MapPin, ArrowUpRight, ArrowDownRight, Search, Filter
+  Globe, MapPin, ArrowUpRight, ArrowDownRight, Search, Filter,
+  Play, Link as LinkIcon, ExternalLink, Upload, Shield, UserCog
 } from 'lucide-react';
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
