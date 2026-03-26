@@ -44,7 +44,7 @@ const SparkAuth = () => {
         email,
         password: crypto.randomUUID(),
         options: {
-          data: { interest: selectedInterest, country: country.trim() },
+          data: { interest: selectedInterests.join(', '), country: country.trim() },
           emailRedirectTo: window.location.origin + '/spark',
         },
       });
