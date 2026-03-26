@@ -140,6 +140,7 @@ const SparkNav = () => {
               { to: '/spark/news', label: 'News' },
               { to: '/spark/media', label: 'Media' },
               { to: '/spark/partners', label: 'Partners' },
+              { to: '/spark/admin', label: 'Admin' },
             ].map((link, i) => (
               <motion.div key={link.to} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
                 <Link to={link.to} onClick={() => setMobileOpen(false)} className="text-2xl font-bold tracking-wide text-gray-900">
