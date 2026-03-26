@@ -151,7 +151,7 @@ const SparkAuth = () => {
                   )}
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Country</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">LOCATION</label>
                     <input
                       type="text"
                       value={country}
