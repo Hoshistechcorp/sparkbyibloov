@@ -31,7 +31,7 @@ const Spark = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-[11px] tracking-[0.3em] uppercase text-[#65A300] font-bold mb-3 block"
+            className="text-[11px] tracking-[0.3em] uppercase text-[#c48500] font-bold mb-3 block"
           >
             Programs
           </motion.span>
@@ -61,7 +61,7 @@ const Spark = () => {
           >
             <Link
               to="/spark/programs"
-              className="inline-block bg-[#CCFF00] text-gray-900 font-extrabold text-sm tracking-[0.08em] uppercase px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-[#B8E600] transition-all shadow-lg shadow-[#CCFF00]/25 hover:scale-105"
+              className="inline-block bg-[#ec9f00] text-white font-extrabold text-sm tracking-[0.08em] uppercase px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-[#d48e00] transition-all shadow-lg shadow-[#ec9f00]/25 hover:scale-105"
             >
               Explore All Programs →
             </Link>
@@ -94,19 +94,19 @@ const SparkNav = () => {
           <span className="text-sm md:text-base font-black tracking-[0.15em] uppercase text-gray-900">Spark</span>
         </div>
         <div className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.12em] uppercase text-gray-500 font-semibold">
-          <Link to="/spark/programs" className="hover:text-[#65A300] transition-colors">Programs</Link>
-          <Link to="/spark/events" className="hover:text-[#65A300] transition-colors">Events</Link>
-          <a href="#audiences" className="hover:text-[#65A300] transition-colors">For You</a>
-          <Link to="/spark/news" className="hover:text-[#65A300] transition-colors">News</Link>
-          <Link to="/spark/media" className="hover:text-[#65A300] transition-colors">Media</Link>
-          <Link to="/spark/admin" className="hover:text-[#65A300] transition-colors">Admin</Link>
+          <Link to="/spark/programs" className="hover:text-[#c48500] transition-colors">Programs</Link>
+          <Link to="/spark/events" className="hover:text-[#c48500] transition-colors">Events</Link>
+          <a href="#audiences" className="hover:text-[#c48500] transition-colors">For You</a>
+          <Link to="/spark/news" className="hover:text-[#c48500] transition-colors">News</Link>
+          <Link to="/spark/media" className="hover:text-[#c48500] transition-colors">Media</Link>
+          <Link to="/spark/admin" className="hover:text-[#c48500] transition-colors">Admin</Link>
         </div>
         <div className="flex items-center gap-3">
           <Link to="/spark/auth">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-[#CCFF00] text-gray-900 text-[10px] md:text-[11px] font-extrabold tracking-[0.12em] uppercase px-4 md:px-5 py-2 md:py-2.5 rounded-full hover:bg-[#B8E600] transition-colors shadow-sm"
+              className="bg-[#ec9f00] text-white text-[10px] md:text-[11px] font-extrabold tracking-[0.12em] uppercase px-4 md:px-5 py-2 md:py-2.5 rounded-full hover:bg-[#d48e00] transition-colors shadow-sm"
             >
               Get Started
             </motion.button>
@@ -117,7 +117,6 @@ const SparkNav = () => {
         </div>
       </motion.nav>
 
-      {/* Mobile menu */}
       {mobileOpen && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -149,7 +148,7 @@ const SparkNav = () => {
               </motion.div>
             ))}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-              <Link to="/spark/auth" onClick={() => setMobileOpen(false)} className="mt-4 inline-block bg-[#CCFF00] text-gray-900 font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-3 rounded-full">
+              <Link to="/spark/auth" onClick={() => setMobileOpen(false)} className="mt-4 inline-block bg-[#ec9f00] text-white font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-3 rounded-full">
                 Get Started
               </Link>
             </motion.div>

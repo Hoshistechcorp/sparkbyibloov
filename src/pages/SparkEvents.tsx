@@ -44,10 +44,10 @@ const SparkEvents = () => {
         <SparkSubNav activeLink="events" />
 
         <section className="pt-24 md:pt-32 pb-8 md:pb-12 px-4 md:px-12 max-w-7xl mx-auto">
-          <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-[11px] tracking-[0.3em] uppercase text-[#65A300] font-bold mb-4 block">Events</motion.span>
+          <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-[11px] tracking-[0.3em] uppercase text-[#c48500] font-bold mb-4 block">Events</motion.span>
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-3xl md:text-5xl lg:text-7xl font-extrabold tracking-tight mb-4 md:mb-6 text-gray-900 leading-[0.95]">
             Learn live.<br />
-            <span className="bg-gradient-to-r from-[#CCFF00] via-[#7BFF60] to-[#00C896] bg-clip-text text-transparent">Connect IRL.</span>
+            <span className="bg-gradient-to-r from-[#ec9f00] via-[#f0b840] to-[#00C896] bg-clip-text text-transparent">Connect IRL.</span>
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="text-base md:text-lg text-gray-400 max-w-2xl">
             Workshops, bootcamps, networking events, and live experiences across Africa and beyond.
@@ -58,7 +58,7 @@ const SparkEvents = () => {
           <div className="flex flex-wrap gap-2">
             {(['all', 'workshop', 'bootcamp', 'conference', 'meetup'] as const).map(t => (
               <motion.button key={t} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setFilter(t)}
-                className={`text-[11px] tracking-[0.1em] uppercase px-3 md:px-4 py-2 rounded-full font-bold transition-all ${filter === t ? 'bg-[#CCFF00] text-gray-900 shadow-md' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}>
+                className={`text-[11px] tracking-[0.1em] uppercase px-3 md:px-4 py-2 rounded-full font-bold transition-all ${filter === t ? 'bg-[#ec9f00] text-white shadow-md' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}>
                 {t === 'all' ? 'All Events' : t}
               </motion.button>
             ))}
@@ -81,22 +81,22 @@ const SparkEvents = () => {
                     {event.image ? (
                       <img src={event.image} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-[#CCFF00]/20 to-[#00C896]/20 flex items-center justify-center">
-                        <Calendar className="w-12 h-12 text-[#65A300]/30" />
+                      <div className="w-full h-full bg-gradient-to-br from-[#ec9f00]/20 to-[#00C896]/20 flex items-center justify-center">
+                        <Calendar className="w-12 h-12 text-[#c48500]/30" />
                       </div>
                     )}
                     <div className="absolute top-3 left-3 flex flex-wrap gap-2">
                       <span className="text-[9px] tracking-[0.15em] uppercase font-bold px-2.5 py-1 rounded-full bg-white/90 text-gray-700 backdrop-blur-sm">{event.type}</span>
-                      {event.isVirtual && <span className="text-[9px] tracking-[0.15em] uppercase font-bold px-2.5 py-1 rounded-full bg-[#CCFF00] text-gray-900 flex items-center gap-1"><Globe className="w-3 h-3" />Virtual</span>}
+                      {event.isVirtual && <span className="text-[9px] tracking-[0.15em] uppercase font-bold px-2.5 py-1 rounded-full bg-[#ec9f00] text-white flex items-center gap-1"><Globe className="w-3 h-3" />Virtual</span>}
                     </div>
                   </div>
                   <div className="p-4 md:p-6">
-                    <p className="text-[11px] text-[#65A300] font-bold mb-2">{event.date ? format(new Date(event.date), 'MMM dd, yyyy · h:mm a') : 'Date TBD'}</p>
-                    <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2 group-hover:text-[#65A300] transition-colors">{event.title}</h3>
+                    <p className="text-[11px] text-[#c48500] font-bold mb-2">{event.date ? format(new Date(event.date), 'MMM dd, yyyy · h:mm a') : 'Date TBD'}</p>
+                    <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2 group-hover:text-[#c48500] transition-colors">{event.title}</h3>
                     {event.description && <p className="text-sm text-gray-400 line-clamp-2 mb-3">{event.description}</p>}
                     {event.location && <p className="text-[11px] text-gray-400 flex items-center gap-1"><MapPin className="w-3 h-3" />{event.location}</p>}
                     {event.registrationUrl && (
-                      <Link to={event.registrationUrl} className="mt-3 inline-flex items-center gap-1 text-[10px] tracking-[0.12em] uppercase font-extrabold text-[#65A300] hover:text-[#4d7a00] transition-colors">
+                      <Link to={event.registrationUrl} className="mt-3 inline-flex items-center gap-1 text-[10px] tracking-[0.12em] uppercase font-extrabold text-[#c48500] hover:text-[#a06d00] transition-colors">
                         Register <ExternalLink className="w-3 h-3" />
                       </Link>
                     )}

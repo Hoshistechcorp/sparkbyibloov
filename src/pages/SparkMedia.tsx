@@ -24,10 +24,10 @@ const SparkMedia = () => {
         <SparkSubNav activeLink="media" />
 
         <section className="pt-24 md:pt-32 pb-8 md:pb-12 px-4 md:px-12 max-w-7xl mx-auto">
-          <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-[11px] tracking-[0.3em] uppercase text-[#65A300] font-bold mb-4 block">Gallery</motion.span>
+          <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-[11px] tracking-[0.3em] uppercase text-[#c48500] font-bold mb-4 block">Gallery</motion.span>
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-3xl md:text-5xl lg:text-7xl font-extrabold tracking-tight mb-4 md:mb-6 text-gray-900 leading-[0.95]">
             See the<br />
-            <span className="bg-gradient-to-r from-[#CCFF00] via-[#7BFF60] to-[#00C896] bg-clip-text text-transparent">journey.</span>
+            <span className="bg-gradient-to-r from-[#ec9f00] via-[#f0b840] to-[#00C896] bg-clip-text text-transparent">journey.</span>
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="text-base md:text-lg text-gray-400 max-w-2xl">
             Photos, videos, and behind-the-scenes moments from our programs, events, and learner experiences.
@@ -37,14 +37,8 @@ const SparkMedia = () => {
         <section className="px-4 md:px-12 pb-16 md:pb-24 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {mediaItems.map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="group rounded-2xl md:rounded-3xl overflow-hidden bg-gray-50 border border-gray-100 hover:shadow-xl transition-all duration-300"
-              >
+              <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                className="group rounded-2xl md:rounded-3xl overflow-hidden bg-gray-50 border border-gray-100 hover:shadow-xl transition-all duration-300">
                 {item.type === 'video' ? (
                   <div className="aspect-video">
                     <iframe src={item.embed} title={item.title} className="w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
@@ -66,7 +60,7 @@ const SparkMedia = () => {
         <section className="py-16 md:py-20 px-4 md:px-6 text-center bg-gray-50">
           <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-4">Want to be featured?</h2>
           <p className="text-gray-400 mb-8 max-w-lg mx-auto">Join a Spark program and your story could be here next.</p>
-          <Link to="/spark/programs" className="inline-block bg-[#CCFF00] text-gray-900 font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-[#B8E600] transition-all shadow-lg shadow-[#CCFF00]/25">
+          <Link to="/spark/programs" className="inline-block bg-[#ec9f00] text-white font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-[#d48e00] transition-all shadow-lg shadow-[#ec9f00]/25">
             Explore Programs →
           </Link>
         </section>

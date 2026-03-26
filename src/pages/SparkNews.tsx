@@ -25,10 +25,10 @@ const SparkNews = () => {
         <SparkSubNav activeLink="news" />
 
         <section className="pt-24 md:pt-32 pb-8 md:pb-12 px-4 md:px-12 max-w-7xl mx-auto">
-          <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-[11px] tracking-[0.3em] uppercase text-[#65A300] font-bold mb-4 block">News & Blog</motion.span>
+          <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-[11px] tracking-[0.3em] uppercase text-[#c48500] font-bold mb-4 block">News & Blog</motion.span>
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-3xl md:text-5xl lg:text-7xl font-extrabold tracking-tight mb-4 md:mb-6 text-gray-900 leading-[0.95]">
             Stories that<br />
-            <span className="bg-gradient-to-r from-[#CCFF00] via-[#7BFF60] to-[#00C896] bg-clip-text text-transparent">inspire.</span>
+            <span className="bg-gradient-to-r from-[#ec9f00] via-[#f0b840] to-[#00C896] bg-clip-text text-transparent">inspire.</span>
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="text-base md:text-lg text-gray-400 max-w-2xl">
             Industry insights, learner spotlights, program updates, and the latest from the Spark ecosystem.
@@ -54,14 +54,14 @@ const SparkNews = () => {
                   )}
                   <div className="p-4 md:p-6">
                     <div className="flex items-center gap-3 mb-3">
-                      <span className="text-[9px] tracking-[0.15em] uppercase font-bold px-2.5 py-1 rounded-full bg-[#CCFF00]/10 text-[#65A300] border border-[#CCFF00]/20">{post.category}</span>
+                      <span className="text-[9px] tracking-[0.15em] uppercase font-bold px-2.5 py-1 rounded-full bg-[#ec9f00]/10 text-[#c48500] border border-[#ec9f00]/20">{post.category}</span>
                       {post.published_at && <span className="text-[11px] text-gray-300">{format(new Date(post.published_at), 'MMM dd, yyyy')}</span>}
                     </div>
-                    <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2 group-hover:text-[#65A300] transition-colors">{post.title}</h3>
+                    <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2 group-hover:text-[#c48500] transition-colors">{post.title}</h3>
                     {post.excerpt && <p className="text-sm text-gray-400 line-clamp-3 mb-4">{post.excerpt}</p>}
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] text-gray-400">By {post.author_name}</span>
-                      <span className="text-[10px] tracking-[0.12em] uppercase font-bold text-[#65A300] flex items-center gap-1 group-hover:gap-2 transition-all">
+                      <span className="text-[10px] tracking-[0.12em] uppercase font-bold text-[#c48500] flex items-center gap-1 group-hover:gap-2 transition-all">
                         Read <ArrowRight className="w-3 h-3" />
                       </span>
                     </div>
