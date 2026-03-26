@@ -20,7 +20,7 @@ const INTEREST_OPTIONS = [
 
 const SparkAuth = () => {
   const [email, setEmail] = useState('');
-  const [interest, setInterest] = useState('');
+  const [interests, setInterests] = useState<string[]>([]);
   const [otherInterest, setOtherInterest] = useState('');
   const [country, setCountry] = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,8 +29,8 @@ const SparkAuth = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!interest) {
-      toast.error('Please select your interest');
+    if (interests.length === 0) {
+      toast.error('Please select at least one interest');
       return;
     }
     if (!country.trim()) {
@@ -39,12 +39,12 @@ const SparkAuth = () => {
     }
     setLoading(true);
     try {
-      const selectedInterest = interest === 'Other (Please specify below)' ? otherInterest : interest;
+      const selectedInterests = interests.map(i => i === 'Other (Please specify below)' ? otherInterest : i).filter(Boolean);
       const { error } = await supabase.auth.signUp({
         email,
         password: crypto.randomUUID(),
         options: {
-          data: { interest: selectedInterest, country: country.trim() },
+          data: { interest: selectedInterests.join(', '), country: country.trim() },
           emailRedirectTo: window.location.origin + '/spark',
         },
       });
@@ -117,26 +117,27 @@ const SparkAuth = () => {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">What interests you?</label>
-                    <div className="relative">
-                      <select
-                        value={interest}
-                        onChange={e => setInterest(e.target.value)}
-                        required
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-900 focus:border-[#ec9f00] focus:outline-none transition-colors appearance-none bg-white pr-10"
-                      >
-                        <option value="" disabled>Select your interest</option>
-                        {INTEREST_OPTIONS.map(opt => (
-                          <option key={opt} value={opt}>{opt}</option>
-                        ))}
-                      </select>
-                      <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">What interests you? <span className="normal-case font-normal text-gray-400">(select all that apply)</span></label>
+                    <div className="space-y-2 border-2 border-gray-200 rounded-xl p-4 max-h-56 overflow-y-auto">
+                      {INTEREST_OPTIONS.map(opt => (
+                        <label key={opt} className="flex items-start gap-3 cursor-pointer group">
+                          <input
+                            type="checkbox"
+                            checked={interests.includes(opt)}
+                            onChange={() => {
+                              setInterests(prev =>
+                                prev.includes(opt) ? prev.filter(i => i !== opt) : [...prev, opt]
+                              );
+                            }}
+                            className="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#ec9f00] accent-[#ec9f00] focus:ring-[#ec9f00]"
+                          />
+                          <span className="text-sm text-gray-700 group-hover:text-gray-900 transition-colors leading-snug">{opt}</span>
+                        </label>
+                      ))}
                     </div>
                   </div>
 
-                  {interest === 'Other (Please specify below)' && (
+                  {interests.includes('Other (Please specify below)') && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} transition={{ duration: 0.3 }}>
                       <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Please specify</label>
                       <input
