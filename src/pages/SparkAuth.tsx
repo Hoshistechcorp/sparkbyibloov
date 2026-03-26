@@ -172,7 +172,7 @@ const SparkAuth = () => {
                       onChange={e => setCountry(e.target.value)}
                       required
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-900 focus:border-[#ec9f00] focus:outline-none transition-colors"
-                      placeholder="e.g. Nigeria, United States"
+                      placeholder="City, Country"
                     />
                   </div>
 
