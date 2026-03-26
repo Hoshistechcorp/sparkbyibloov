@@ -43,9 +43,9 @@ export const SparkPrograms = () => {
                   <button className="text-[10px] tracking-[0.12em] uppercase font-extrabold px-5 py-2.5 bg-[#ec9f00] text-white rounded-full hover:bg-[#d48e00] transition-colors shadow-sm">
                     Enroll Now
                   </button>
-                  <button className="text-[10px] tracking-[0.12em] uppercase font-bold px-5 py-2.5 border border-gray-200 text-gray-400 rounded-full hover:border-gray-300 transition-colors">
-                    View Syllabus
-                  </button>
+                   <a href="https://youtube.com/@spark-programs" target="_blank" rel="noopener noreferrer" className="text-[10px] tracking-[0.12em] uppercase font-bold px-5 py-2.5 border border-gray-200 text-gray-400 rounded-full hover:border-gray-300 transition-colors">
+                     About
+                   </a>
                 </div>
               </div>
             )}
