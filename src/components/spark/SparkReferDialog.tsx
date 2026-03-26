@@ -18,7 +18,7 @@ export const SparkReferDialog: React.FC<SparkReferDialogProps> = ({ open, onClos
   const { data: programs = [] } = useQuery({
     queryKey: ['spark-programs-refer'],
     queryFn: async () => {
-      const { data } = await supabase.from('spark_programs').select('id, cool_name, color').eq('published', true).order('sort_order', { ascending: true });
+      const { data } = await supabase.from('spark_programs').select('id, cool_name, real_name, description, color').eq('published', true).order('sort_order', { ascending: true });
       return data || [];
     },
   });
@@ -39,13 +39,11 @@ export const SparkReferDialog: React.FC<SparkReferDialogProps> = ({ open, onClos
     }
     setSending(true);
 
-    // Build referral link with program info
     const programNames = programs.filter((p: any) => selectedPrograms.includes(p.id)).map((p: any) => p.cool_name);
     const referralLink = `${window.location.origin}/spark/auth`;
     const text = `Hey! I think you'd love these Spark programs: ${programNames.join(', ')}. Sign up here: ${referralLink}`;
 
     try {
-      // Copy to clipboard as fallback & share
       if (navigator.share) {
         await navigator.share({ title: 'Join Spark', text, url: referralLink }).catch(() => {});
       } else {
@@ -85,7 +83,7 @@ export const SparkReferDialog: React.FC<SparkReferDialogProps> = ({ open, onClos
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
           transition={{ type: 'spring', duration: 0.5 }}
-          className="bg-white rounded-2xl md:rounded-3xl w-full max-w-md p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto"
+          className="bg-white rounded-2xl md:rounded-3xl w-full max-w-lg p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto"
           onClick={e => e.stopPropagation()}
         >
           <button onClick={handleClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
@@ -119,7 +117,7 @@ export const SparkReferDialog: React.FC<SparkReferDialogProps> = ({ open, onClos
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Recommend Programs</label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-2">
                     {programs.map((p: any) => {
                       const selected = selectedPrograms.includes(p.id);
                       return (
@@ -127,20 +125,31 @@ export const SparkReferDialog: React.FC<SparkReferDialogProps> = ({ open, onClos
                           key={p.id}
                           type="button"
                           onClick={() => toggleProgram(p.id)}
-                          className={`relative text-left px-3 py-2.5 rounded-xl border-2 transition-all text-xs leading-snug font-medium ${
+                          className={`relative w-full text-left px-4 py-3 rounded-xl border-2 transition-all ${
                             selected
-                              ? 'border-[#ec9f00] bg-[#ec9f00]/10 text-gray-900 shadow-sm'
-                              : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50'
+                              ? 'border-[#ec9f00] bg-[#ec9f00]/5 shadow-sm'
+                              : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
                           }`}
                         >
-                          {selected && (
-                            <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-[#ec9f00] flex items-center justify-center">
-                              <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                              </svg>
-                            </span>
-                          )}
-                          {p.cool_name}
+                          <div className="flex items-start gap-3">
+                            <div className="flex-shrink-0 mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors"
+                              style={{ borderColor: selected ? '#ec9f00' : '#d1d5db', backgroundColor: selected ? '#ec9f00' : 'transparent' }}>
+                              {selected && (
+                                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                              )}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2 mb-0.5">
+                                <span className="font-bold text-sm text-gray-900">{p.cool_name}</span>
+                                <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400">{p.real_name}</span>
+                              </div>
+                              {p.description && (
+                                <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">{p.description}</p>
+                              )}
+                            </div>
+                          </div>
                         </button>
                       );
                     })}
