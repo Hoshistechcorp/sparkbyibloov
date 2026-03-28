@@ -91,6 +91,7 @@ const Spark = () => {
         <SparkAudience />
         <SparkDNA />
         <SparkPartners />
+        <SparkScholarship />
         <SparkCTA />
         <SparkFooter />
       </div>
