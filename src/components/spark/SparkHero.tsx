@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
@@ -10,6 +10,16 @@ import heroConcierge from '@/assets/hero/concierge.jpeg';
 import heroDjPerforming from '@/assets/hero/dj-performing.jpeg';
 import heroDjsMixing from '@/assets/hero/djs-mixing.jpeg';
 import heroHotelReception from '@/assets/hero/hotel-reception.jpeg';
+import heroRestaurantService from '@/assets/hero/restaurant-service.png';
+import heroHospitalityTeam from '@/assets/hero/hospitality-team.png';
+import heroRooftopBartender from '@/assets/hero/rooftop-bartender.png';
+import heroCocktailPouring from '@/assets/hero/cocktail-pouring.png';
+import heroCafeBaristas from '@/assets/hero/cafe-baristas.png';
+import heroChefsPlating from '@/assets/hero/chefs-plating.png';
+import heroBeachDj from '@/assets/hero/beach-dj.png';
+import heroVirtualLearning from '@/assets/hero/virtual-learning.png';
+import heroWaitressServing from '@/assets/hero/waitress-serving.png';
+import heroStudyBartend from '@/assets/hero/study-bartend.png';
 
 const images = [
   heroBaristas,
@@ -20,6 +30,16 @@ const images = [
   heroDjPerforming,
   heroDjsMixing,
   heroHotelReception,
+  heroRestaurantService,
+  heroHospitalityTeam,
+  heroRooftopBartender,
+  heroCocktailPouring,
+  heroCafeBaristas,
+  heroChefsPlating,
+  heroBeachDj,
+  heroVirtualLearning,
+  heroWaitressServing,
+  heroStudyBartend,
 ];
 
 const gridCells = [
@@ -37,8 +57,25 @@ const gridCells = [
   { col: 1, row: 4, colSpan: 1, rowSpan: 1 },
 ];
 
+// Generate initial assignments ensuring no duplicates
+function getUniqueInitialImages(count: number, totalImages: number): number[] {
+  const indices: number[] = [];
+  const available = Array.from({ length: totalImages }, (_, i) => i);
+  // Shuffle
+  for (let i = available.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [available[i], available[j]] = [available[j], available[i]];
+  }
+  for (let i = 0; i < count; i++) {
+    indices.push(available[i % available.length]);
+  }
+  return indices;
+}
+
 export const SparkHero = () => {
-  const [cellImages, setCellImages] = useState<number[]>(gridCells.map((_, i) => i % images.length));
+  const [cellImages, setCellImages] = useState<number[]>(() =>
+    getUniqueInitialImages(gridCells.length, images.length)
+  );
   const [swappingCell, setSwappingCell] = useState<number | null>(null);
 
   const swapRandomCell = useCallback(() => {
@@ -65,11 +102,16 @@ export const SparkHero = () => {
     return () => clearInterval(interval);
   }, [swapRandomCell]);
 
+  // For mobile grid, pick 12 unique images
+  const mobileImages = useMemo(() => {
+    return getUniqueInitialImages(12, images.length).map(i => images[i]);
+  }, []);
+
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white">
       <div className="absolute inset-0">
         <div className="w-full h-full grid gap-1 p-1 md:hidden" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(4, 1fr)' }}>
-          {images.slice(0, 12).map((img, i) => (
+          {mobileImages.map((img, i) => (
             <div key={i} className="relative overflow-hidden rounded-lg">
               <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover" />
             </div>
