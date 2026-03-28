@@ -75,7 +75,7 @@ export const SparkScholarship = () => {
                 Contribute to our open scholarship pool. Every donation directly funds a learner's journey through a Spark program — no strings attached.
               </p>
               <motion.a
-                href="https://forms.gle/fkqsJ9qLvT5wHnTf6"
+                href="https://flex.ibloov.com/Spark-fund/payment"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
