@@ -246,6 +246,7 @@ export type Database = {
           id: string
           image_url: string | null
           lessons: number | null
+          price: number | null
           published: boolean
           real_name: string
           sort_order: number
@@ -264,6 +265,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           lessons?: number | null
+          price?: number | null
           published?: boolean
           real_name: string
           sort_order?: number
@@ -282,6 +284,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           lessons?: number | null
+          price?: number | null
           published?: boolean
           real_name?: string
           sort_order?: number

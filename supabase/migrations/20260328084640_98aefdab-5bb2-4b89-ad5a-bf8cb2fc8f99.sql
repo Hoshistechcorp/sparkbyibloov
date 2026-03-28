@@ -1,0 +1,1 @@
+ALTER TABLE public.spark_programs ADD COLUMN price numeric(10,2) DEFAULT 0;
