@@ -2,19 +2,24 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
+import heroBaristas from '@/assets/hero/baristas.jpeg';
+import heroBartender from '@/assets/hero/bartender.jpeg';
+import heroChefPlating from '@/assets/hero/chef-plating.jpeg';
+import heroChefsCooking from '@/assets/hero/chefs-cooking.jpeg';
+import heroConcierge from '@/assets/hero/concierge.jpeg';
+import heroDjPerforming from '@/assets/hero/dj-performing.jpeg';
+import heroDjsMixing from '@/assets/hero/djs-mixing.jpeg';
+import heroHotelReception from '@/assets/hero/hotel-reception.jpeg';
+
 const images = [
-  'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=600&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=600&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=600&h=600&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1543269865-cbf427effbad?w=600&h=600&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&h=600&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1506869640319-fe1a24fd76cb?w=600&h=600&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&h=600&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=600&h=600&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=600&h=600&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&h=600&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=600&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&h=600&fit=crop&q=80',
+  heroBaristas,
+  heroBartender,
+  heroChefPlating,
+  heroChefsCooking,
+  heroConcierge,
+  heroDjPerforming,
+  heroDjsMixing,
+  heroHotelReception,
 ];
 
 const gridCells = [
