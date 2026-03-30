@@ -56,7 +56,7 @@ const SparkEvents = () => {
 
         <section className="px-4 md:px-12 max-w-7xl mx-auto mb-6 md:mb-8">
           <div className="flex flex-wrap gap-2">
-            {(['all', 'workshop', 'bootcamp', 'conference', 'meetup'] as const).map(t => (
+            {(['all', 'workshop', 'bootcamp', 'webinar', 'meetup'] as const).map(t => (
               <motion.button key={t} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setFilter(t)}
                 className={`text-[11px] tracking-[0.1em] uppercase px-3 md:px-4 py-2 rounded-full font-bold transition-all ${filter === t ? 'bg-[#ec9f00] text-white shadow-md' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}>
                 {t === 'all' ? 'All Events' : t}
