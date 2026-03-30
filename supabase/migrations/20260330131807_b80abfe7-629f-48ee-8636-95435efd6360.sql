@@ -1,0 +1,1 @@
+UPDATE public.spark_programs SET status = 'coming_soon' WHERE id = 'e2a5b79d-67c5-4e15-b856-9c5b7646d916';
