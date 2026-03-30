@@ -10,7 +10,7 @@ import { SparkSubNav } from '@/components/spark/SparkSubNav';
 import { SparkFooter } from '@/components/spark/SparkFooter';
 
 const SparkEvents = () => {
-  const [filter, setFilter] = useState<'all' | 'workshop' | 'bootcamp' | 'webinar' | 'meetup'>('all');
+  const [filter, setFilter] = useState<'all' | 'workshop' | 'bootcamp' | 'webinar' | 'meetup' | 'masterclass'>('all');
 
   const { data: sparkEvents = [] } = useQuery({
     queryKey: ['spark-events'],
