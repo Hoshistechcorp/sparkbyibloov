@@ -61,10 +61,16 @@ const SparkPrograms = () => {
                   </p>
 
                   <div className={`flex gap-2 md:gap-3 mt-3 md:mt-4 transition-all duration-500 md:${hoveredId === p.id ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                    <button className="text-[10px] tracking-[0.12em] uppercase font-extrabold px-4 md:px-5 py-2 md:py-2.5 rounded-full transition-colors"
-                      style={{ backgroundColor: p.color, color: '#fff' }}>
-                      Enroll Now
-                    </button>
+                    {p.status === 'coming_soon' ? (
+                      <span className="text-[10px] tracking-[0.12em] uppercase font-extrabold px-4 md:px-5 py-2 md:py-2.5 rounded-full bg-white/20 text-white/90 border border-white/30 backdrop-blur-sm">
+                        Coming Soon
+                      </span>
+                    ) : (
+                      <button className="text-[10px] tracking-[0.12em] uppercase font-extrabold px-4 md:px-5 py-2 md:py-2.5 rounded-full transition-colors"
+                        style={{ backgroundColor: p.color, color: '#fff' }}>
+                        Enroll Now
+                      </button>
+                    )}
                     {p.youtube_url && (
                       <a href={p.youtube_url} target="_blank" rel="noopener noreferrer" className="group/btn flex items-center gap-2 text-[10px] tracking-[0.12em] uppercase font-bold px-4 md:px-5 py-2 md:py-2.5 rounded-full border border-white/30 text-white/90 hover:bg-white/10 hover:border-white/50 transition-all">
                         <svg className="w-3.5 h-3.5 group-hover/btn:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
