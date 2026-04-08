@@ -279,10 +279,16 @@ const SparkProgramDetails = () => {
                 <span className="text-[11px] tracking-[0.12em] uppercase font-extrabold px-6 py-3 rounded-full bg-white/20 text-white/90 border border-white/30 backdrop-blur-sm">
                   Coming Soon
                 </span>
-              ) : (
-                <button className="text-[11px] tracking-[0.12em] uppercase font-extrabold px-8 py-3.5 rounded-full text-white shadow-lg transition-all hover:scale-105"
+              ) : enrollment ? (
+                <Link to="/spark/my-programs" className="text-[11px] tracking-[0.12em] uppercase font-extrabold px-8 py-3.5 rounded-full text-white shadow-lg transition-all hover:scale-105 flex items-center gap-2"
                   style={{ backgroundColor: program.color }}>
-                  Enroll Now
+                  <CheckCircle2 className="w-4 h-4" /> Enrolled · {progressPercentage}%
+                </Link>
+              ) : (
+                <button onClick={handleEnroll} disabled={enrollMutation.isPending}
+                  className="text-[11px] tracking-[0.12em] uppercase font-extrabold px-8 py-3.5 rounded-full text-white shadow-lg transition-all hover:scale-105 disabled:opacity-50"
+                  style={{ backgroundColor: program.color }}>
+                  {enrollMutation.isPending ? 'Enrolling...' : 'Enroll Now'}
                 </button>
               )}
               {program.youtube_url && (
