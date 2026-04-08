@@ -7,7 +7,24 @@ import { SparkSubNav } from '@/components/spark/SparkSubNav';
 import { SparkFooter } from '@/components/spark/SparkFooter';
 import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, BookOpen, ChevronDown, Play, Lock, Eye, ArrowLeft, Users, Award, CheckCircle2 } from 'lucide-react';
+import { Clock, BookOpen, ChevronDown, Play, Lock, Eye, ArrowLeft, Users, Award, CheckCircle2, Sparkles, GraduationCap } from 'lucide-react';
+
+const MODULE_THUMBNAILS = [
+  'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1557426272-fc759fdf7a8d?w=400&h=250&fit=crop',
+];
+
+const LESSON_THUMBNAILS = [
+  'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=200&h=120&fit=crop',
+  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=200&h=120&fit=crop',
+  'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=200&h=120&fit=crop',
+  'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=200&h=120&fit=crop',
+  'https://images.unsplash.com/photo-1588702547923-7093a6c3ba33?w=200&h=120&fit=crop',
+];
 
 const SparkProgramDetails = () => {
   const { id } = useParams<{ id: string }>();
