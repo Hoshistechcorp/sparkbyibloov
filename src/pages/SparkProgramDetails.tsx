@@ -7,7 +7,7 @@ import { SparkSubNav } from '@/components/spark/SparkSubNav';
 import { SparkFooter } from '@/components/spark/SparkFooter';
 import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, BookOpen, ChevronDown, Play, Lock, Eye, ArrowLeft, Users, Award, CheckCircle2, Sparkles, GraduationCap } from 'lucide-react';
+import { Clock, BookOpen, ChevronDown, Play, Lock, ArrowLeft, Users, Award, CheckCircle2 } from 'lucide-react';
 
 const MODULE_THUMBNAILS = [
   'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=250&fit=crop',
