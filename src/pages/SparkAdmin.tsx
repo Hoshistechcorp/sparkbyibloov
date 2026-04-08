@@ -688,7 +688,7 @@ const ProgramsTab = () => {
             <div>
               <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Status</label>
               <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} className={inputCls}>
-                <option value="active">Active</option><option value="draft">Draft</option><option value="archived">Archived</option>
+                <option value="active">Active</option><option value="coming_soon">Coming Soon</option><option value="draft">Draft</option><option value="archived">Archived</option>
               </select>
             </div>
             <div className="md:col-span-2">
@@ -726,8 +726,8 @@ const ProgramsTab = () => {
                   <Play className="w-3.5 h-3.5" /> About
                 </a>
               )}
-              <span className={`text-[9px] uppercase tracking-[0.1em] font-bold px-2.5 py-1 rounded-full ${p.status === 'active' ? 'text-emerald-400 bg-emerald-400/10' : p.status === 'draft' ? 'text-yellow-400 bg-yellow-400/10' : 'text-gray-400 bg-gray-400/10'}`}>
-                {p.status}
+              <span className={`text-[9px] uppercase tracking-[0.1em] font-bold px-2.5 py-1 rounded-full ${p.status === 'active' ? 'text-emerald-400 bg-emerald-400/10' : p.status === 'coming_soon' ? 'text-orange-400 bg-orange-400/10' : p.status === 'draft' ? 'text-yellow-400 bg-yellow-400/10' : 'text-gray-400 bg-gray-400/10'}`}>
+                {p.status === 'coming_soon' ? 'Coming Soon' : p.status}
               </span>
               <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button onClick={() => openEdit(p)} className="p-2 hover:bg-white/5 rounded-lg transition-colors"><Pencil className="w-4 h-4 text-gray-400" /></button>
