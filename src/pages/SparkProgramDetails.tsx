@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { SparkSubNav } from '@/components/spark/SparkSubNav';
 import { SparkFooter } from '@/components/spark/SparkFooter';
 import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, BookOpen, ChevronDown, Play, Lock, ArrowLeft, Users, Award, CheckCircle2 } from 'lucide-react';
+import { Clock, BookOpen, ChevronDown, Play, Lock, ArrowLeft, Users, Award, CheckCircle2, Check } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const MODULE_THUMBNAILS = [
   'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=250&fit=crop',
@@ -28,8 +29,22 @@ const LESSON_THUMBNAILS = [
 
 const SparkProgramDetails = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [referOpen, setReferOpen] = useState(false);
   const [expandedModule, setExpandedModule] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   const { data: program, isLoading: programLoading } = useQuery({
     queryKey: ['spark-program', id],
@@ -67,6 +82,84 @@ const SparkProgramDetails = () => {
     },
     enabled: modules.length > 0,
   });
+
+  const { data: enrollment } = useQuery({
+    queryKey: ['my-enrollment', id, user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('program_enrollments')
+        .select('*')
+        .eq('user_id', user!.id)
+        .eq('program_id', id!)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!user && !!id,
+  });
+
+  const { data: lessonProgress = [] } = useQuery({
+    queryKey: ['my-lesson-progress', id, user?.id],
+    queryFn: async () => {
+      const lessonIds = lessons.map((l: any) => l.id);
+      if (lessonIds.length === 0) return [];
+      const { data } = await supabase
+        .from('lesson_progress')
+        .select('*')
+        .eq('user_id', user!.id)
+        .in('lesson_id', lessonIds)
+        .eq('completed', true);
+      return data || [];
+    },
+    enabled: !!user && lessons.length > 0,
+  });
+
+  const isEnrolled = !!enrollment;
+  const completedLessonIds = new Set(lessonProgress.map((p: any) => p.lesson_id));
+  const progressPercentage = lessons.length > 0 ? Math.round((completedLessonIds.size / lessons.length) * 100) : 0;
+
+  const enrollMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from('program_enrollments').insert({
+        user_id: user!.id,
+        program_id: id!,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-enrollment', id] });
+      toast({ title: 'Enrolled!', description: 'You have successfully enrolled in this program.' });
+    },
+    onError: () => {
+      toast({ title: 'Error', description: 'Could not enroll. Please try again.', variant: 'destructive' });
+    },
+  });
+
+  const toggleLessonMutation = useMutation({
+    mutationFn: async (lessonId: string) => {
+      const isCompleted = completedLessonIds.has(lessonId);
+      if (isCompleted) {
+        await supabase.from('lesson_progress').delete().eq('user_id', user!.id).eq('lesson_id', lessonId);
+      } else {
+        await supabase.from('lesson_progress').upsert({
+          user_id: user!.id,
+          lesson_id: lessonId,
+          completed: true,
+          completed_at: new Date().toISOString(),
+        }, { onConflict: 'user_id,lesson_id' });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-lesson-progress', id] });
+    },
+  });
+
+  const handleEnroll = () => {
+    if (!user) {
+      navigate('/spark/auth');
+      return;
+    }
+    enrollMutation.mutate();
+  };
 
   const getLessonsForModule = (moduleId: string) =>
     lessons.filter((l: any) => l.module_id === moduleId);
