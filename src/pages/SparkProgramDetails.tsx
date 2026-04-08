@@ -7,7 +7,24 @@ import { SparkSubNav } from '@/components/spark/SparkSubNav';
 import { SparkFooter } from '@/components/spark/SparkFooter';
 import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, BookOpen, ChevronDown, Play, Lock, Eye, ArrowLeft, Users, Award, CheckCircle2 } from 'lucide-react';
+import { Clock, BookOpen, ChevronDown, Play, Lock, ArrowLeft, Users, Award, CheckCircle2 } from 'lucide-react';
+
+const MODULE_THUMBNAILS = [
+  'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1557426272-fc759fdf7a8d?w=400&h=250&fit=crop',
+];
+
+const LESSON_THUMBNAILS = [
+  'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=200&h=120&fit=crop',
+  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=200&h=120&fit=crop',
+  'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=200&h=120&fit=crop',
+  'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=200&h=120&fit=crop',
+  'https://images.unsplash.com/photo-1588702547923-7093a6c3ba33?w=200&h=120&fit=crop',
+];
 
 const SparkProgramDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -190,13 +207,13 @@ const SparkProgramDetails = () => {
         </section>
 
         {/* Course Curriculum */}
-        <section className="py-16 md:py-24 px-4 md:px-12 max-w-5xl mx-auto">
-          <div className="mb-10">
+        <section className="py-16 md:py-24 px-4 md:px-12 max-w-6xl mx-auto">
+          <div className="mb-12 text-center">
             <span className="text-[11px] tracking-[0.3em] uppercase text-[#c48500] font-bold mb-3 block">Course Curriculum</span>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-2">
+            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-3">
               What You'll Learn
             </h2>
-            <p className="text-gray-400 text-base">
+            <p className="text-gray-400 text-base max-w-xl mx-auto">
               {modules.length > 0
                 ? `${modules.length} modules · ${totalLessons} lessons · ${formatDuration(totalDuration)} of content`
                 : 'Curriculum details coming soon. Check back for updates.'}
@@ -204,33 +221,67 @@ const SparkProgramDetails = () => {
           </div>
 
           {modules.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {modules.map((mod: any, idx: number) => {
                 const modLessons = getLessonsForModule(mod.id);
                 const modDuration = modLessons.reduce((a: number, l: any) => a + (l.duration_minutes || 0), 0);
                 const isExpanded = expandedModule === mod.id;
+                const modThumb = MODULE_THUMBNAILS[idx % MODULE_THUMBNAILS.length];
 
                 return (
                   <motion.div key={mod.id}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                    className="border border-gray-100 rounded-2xl overflow-hidden bg-white hover:shadow-md transition-shadow">
+                    transition={{ delay: idx * 0.07, duration: 0.4 }}
+                    className="rounded-2xl overflow-hidden bg-white border border-gray-100 hover:shadow-xl transition-all duration-300"
+                    style={{ boxShadow: isExpanded ? `0 8px 32px -8px ${program.color}25` : undefined }}>
                     
                     <button
                       onClick={() => setExpandedModule(isExpanded ? null : mod.id)}
-                      className="w-full flex items-center gap-4 p-5 md:p-6 text-left hover:bg-gray-50/50 transition-colors">
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-extrabold text-white flex-shrink-0"
-                        style={{ backgroundColor: program.color }}>
-                        {String(idx + 1).padStart(2, '0')}
+                      className="w-full flex items-stretch text-left group">
+                      {/* Module thumbnail */}
+                      <div className="hidden md:block w-40 lg:w-48 flex-shrink-0 relative overflow-hidden">
+                        <img src={modThumb} alt={mod.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/20" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                            <span className="text-lg font-extrabold" style={{ color: program.color }}>
+                              {String(idx + 1).padStart(2, '0')}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-sm md:text-base font-bold text-gray-900 truncate">{mod.title}</h3>
-                        <p className="text-xs text-gray-400 mt-0.5">
-                          {modLessons.length} lesson{modLessons.length !== 1 ? 's' : ''} · {formatDuration(modDuration)}
-                        </p>
+
+                      <div className="flex-1 flex items-center gap-4 p-5 md:p-6">
+                        {/* Mobile number badge */}
+                        <div className="md:hidden w-11 h-11 rounded-xl flex items-center justify-center text-sm font-extrabold text-white flex-shrink-0 shadow-md"
+                          style={{ backgroundColor: program.color }}>
+                          {String(idx + 1).padStart(2, '0')}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base md:text-lg font-bold text-gray-900 group-hover:text-gray-700 transition-colors">{mod.title}</h3>
+                          {mod.description && (
+                            <p className="text-xs md:text-sm text-gray-400 mt-1 line-clamp-1">{mod.description}</p>
+                          )}
+                          <div className="flex items-center gap-3 mt-2">
+                            <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full"
+                              style={{ backgroundColor: program.color + '15', color: program.color }}>
+                              <BookOpen className="w-3 h-3" />
+                              {modLessons.length} lesson{modLessons.length !== 1 ? 's' : ''}
+                            </span>
+                            <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-gray-400 bg-gray-50 px-2.5 py-1 rounded-full">
+                              <Clock className="w-3 h-3" />
+                              {formatDuration(modDuration)}
+                            </span>
+                            {modLessons.some((l: any) => l.is_free_preview) && (
+                              <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+                                <Play className="w-3 h-3" /> Free Preview
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <ChevronDown className={`w-5 h-5 text-gray-300 transition-transform duration-300 flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
                       </div>
-                      <ChevronDown className={`w-5 h-5 text-gray-300 transition-transform duration-300 flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
                     </button>
 
                     <AnimatePresence>
@@ -239,46 +290,67 @@ const SparkProgramDetails = () => {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
+                          transition={{ duration: 0.35, ease: 'easeInOut' }}
                           className="overflow-hidden">
-                          {mod.description && (
-                            <p className="px-5 md:px-6 pb-3 text-sm text-gray-500 leading-relaxed">
-                              {mod.description}
-                            </p>
-                          )}
-                          <div className="border-t border-gray-50">
-                            {modLessons.map((lesson: any, lIdx: number) => (
-                              <div key={lesson.id}
-                                className={`flex items-center gap-4 px-5 md:px-6 py-3.5 hover:bg-gray-50/80 transition-colors ${lIdx < modLessons.length - 1 ? 'border-b border-gray-50' : ''}`}>
-                                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0" style={{ color: program.color }}>
-                                  {lessonTypeIcon(lesson.lesson_type)}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-semibold text-gray-800 truncate">{lesson.title}</p>
-                                  {lesson.description && (
-                                    <p className="text-xs text-gray-400 mt-0.5 truncate">{lesson.description}</p>
-                                  )}
-                                </div>
-                                <div className="flex items-center gap-3 flex-shrink-0">
-                                  {lesson.is_free_preview && (
-                                    <span className="text-[9px] tracking-[0.1em] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">
-                                      Preview
+                          <div className="px-5 md:px-6 pb-5 md:pb-6 pt-2 space-y-2">
+                            {modLessons.map((lesson: any, lIdx: number) => {
+                              const lessonThumb = LESSON_THUMBNAILS[lIdx % LESSON_THUMBNAILS.length];
+                              return (
+                                <motion.div key={lesson.id}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: lIdx * 0.05 }}
+                                  className={`flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-xl transition-all duration-200 group/lesson cursor-pointer ${
+                                    lesson.is_free_preview 
+                                      ? 'bg-gradient-to-r from-emerald-50/80 to-white hover:from-emerald-50 border border-emerald-100/50' 
+                                      : 'bg-gray-50/60 hover:bg-gray-50 border border-transparent hover:border-gray-100'
+                                  }`}>
+                                  {/* Lesson thumbnail */}
+                                  <div className="relative w-16 h-12 md:w-20 md:h-14 rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
+                                    <img src={lessonThumb} alt={lesson.title} className="w-full h-full object-cover group-hover/lesson:scale-110 transition-transform duration-300" />
+                                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover/lesson:opacity-100 transition-opacity">
+                                      {lesson.is_free_preview ? (
+                                        <Play className="w-5 h-5 text-white" />
+                                      ) : (
+                                        <Lock className="w-4 h-4 text-white/80" />
+                                      )}
+                                    </div>
+                                    {lesson.lesson_type === 'video' && (
+                                      <div className="absolute bottom-1 right-1 bg-black/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+                                        {lesson.duration_minutes > 0 ? formatDuration(lesson.duration_minutes) : '—'}
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0"
+                                        style={{ color: lesson.is_free_preview ? '#059669' : program.color }}>
+                                        {lessonTypeIcon(lesson.lesson_type)}
+                                      </div>
+                                      <p className="text-sm font-semibold text-gray-800 truncate">{lesson.title}</p>
+                                    </div>
+                                    {lesson.description && (
+                                      <p className="text-xs text-gray-400 mt-0.5 ml-7 truncate">{lesson.description}</p>
+                                    )}
+                                  </div>
+
+                                  <div className="flex items-center gap-2 flex-shrink-0">
+                                    {lesson.is_free_preview && (
+                                      <span className="hidden sm:inline-flex items-center gap-1 text-[9px] tracking-[0.1em] uppercase font-bold px-2.5 py-1 rounded-full bg-emerald-500 text-white shadow-sm">
+                                        <Play className="w-3 h-3" /> Preview
+                                      </span>
+                                    )}
+                                    <span className="hidden sm:inline text-[10px] uppercase tracking-wider font-semibold text-gray-300 bg-white px-2 py-1 rounded border border-gray-100">
+                                      {lesson.lesson_type}
                                     </span>
-                                  )}
-                                  <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-300 bg-gray-50 px-2 py-1 rounded">
-                                    {lesson.lesson_type}
-                                  </span>
-                                  {lesson.duration_minutes > 0 && (
-                                    <span className="text-xs text-gray-400 font-medium whitespace-nowrap">
-                                      {formatDuration(lesson.duration_minutes)}
-                                    </span>
-                                  )}
-                                  {!lesson.is_free_preview && (
-                                    <Lock className="w-3.5 h-3.5 text-gray-300" />
-                                  )}
-                                </div>
-                              </div>
-                            ))}
+                                    {!lesson.is_free_preview && (
+                                      <Lock className="w-3.5 h-3.5 text-gray-300" />
+                                    )}
+                                  </div>
+                                </motion.div>
+                              );
+                            })}
                           </div>
                         </motion.div>
                       )}
@@ -297,8 +369,6 @@ const SparkProgramDetails = () => {
             </div>
           )}
         </section>
-
-        {/* CTA */}
         <section className="py-16 md:py-20 px-4 md:px-6 text-center bg-gray-50">
           <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-4">Ready to start?</h2>
           <p className="text-gray-400 mb-8 max-w-lg mx-auto">
