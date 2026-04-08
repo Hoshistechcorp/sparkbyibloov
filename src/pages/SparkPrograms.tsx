@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -38,7 +39,7 @@ const SparkPrograms = () => {
         <section className="px-4 md:px-12 pb-16 md:pb-24 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {programs.map((p: any) => (
-              <div key={p.id} className="group relative rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 hover:shadow-2xl"
+              <Link to={`/spark/programs/${p.id}`} key={p.id} className="group relative rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 hover:shadow-2xl block"
                 style={{ minHeight: '280px' }} onMouseEnter={() => setHoveredId(p.id)} onMouseLeave={() => setHoveredId(null)}>
                 <div className="absolute inset-0">
                   <img src={p.image_url || 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&h=400&fit=crop'} alt={p.cool_name} className="w-full h-full object-cover" style={{ animation: `kenburns ${15 + p.sort_order * 2}s ease-in-out infinite alternate` }} />
@@ -81,7 +82,7 @@ const SparkPrograms = () => {
                 </div>
 
                 <div className="absolute top-4 md:top-6 right-4 md:right-6 text-4xl md:text-6xl font-extrabold text-white/15 z-10">0{p.sort_order}</div>
-              </div>
+              </Link>
             ))}
           </div>
         </section>

@@ -567,6 +567,7 @@ const ProgramsTab = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingProgram, setEditingProgram] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [curriculumProgramId, setCurriculumProgramId] = useState<string | null>(null);
   const [form, setForm] = useState({ cool_name: '', real_name: '', tag: 'CORE', description: '', duration: '', lessons: 0, color: '#ec9f00', image_url: '', youtube_url: '', sort_order: 0, status: 'active', published: true });
 
   const { data: programs = [] } = useQuery({
@@ -616,6 +617,11 @@ const ProgramsTab = () => {
   const filtered = programs.filter((p: any) => p.cool_name?.toLowerCase().includes(searchQuery.toLowerCase()) || p.real_name?.toLowerCase().includes(searchQuery.toLowerCase()));
 
   const inputCls = "px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-gray-600 focus:border-[#ec9f00]/50 outline-none w-full";
+
+  if (curriculumProgramId) {
+    const prog = programs.find((p: any) => p.id === curriculumProgramId);
+    return <CurriculumManager programId={curriculumProgramId} programName={prog?.cool_name || 'Program'} programColor={prog?.color || '#ec9f00'} onBack={() => setCurriculumProgramId(null)} />;
+  }
 
   return (
     <div className="space-y-4">
@@ -688,7 +694,7 @@ const ProgramsTab = () => {
             <div>
               <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Status</label>
               <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} className={inputCls}>
-                <option value="active">Active</option><option value="draft">Draft</option><option value="archived">Archived</option>
+                <option value="active">Active</option><option value="coming_soon">Coming Soon</option><option value="draft">Draft</option><option value="archived">Archived</option>
               </select>
             </div>
             <div className="md:col-span-2">
@@ -721,13 +727,16 @@ const ProgramsTab = () => {
               </div>
             </div>
             <div className="flex items-center gap-3 flex-shrink-0">
+              <button onClick={() => setCurriculumProgramId(p.id)} className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.1em] font-bold text-[#7B61FF] hover:text-[#9B81FF] transition-colors">
+                <BookOpen className="w-3.5 h-3.5" /> Curriculum
+              </button>
               {p.youtube_url && (
                 <a href={p.youtube_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.1em] font-bold text-[#ec9f00] hover:text-[#f0b840] transition-colors">
                   <Play className="w-3.5 h-3.5" /> About
                 </a>
               )}
-              <span className={`text-[9px] uppercase tracking-[0.1em] font-bold px-2.5 py-1 rounded-full ${p.status === 'active' ? 'text-emerald-400 bg-emerald-400/10' : p.status === 'draft' ? 'text-yellow-400 bg-yellow-400/10' : 'text-gray-400 bg-gray-400/10'}`}>
-                {p.status}
+              <span className={`text-[9px] uppercase tracking-[0.1em] font-bold px-2.5 py-1 rounded-full ${p.status === 'active' ? 'text-emerald-400 bg-emerald-400/10' : p.status === 'coming_soon' ? 'text-orange-400 bg-orange-400/10' : p.status === 'draft' ? 'text-yellow-400 bg-yellow-400/10' : 'text-gray-400 bg-gray-400/10'}`}>
+                {p.status === 'coming_soon' ? 'Coming Soon' : p.status}
               </span>
               <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button onClick={() => openEdit(p)} className="p-2 hover:bg-white/5 rounded-lg transition-colors"><Pencil className="w-4 h-4 text-gray-400" /></button>
@@ -737,6 +746,227 @@ const ProgramsTab = () => {
           </div>
         ))}
         {filtered.length === 0 && <p className="text-center text-gray-600 py-12 text-sm">No programs found.</p>}
+      </div>
+    </div>
+  );
+};
+
+/* ─── CURRICULUM MANAGER ─── */
+const CurriculumManager = ({ programId, programName, programColor, onBack }: { programId: string; programName: string; programColor: string; onBack: () => void }) => {
+  const queryClient = useQueryClient();
+  const [showModuleForm, setShowModuleForm] = useState(false);
+  const [editingModule, setEditingModule] = useState<any>(null);
+  const [moduleForm, setModuleForm] = useState({ title: '', description: '', sort_order: 0 });
+  const [showLessonForm, setShowLessonForm] = useState<string | null>(null);
+  const [editingLesson, setEditingLesson] = useState<any>(null);
+  const [lessonForm, setLessonForm] = useState({ title: '', description: '', duration_minutes: 0, lesson_type: 'video', content_url: '', sort_order: 0, is_free_preview: false });
+
+  const { data: modules = [] } = useQuery({
+    queryKey: ['admin-modules', programId],
+    queryFn: async () => {
+      const { data } = await supabase.from('spark_program_modules').select('*').eq('program_id', programId).order('sort_order', { ascending: true });
+      return data || [];
+    },
+  });
+
+  const { data: lessons = [] } = useQuery({
+    queryKey: ['admin-lessons', programId],
+    queryFn: async () => {
+      const moduleIds = modules.map((m: any) => m.id);
+      if (moduleIds.length === 0) return [];
+      const { data } = await supabase.from('spark_program_lessons').select('*').in('module_id', moduleIds).order('sort_order', { ascending: true });
+      return data || [];
+    },
+    enabled: modules.length > 0,
+  });
+
+  const getLessonsForModule = (moduleId: string) => lessons.filter((l: any) => l.module_id === moduleId);
+
+  const saveModuleMutation = useMutation({
+    mutationFn: async () => {
+      const payload = { ...moduleForm, sort_order: Number(moduleForm.sort_order), program_id: programId };
+      if (editingModule) {
+        const { error } = await supabase.from('spark_program_modules').update({ title: payload.title, description: payload.description, sort_order: payload.sort_order }).eq('id', editingModule.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('spark_program_modules').insert(payload);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-modules', programId] }); setShowModuleForm(false); setEditingModule(null); setModuleForm({ title: '', description: '', sort_order: 0 }); toast.success('Module saved!'); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const deleteModuleMutation = useMutation({
+    mutationFn: async (id: string) => { const { error } = await supabase.from('spark_program_modules').delete().eq('id', id); if (error) throw error; },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-modules', programId] }); queryClient.invalidateQueries({ queryKey: ['admin-lessons', programId] }); toast.success('Module deleted'); },
+  });
+
+  const saveLessonMutation = useMutation({
+    mutationFn: async (moduleId: string) => {
+      const payload = { ...lessonForm, duration_minutes: Number(lessonForm.duration_minutes), sort_order: Number(lessonForm.sort_order), module_id: moduleId };
+      if (editingLesson) {
+        const { error } = await supabase.from('spark_program_lessons').update({ title: payload.title, description: payload.description, duration_minutes: payload.duration_minutes, lesson_type: payload.lesson_type, content_url: payload.content_url, sort_order: payload.sort_order, is_free_preview: payload.is_free_preview }).eq('id', editingLesson.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('spark_program_lessons').insert(payload);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-lessons', programId] }); setShowLessonForm(null); setEditingLesson(null); setLessonForm({ title: '', description: '', duration_minutes: 0, lesson_type: 'video', content_url: '', sort_order: 0, is_free_preview: false }); toast.success('Lesson saved!'); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const deleteLessonMutation = useMutation({
+    mutationFn: async (id: string) => { const { error } = await supabase.from('spark_program_lessons').delete().eq('id', id); if (error) throw error; },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-lessons', programId] }); toast.success('Lesson deleted'); },
+  });
+
+  const inputCls = "px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-gray-600 focus:border-[#ec9f00]/50 outline-none w-full";
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-4">
+        <button onClick={onBack} className="text-gray-500 hover:text-white transition-colors text-sm font-bold">← Back</button>
+        <div>
+          <h2 className="text-xl font-extrabold text-white">Curriculum: {programName}</h2>
+          <p className="text-sm text-gray-500">{modules.length} modules · {lessons.length} lessons</p>
+        </div>
+      </div>
+
+      <button onClick={() => { setModuleForm({ title: '', description: '', sort_order: modules.length }); setEditingModule(null); setShowModuleForm(true); }}
+        className="flex items-center gap-2 bg-[#7B61FF] text-white text-[11px] font-extrabold tracking-[0.08em] uppercase px-4 py-2.5 rounded-lg hover:bg-[#6B51EF] transition-colors">
+        <Plus className="w-4 h-4" /> Add Module
+      </button>
+
+      {showModuleForm && (
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-[#1c1c26] rounded-xl p-5 border border-white/5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold text-sm text-white">{editingModule ? 'Edit Module' : 'Add Module'}</h3>
+            <button onClick={() => { setShowModuleForm(false); setEditingModule(null); }} className="text-gray-500 hover:text-white"><X className="w-5 h-5" /></button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="md:col-span-2">
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Module Title</label>
+              <input placeholder="e.g. Introduction to Event Planning" value={moduleForm.title} onChange={e => setModuleForm({ ...moduleForm, title: e.target.value })} className={inputCls} />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Description</label>
+              <textarea placeholder="Module overview..." value={moduleForm.description} onChange={e => setModuleForm({ ...moduleForm, description: e.target.value })} className={inputCls} rows={2} />
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Sort Order</label>
+              <input type="number" value={moduleForm.sort_order} onChange={e => setModuleForm({ ...moduleForm, sort_order: parseInt(e.target.value) || 0 })} className={inputCls} />
+            </div>
+          </div>
+          <div className="flex gap-3 mt-4">
+            <button onClick={() => saveModuleMutation.mutate()} disabled={!moduleForm.title} className="bg-[#7B61FF] text-white text-[11px] font-extrabold tracking-[0.08em] uppercase px-6 py-2.5 rounded-lg hover:bg-[#6B51EF] transition-colors disabled:opacity-50">
+              {editingModule ? 'Update' : 'Create'}
+            </button>
+            <button onClick={() => { setShowModuleForm(false); setEditingModule(null); }} className="text-gray-500 text-[11px] font-bold uppercase px-4 py-2.5 hover:text-white">Cancel</button>
+          </div>
+        </motion.div>
+      )}
+
+      <div className="space-y-4">
+        {modules.map((mod: any, idx: number) => {
+          const modLessons = getLessonsForModule(mod.id);
+          return (
+            <div key={mod.id} className="bg-[#1c1c26] rounded-xl border border-white/5 overflow-hidden">
+              <div className="flex items-center justify-between p-4 border-b border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-extrabold text-white" style={{ backgroundColor: programColor }}>
+                    {String(idx + 1).padStart(2, '0')}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-white">{mod.title}</p>
+                    <p className="text-[11px] text-gray-500">{modLessons.length} lessons{mod.description ? ` · ${mod.description.substring(0, 50)}...` : ''}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <button onClick={() => { setShowLessonForm(mod.id); setEditingLesson(null); setLessonForm({ title: '', description: '', duration_minutes: 0, lesson_type: 'video', content_url: '', sort_order: modLessons.length, is_free_preview: false }); }}
+                    className="text-[10px] uppercase tracking-[0.1em] font-bold px-3 py-1.5 rounded-lg bg-[#ec9f00]/10 text-[#ec9f00] hover:bg-[#ec9f00]/20 transition-colors">
+                    + Lesson
+                  </button>
+                  <button onClick={() => { setEditingModule(mod); setModuleForm({ title: mod.title, description: mod.description || '', sort_order: mod.sort_order }); setShowModuleForm(true); }}
+                    className="p-2 hover:bg-white/5 rounded-lg transition-colors"><Pencil className="w-3.5 h-3.5 text-gray-400" /></button>
+                  <button onClick={() => { if (confirm('Delete this module and all its lessons?')) deleteModuleMutation.mutate(mod.id); }}
+                    className="p-2 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 className="w-3.5 h-3.5 text-red-400" /></button>
+                </div>
+              </div>
+
+              {showLessonForm === mod.id && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 border-b border-white/5 bg-white/[0.02]">
+                  <h4 className="text-xs font-bold text-white mb-3">{editingLesson ? 'Edit Lesson' : 'Add Lesson'}</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="md:col-span-2">
+                      <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Title</label>
+                      <input placeholder="Lesson title" value={lessonForm.title} onChange={e => setLessonForm({ ...lessonForm, title: e.target.value })} className={inputCls} />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Type</label>
+                      <select value={lessonForm.lesson_type} onChange={e => setLessonForm({ ...lessonForm, lesson_type: e.target.value })} className={inputCls}>
+                        <option value="video">Video</option><option value="reading">Reading</option><option value="quiz">Quiz</option><option value="exercise">Exercise</option>
+                      </select>
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Description</label>
+                      <input placeholder="Brief description" value={lessonForm.description} onChange={e => setLessonForm({ ...lessonForm, description: e.target.value })} className={inputCls} />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Duration (min)</label>
+                      <input type="number" value={lessonForm.duration_minutes} onChange={e => setLessonForm({ ...lessonForm, duration_minutes: parseInt(e.target.value) || 0 })} className={inputCls} />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Content URL</label>
+                      <input placeholder="https://..." value={lessonForm.content_url} onChange={e => setLessonForm({ ...lessonForm, content_url: e.target.value })} className={inputCls} />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Order</label>
+                      <input type="number" value={lessonForm.sort_order} onChange={e => setLessonForm({ ...lessonForm, sort_order: parseInt(e.target.value) || 0 })} className={inputCls} />
+                    </div>
+                    <label className="flex items-center gap-2 text-sm text-gray-400"><input type="checkbox" checked={lessonForm.is_free_preview} onChange={e => setLessonForm({ ...lessonForm, is_free_preview: e.target.checked })} className="rounded accent-[#ec9f00]" /> Free Preview</label>
+                  </div>
+                  <div className="flex gap-3 mt-3">
+                    <button onClick={() => saveLessonMutation.mutate(mod.id)} disabled={!lessonForm.title} className="bg-[#ec9f00] text-gray-900 text-[10px] font-extrabold tracking-[0.08em] uppercase px-5 py-2 rounded-lg hover:bg-[#d48e00] transition-colors disabled:opacity-50">
+                      {editingLesson ? 'Update' : 'Add'}
+                    </button>
+                    <button onClick={() => { setShowLessonForm(null); setEditingLesson(null); }} className="text-gray-500 text-[10px] font-bold uppercase px-3 py-2 hover:text-white">Cancel</button>
+                  </div>
+                </motion.div>
+              )}
+
+              {modLessons.length > 0 && (
+                <div>
+                  {modLessons.map((lesson: any, lIdx: number) => (
+                    <div key={lesson.id} className={`flex items-center justify-between px-4 py-3 hover:bg-white/[0.02] transition-colors ${lIdx < modLessons.length - 1 ? 'border-b border-white/[0.03]' : ''}`}>
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="text-[10px] text-gray-600 font-mono w-4">{lIdx + 1}</span>
+                        <span className={`text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded ${lesson.lesson_type === 'video' ? 'text-blue-400 bg-blue-400/10' : lesson.lesson_type === 'quiz' ? 'text-emerald-400 bg-emerald-400/10' : lesson.lesson_type === 'exercise' ? 'text-orange-400 bg-orange-400/10' : 'text-gray-400 bg-gray-400/10'}`}>
+                          {lesson.lesson_type}
+                        </span>
+                        <p className="text-sm text-white/80 truncate">{lesson.title}</p>
+                        {lesson.is_free_preview && <span className="text-[8px] uppercase font-bold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded">Preview</span>}
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {lesson.duration_minutes > 0 && <span className="text-[10px] text-gray-500">{lesson.duration_minutes}m</span>}
+                        <button onClick={() => { setEditingLesson(lesson); setLessonForm({ title: lesson.title, description: lesson.description || '', duration_minutes: lesson.duration_minutes || 0, lesson_type: lesson.lesson_type, content_url: lesson.content_url || '', sort_order: lesson.sort_order, is_free_preview: lesson.is_free_preview }); setShowLessonForm(mod.id); }}
+                          className="p-1.5 hover:bg-white/5 rounded transition-colors"><Pencil className="w-3 h-3 text-gray-500" /></button>
+                        <button onClick={() => { if (confirm('Delete this lesson?')) deleteLessonMutation.mutate(lesson.id); }}
+                          className="p-1.5 hover:bg-red-500/10 rounded transition-colors"><Trash2 className="w-3 h-3 text-red-400" /></button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {modLessons.length === 0 && !showLessonForm && (
+                <p className="text-center text-gray-600 py-6 text-xs">No lessons yet. Click "+ Lesson" to add one.</p>
+              )}
+            </div>
+          );
+        })}
+        {modules.length === 0 && <p className="text-center text-gray-600 py-12 text-sm">No modules yet. Add a module to start building the curriculum.</p>}
       </div>
     </div>
   );
