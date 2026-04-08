@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import sparkLogo from '@/assets/spark-logo.svg';
 import { Menu, X } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SparkSubNavProps {
   activeLink?: string;
@@ -18,6 +19,21 @@ const navLinks = [
 
 export const SparkSubNav: React.FC<SparkSubNavProps> = ({ activeLink }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session?.user);
+    });
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsLoggedIn(!!session?.user);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const allLinks = isLoggedIn
+    ? [...navLinks, { to: '/spark/my-programs', label: 'My Programs' }]
+    : navLinks;
 
   return (
     <>
@@ -29,7 +45,7 @@ export const SparkSubNav: React.FC<SparkSubNavProps> = ({ activeLink }) => {
         </Link>
 
         <div className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.12em] uppercase text-gray-500 font-semibold">
-          {navLinks.map(link => (
+          {allLinks.map(link => (
             <Link key={link.to} to={link.to}
               className={`hover:text-[#c48500] transition-colors ${activeLink === link.label.toLowerCase() ? 'text-[#c48500]' : ''}`}>
               {link.label}
@@ -38,9 +54,9 @@ export const SparkSubNav: React.FC<SparkSubNavProps> = ({ activeLink }) => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link to="/spark/auth"
+          <Link to={isLoggedIn ? "/spark/my-programs" : "/spark/auth"}
             className="hidden md:inline-block bg-[#ec9f00] text-white text-[11px] font-extrabold tracking-[0.12em] uppercase px-5 py-2.5 rounded-full hover:bg-[#d48e00] transition-colors shadow-sm">
-            Get Started
+            {isLoggedIn ? 'My Programs' : 'Get Started'}
           </Link>
           <button onClick={() => setMobileOpen(true)} className="md:hidden p-2 text-gray-700">
             <Menu className="w-5 h-5" />
@@ -59,7 +75,7 @@ export const SparkSubNav: React.FC<SparkSubNavProps> = ({ activeLink }) => {
               <button onClick={() => setMobileOpen(false)} className="p-2 text-gray-700"><X className="w-5 h-5" /></button>
             </div>
             <div className="flex-1 flex flex-col items-center justify-center gap-6">
-              {navLinks.map((link, i) => (
+              {allLinks.map((link, i) => (
                 <motion.div key={link.to} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
                   <Link to={link.to} onClick={() => setMobileOpen(false)}
                     className={`text-2xl font-bold tracking-wide ${activeLink === link.label.toLowerCase() ? 'text-[#c48500]' : 'text-gray-900'}`}>
@@ -68,9 +84,9 @@ export const SparkSubNav: React.FC<SparkSubNavProps> = ({ activeLink }) => {
                 </motion.div>
               ))}
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                <Link to="/spark/auth" onClick={() => setMobileOpen(false)}
+                <Link to={isLoggedIn ? "/spark/my-programs" : "/spark/auth"} onClick={() => setMobileOpen(false)}
                   className="mt-4 inline-block bg-[#ec9f00] text-white font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-3 rounded-full">
-                  Get Started
+                  {isLoggedIn ? 'My Programs' : 'Get Started'}
                 </Link>
               </motion.div>
             </div>
