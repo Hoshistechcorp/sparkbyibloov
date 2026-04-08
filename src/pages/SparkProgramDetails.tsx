@@ -517,10 +517,17 @@ const SparkProgramDetails = () => {
               <span className="text-sm tracking-[0.08em] uppercase font-extrabold px-8 py-4 rounded-full bg-gray-200 text-gray-500">
                 Coming Soon
               </span>
-            ) : (
-              <button className="text-white font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:scale-105 transition-all shadow-lg"
+            ) : enrollment ? (
+              <Link to="/spark/my-programs"
+                className="text-white font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:scale-105 transition-all shadow-lg flex items-center gap-2"
                 style={{ backgroundColor: program.color, boxShadow: `0 10px 25px -5px ${program.color}40` }}>
-                Enroll Now — ${Number(program.price || 0).toFixed(0)}
+                <CheckCircle2 className="w-5 h-5" /> View My Programs
+              </Link>
+            ) : (
+              <button onClick={handleEnroll} disabled={enrollMutation.isPending}
+                className="text-white font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:scale-105 transition-all shadow-lg disabled:opacity-50"
+                style={{ backgroundColor: program.color, boxShadow: `0 10px 25px -5px ${program.color}40` }}>
+                {enrollMutation.isPending ? 'Enrolling...' : `Enroll Now — $${Number(program.price || 0).toFixed(0)}`}
               </button>
             )}
             <Link to="/spark/programs"
