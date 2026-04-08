@@ -305,6 +305,31 @@ const SparkProgramDetails = () => {
           </div>
         </section>
 
+        {/* Progress Bar (enrolled users) */}
+        {enrollment && (
+          <section className="bg-white border-b border-gray-100 py-4 px-4 md:px-12">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-gray-500">
+                  {completedLessonIds.size}/{totalLessons} lessons completed
+                </span>
+                <span className="text-sm font-extrabold" style={{ color: program.color }}>
+                  {progressPercentage}%
+                </span>
+              </div>
+              <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progressPercentage}%` }}
+                  transition={{ duration: 1, ease: 'easeOut' }}
+                  className="h-full rounded-full"
+                  style={{ backgroundColor: program.color }}
+                />
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Course Curriculum */}
         <section className="py-16 md:py-24 px-4 md:px-12 max-w-6xl mx-auto">
           <div className="mb-12 text-center">
