@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import sparkLogo from '@/assets/spark-logo.svg';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, GraduationCap } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SparkSubNavProps {
   activeLink?: string;
