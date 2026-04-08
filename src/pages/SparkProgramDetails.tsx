@@ -463,6 +463,17 @@ const SparkProgramDetails = () => {
                                   </div>
 
                                   <div className="flex items-center gap-2 flex-shrink-0">
+                                    {enrollment && (
+                                      <button
+                                        onClick={(e) => { e.stopPropagation(); toggleLessonMutation.mutate(lesson.id); }}
+                                        className={`w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all ${
+                                          isLessonCompleted
+                                            ? 'border-emerald-500 bg-emerald-500 text-white'
+                                            : 'border-gray-200 hover:border-gray-400'
+                                        }`}>
+                                        {isLessonCompleted && <CheckCircle2 className="w-4 h-4" />}
+                                      </button>
+                                    )}
                                     {lesson.is_free_preview && (
                                       <span className="hidden sm:inline-flex items-center gap-1 text-[9px] tracking-[0.1em] uppercase font-bold px-2.5 py-1 rounded-full bg-emerald-500 text-white shadow-sm">
                                         <Play className="w-3 h-3" /> Preview
@@ -471,7 +482,7 @@ const SparkProgramDetails = () => {
                                     <span className="hidden sm:inline text-[10px] uppercase tracking-wider font-semibold text-gray-300 bg-white px-2 py-1 rounded border border-gray-100">
                                       {lesson.lesson_type}
                                     </span>
-                                    {!lesson.is_free_preview && (
+                                    {!lesson.is_free_preview && !enrollment && (
                                       <Lock className="w-3.5 h-3.5 text-gray-300" />
                                     )}
                                   </div>
