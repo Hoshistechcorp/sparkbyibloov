@@ -1,0 +1,332 @@
+import React, { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { SEOHead } from '@/components/SEOHead';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { SparkSubNav } from '@/components/spark/SparkSubNav';
+import { SparkFooter } from '@/components/spark/SparkFooter';
+import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Clock, BookOpen, ChevronDown, Play, Lock, Eye, ArrowLeft, Users, Award, CheckCircle2 } from 'lucide-react';
+
+const SparkProgramDetails = () => {
+  const { id } = useParams<{ id: string }>();
+  const [referOpen, setReferOpen] = useState(false);
+  const [expandedModule, setExpandedModule] = useState<string | null>(null);
+
+  const { data: program, isLoading: programLoading } = useQuery({
+    queryKey: ['spark-program', id],
+    queryFn: async () => {
+      const { data } = await supabase.from('spark_programs').select('*').eq('id', id!).single();
+      return data;
+    },
+    enabled: !!id,
+  });
+
+  const { data: modules = [] } = useQuery({
+    queryKey: ['spark-program-modules', id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('spark_program_modules')
+        .select('*')
+        .eq('program_id', id!)
+        .order('sort_order', { ascending: true });
+      return data || [];
+    },
+    enabled: !!id,
+  });
+
+  const { data: lessons = [] } = useQuery({
+    queryKey: ['spark-program-lessons', id],
+    queryFn: async () => {
+      const moduleIds = modules.map((m: any) => m.id);
+      if (moduleIds.length === 0) return [];
+      const { data } = await supabase
+        .from('spark_program_lessons')
+        .select('*')
+        .in('module_id', moduleIds)
+        .order('sort_order', { ascending: true });
+      return data || [];
+    },
+    enabled: modules.length > 0,
+  });
+
+  const getLessonsForModule = (moduleId: string) =>
+    lessons.filter((l: any) => l.module_id === moduleId);
+
+  const totalLessons = lessons.length;
+  const totalDuration = lessons.reduce((acc: number, l: any) => acc + (l.duration_minutes || 0), 0);
+  const formatDuration = (mins: number) => {
+    if (mins < 60) return `${mins} min`;
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return m > 0 ? `${h}h ${m}m` : `${h}h`;
+  };
+
+  const lessonTypeIcon = (type: string) => {
+    switch (type) {
+      case 'video': return <Play className="w-3.5 h-3.5" />;
+      case 'quiz': return <CheckCircle2 className="w-3.5 h-3.5" />;
+      case 'reading': return <BookOpen className="w-3.5 h-3.5" />;
+      case 'exercise': return <Award className="w-3.5 h-3.5" />;
+      default: return <BookOpen className="w-3.5 h-3.5" />;
+    }
+  };
+
+  if (programLoading) {
+    return (
+      <div className="bg-white min-h-screen font-[Nunito]">
+        <SparkSubNav activeLink="programs" />
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="w-8 h-8 border-4 border-[#ec9f00] border-t-transparent rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!program) {
+    return (
+      <div className="bg-white min-h-screen font-[Nunito]">
+        <SparkSubNav activeLink="programs" />
+        <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+          <h1 className="text-2xl font-extrabold text-gray-900">Program Not Found</h1>
+          <Link to="/spark/programs" className="text-[#ec9f00] font-bold hover:underline">← Back to Programs</Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <SEOHead title={`${program.cool_name} — Spark Programs`} description={program.description || `Learn ${program.real_name} with Spark micro-credentials.`} />
+      <div className="bg-white text-gray-900 min-h-screen font-[Nunito]">
+        <SparkSubNav activeLink="programs" />
+
+        {/* Hero */}
+        <section className="relative pt-20 md:pt-24 overflow-hidden">
+          <div className="absolute inset-0">
+            <img
+              src={program.image_url || 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&h=600&fit=crop'}
+              alt={program.cool_name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/40" />
+          </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-12 py-16 md:py-24">
+            <Link to="/spark/programs" className="inline-flex items-center gap-2 text-white/60 hover:text-white text-sm font-semibold mb-6 transition-colors">
+              <ArrowLeft className="w-4 h-4" /> Back to Programs
+            </Link>
+
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-[9px] tracking-[0.2em] uppercase font-extrabold px-3 py-1 rounded-full border text-white"
+                style={{ borderColor: program.color + '80', backgroundColor: program.color + '30' }}>
+                {program.tag}
+              </span>
+              {program.status === 'coming_soon' && (
+                <span className="text-[9px] tracking-[0.2em] uppercase font-extrabold px-3 py-1 rounded-full bg-white/20 text-white/90 border border-white/30">
+                  Coming Soon
+                </span>
+              )}
+            </div>
+
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-2 leading-[0.95] drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
+              {program.cool_name}
+            </h1>
+            <p className="text-sm md:text-base uppercase tracking-[0.15em] text-white/60 font-bold mb-4">
+              {program.real_name}
+            </p>
+            <p className="text-base md:text-lg text-white/80 max-w-2xl leading-relaxed mb-8">
+              {program.description}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4 md:gap-6 mb-8">
+              {program.duration && (
+                <div className="flex items-center gap-2 text-white/70">
+                  <Clock className="w-4 h-4" />
+                  <span className="text-sm font-semibold">{program.duration}</span>
+                </div>
+              )}
+              <div className="flex items-center gap-2 text-white/70">
+                <BookOpen className="w-4 h-4" />
+                <span className="text-sm font-semibold">{totalLessons || program.lessons || 0} lessons</span>
+              </div>
+              {totalDuration > 0 && (
+                <div className="flex items-center gap-2 text-white/70">
+                  <Play className="w-4 h-4" />
+                  <span className="text-sm font-semibold">{formatDuration(totalDuration)} total</span>
+                </div>
+              )}
+              {program.price && (
+                <div className="flex items-center gap-2 text-white">
+                  <span className="text-lg font-extrabold">${Number(program.price).toFixed(0)}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              {program.status === 'coming_soon' ? (
+                <span className="text-[11px] tracking-[0.12em] uppercase font-extrabold px-6 py-3 rounded-full bg-white/20 text-white/90 border border-white/30 backdrop-blur-sm">
+                  Coming Soon
+                </span>
+              ) : (
+                <button className="text-[11px] tracking-[0.12em] uppercase font-extrabold px-8 py-3.5 rounded-full text-white shadow-lg transition-all hover:scale-105"
+                  style={{ backgroundColor: program.color }}>
+                  Enroll Now
+                </button>
+              )}
+              {program.youtube_url && (
+                <a href={program.youtube_url} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase font-bold px-6 py-3.5 rounded-full border border-white/30 text-white/90 hover:bg-white/10 transition-all">
+                  <Play className="w-4 h-4" /> Watch About
+                </a>
+              )}
+              <button onClick={() => setReferOpen(true)}
+                className="flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase font-bold px-6 py-3.5 rounded-full border border-white/30 text-white/90 hover:bg-white/10 transition-all">
+                <Users className="w-4 h-4" /> Refer a Friend
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Course Curriculum */}
+        <section className="py-16 md:py-24 px-4 md:px-12 max-w-5xl mx-auto">
+          <div className="mb-10">
+            <span className="text-[11px] tracking-[0.3em] uppercase text-[#c48500] font-bold mb-3 block">Course Curriculum</span>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-2">
+              What You'll Learn
+            </h2>
+            <p className="text-gray-400 text-base">
+              {modules.length > 0
+                ? `${modules.length} modules · ${totalLessons} lessons · ${formatDuration(totalDuration)} of content`
+                : 'Curriculum details coming soon. Check back for updates.'}
+            </p>
+          </div>
+
+          {modules.length > 0 ? (
+            <div className="space-y-3">
+              {modules.map((mod: any, idx: number) => {
+                const modLessons = getLessonsForModule(mod.id);
+                const modDuration = modLessons.reduce((a: number, l: any) => a + (l.duration_minutes || 0), 0);
+                const isExpanded = expandedModule === mod.id;
+
+                return (
+                  <motion.div key={mod.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="border border-gray-100 rounded-2xl overflow-hidden bg-white hover:shadow-md transition-shadow">
+                    
+                    <button
+                      onClick={() => setExpandedModule(isExpanded ? null : mod.id)}
+                      className="w-full flex items-center gap-4 p-5 md:p-6 text-left hover:bg-gray-50/50 transition-colors">
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-extrabold text-white flex-shrink-0"
+                        style={{ backgroundColor: program.color }}>
+                        {String(idx + 1).padStart(2, '0')}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm md:text-base font-bold text-gray-900 truncate">{mod.title}</h3>
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          {modLessons.length} lesson{modLessons.length !== 1 ? 's' : ''} · {formatDuration(modDuration)}
+                        </p>
+                      </div>
+                      <ChevronDown className={`w-5 h-5 text-gray-300 transition-transform duration-300 flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden">
+                          {mod.description && (
+                            <p className="px-5 md:px-6 pb-3 text-sm text-gray-500 leading-relaxed">
+                              {mod.description}
+                            </p>
+                          )}
+                          <div className="border-t border-gray-50">
+                            {modLessons.map((lesson: any, lIdx: number) => (
+                              <div key={lesson.id}
+                                className={`flex items-center gap-4 px-5 md:px-6 py-3.5 hover:bg-gray-50/80 transition-colors ${lIdx < modLessons.length - 1 ? 'border-b border-gray-50' : ''}`}>
+                                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0" style={{ color: program.color }}>
+                                  {lessonTypeIcon(lesson.lesson_type)}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-semibold text-gray-800 truncate">{lesson.title}</p>
+                                  {lesson.description && (
+                                    <p className="text-xs text-gray-400 mt-0.5 truncate">{lesson.description}</p>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-3 flex-shrink-0">
+                                  {lesson.is_free_preview && (
+                                    <span className="text-[9px] tracking-[0.1em] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">
+                                      Preview
+                                    </span>
+                                  )}
+                                  <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-300 bg-gray-50 px-2 py-1 rounded">
+                                    {lesson.lesson_type}
+                                  </span>
+                                  {lesson.duration_minutes > 0 && (
+                                    <span className="text-xs text-gray-400 font-medium whitespace-nowrap">
+                                      {formatDuration(lesson.duration_minutes)}
+                                    </span>
+                                  )}
+                                  {!lesson.is_free_preview && (
+                                    <Lock className="w-3.5 h-3.5 text-gray-300" />
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-16 bg-gray-50 rounded-2xl">
+              <BookOpen className="w-12 h-12 text-gray-200 mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-gray-400 mb-2">Curriculum Coming Soon</h3>
+              <p className="text-sm text-gray-300 max-w-md mx-auto">
+                We're putting the finishing touches on this program's curriculum. Check back soon for the full lesson breakdown.
+              </p>
+            </div>
+          )}
+        </section>
+
+        {/* CTA */}
+        <section className="py-16 md:py-20 px-4 md:px-6 text-center bg-gray-50">
+          <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-4">Ready to start?</h2>
+          <p className="text-gray-400 mb-8 max-w-lg mx-auto">
+            Join thousands of learners building real-world skills in hospitality, events, and tourism.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            {program.status === 'coming_soon' ? (
+              <span className="text-sm tracking-[0.08em] uppercase font-extrabold px-8 py-4 rounded-full bg-gray-200 text-gray-500">
+                Coming Soon
+              </span>
+            ) : (
+              <button className="text-white font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:scale-105 transition-all shadow-lg"
+                style={{ backgroundColor: program.color, boxShadow: `0 10px 25px -5px ${program.color}40` }}>
+                Enroll Now — ${Number(program.price || 0).toFixed(0)}
+              </button>
+            )}
+            <Link to="/spark/programs"
+              className="border-2 border-gray-200 text-gray-600 font-bold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-gray-50 transition-all">
+              Browse All Programs
+            </Link>
+          </div>
+        </section>
+
+        <SparkReferDialog open={referOpen} onClose={() => setReferOpen(false)} />
+        <SparkFooter />
+      </div>
+    </>
+  );
+};
+
+export default SparkProgramDetails;
