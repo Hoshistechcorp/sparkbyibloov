@@ -7,7 +7,7 @@ import { SparkSubNav } from '@/components/spark/SparkSubNav';
 import { SparkFooter } from '@/components/spark/SparkFooter';
 import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, BookOpen, ChevronDown, Play, Lock, ArrowLeft, Users, Award, CheckCircle2, Check } from 'lucide-react';
+import { Clock, BookOpen, ChevronDown, Play, Lock, ArrowLeft, Users, Award, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const MODULE_THUMBNAILS = [
@@ -113,7 +113,7 @@ const SparkProgramDetails = () => {
     enabled: !!user && lessons.length > 0,
   });
 
-  const isEnrolled = !!enrollment;
+  
   const completedLessonIds = new Set(lessonProgress.map((p: any) => p.lesson_id));
   const progressPercentage = lessons.length > 0 ? Math.round((completedLessonIds.size / lessons.length) * 100) : 0;
 
