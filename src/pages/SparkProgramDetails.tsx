@@ -419,15 +419,18 @@ const SparkProgramDetails = () => {
                           <div className="px-5 md:px-6 pb-5 md:pb-6 pt-2 space-y-2">
                             {modLessons.map((lesson: any, lIdx: number) => {
                               const lessonThumb = LESSON_THUMBNAILS[lIdx % LESSON_THUMBNAILS.length];
+                              const isLessonCompleted = completedLessonIds.has(lesson.id);
                               return (
                                 <motion.div key={lesson.id}
                                   initial={{ opacity: 0, x: -10 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ delay: lIdx * 0.05 }}
                                   className={`flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-xl transition-all duration-200 group/lesson cursor-pointer ${
-                                    lesson.is_free_preview 
-                                      ? 'bg-gradient-to-r from-emerald-50/80 to-white hover:from-emerald-50 border border-emerald-100/50' 
-                                      : 'bg-gray-50/60 hover:bg-gray-50 border border-transparent hover:border-gray-100'
+                                    isLessonCompleted
+                                      ? 'bg-gradient-to-r from-emerald-50/60 to-white border border-emerald-100/50'
+                                      : lesson.is_free_preview 
+                                        ? 'bg-gradient-to-r from-emerald-50/80 to-white hover:from-emerald-50 border border-emerald-100/50' 
+                                        : 'bg-gray-50/60 hover:bg-gray-50 border border-transparent hover:border-gray-100'
                                   }`}>
                                   {/* Lesson thumbnail */}
                                   <div className="relative w-16 h-12 md:w-20 md:h-14 rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
