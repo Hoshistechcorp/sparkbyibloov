@@ -11,6 +11,7 @@ import SparkNews from "./pages/SparkNews";
 import SparkAdmin from "./pages/SparkAdmin";
 import SparkAuth from "./pages/SparkAuth";
 import SparkPartners from "./pages/SparkPartners";
+import SparkMyPrograms from "./pages/SparkMyPrograms";
 import NotFound from "./pages/NotFound";
 const App = () => (
   <TooltipProvider>
@@ -24,6 +25,7 @@ const App = () => (
       <Route path="/spark/media" element={<SparkMedia />} />
       <Route path="/spark/events" element={<SparkEvents />} />
       <Route path="/spark/news" element={<SparkNews />} />
+      <Route path="/spark/my-programs" element={<SparkMyPrograms />} />
       <Route path="/spark/admin" element={<SparkAdmin />} />
       <Route path="/spark/auth" element={<SparkAuth />} />
       <Route path="/spark/partners" element={<SparkPartners />} />
