@@ -162,7 +162,7 @@ export const SparkHero = () => {
           </Link>
           <Link to="/spark/partners">
             <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-              className="border-2 border-gray-300 text-gray-700 font-bold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-white/60 transition-all">
+              className="border-2 border-white/40 text-white font-bold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-white/20 transition-all">
               Partner With Us
             </motion.button>
           </Link>
