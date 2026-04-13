@@ -608,6 +608,97 @@ const SparkProgramDetails = () => {
             </div>
           )}
         </section>
+
+        {/* Weekly Live Class */}
+        {liveClasses.length > 0 && (
+          <section className="py-16 md:py-20 px-4 md:px-12 bg-gradient-to-br from-gray-900 via-gray-900 to-black">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-12">
+                <span className="text-[11px] tracking-[0.3em] uppercase font-bold mb-3 block" style={{ color: program.color }}>Live Learning</span>
+                <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-3">Weekly Live Class</h2>
+                <p className="text-gray-400 text-base max-w-xl mx-auto">Join your instructor for interactive live sessions every week.</p>
+              </div>
+              
+              {liveClasses.map((lc: any) => (
+                <motion.div key={lc.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="relative rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm max-w-3xl mx-auto">
+                  <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: program.color }} />
+                  <div className="p-6 md:p-10">
+                    <div className="flex flex-col md:flex-row md:items-start gap-6">
+                      {/* Live indicator */}
+                      <div className="flex-shrink-0">
+                        <div className="w-20 h-20 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: program.color + '20' }}>
+                          <Video className="w-7 h-7 mb-1" style={{ color: program.color }} />
+                          <span className="text-[9px] tracking-[0.15em] uppercase font-extrabold" style={{ color: program.color }}>LIVE</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex-1">
+                        <h3 className="text-xl md:text-2xl font-extrabold text-white mb-2">{lc.title}</h3>
+                        <p className="text-gray-400 text-sm mb-4 leading-relaxed">{lc.description}</p>
+                        
+                        <div className="flex flex-wrap gap-3 mb-6">
+                          <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full bg-white/10 text-white/80">
+                            <Calendar className="w-3.5 h-3.5" />
+                            Every {lc.day_of_week}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full bg-white/10 text-white/80">
+                            <Clock className="w-3.5 h-3.5" />
+                            {lc.time}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full bg-white/10 text-white/80">
+                            <Users className="w-3.5 h-3.5" />
+                            {lc.instructor_name}
+                          </span>
+                        </div>
+                        
+                        {enrollment ? (
+                          <a href={lc.meeting_url || '#'} target="_blank" rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase font-extrabold px-6 py-3 rounded-full text-white shadow-lg hover:scale-105 transition-all"
+                            style={{ backgroundColor: program.color }}>
+                            <Play className="w-4 h-4" /> Join Live Class
+                          </a>
+                        ) : (
+                          <p className="text-xs text-gray-500 italic">Enroll in this program to join the weekly live class.</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Certificate Section */}
+        {enrollment && progressPercentage === 100 && (
+          <section className="py-16 md:py-20 px-4 md:px-12">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="max-w-3xl mx-auto text-center bg-gradient-to-br from-[#0f0f12] to-gray-900 rounded-3xl p-10 md:p-16 border border-white/10 relative overflow-hidden">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full blur-[80px]" style={{ backgroundColor: program.color + '30' }} />
+              <div className="relative z-10">
+                <div className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center" style={{ backgroundColor: program.color + '20' }}>
+                  <Award className="w-10 h-10" style={{ color: program.color }} />
+                </div>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-3">🎉 Congratulations!</h2>
+                <p className="text-gray-400 mb-2">You've completed all {totalLessons} lessons in</p>
+                <p className="text-xl font-extrabold mb-6" style={{ color: program.color }}>{program.cool_name}</p>
+                <button onClick={generateCertificate}
+                  className="inline-flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase font-extrabold px-8 py-4 rounded-full text-white shadow-lg hover:scale-105 transition-all"
+                  style={{ backgroundColor: program.color, boxShadow: `0 10px 25px -5px ${program.color}40` }}>
+                  <Download className="w-5 h-5" /> Download Certificate
+                </button>
+              </div>
+            </motion.div>
+          </section>
+        )}
+
         <section className="py-16 md:py-20 px-4 md:px-6 text-center bg-gray-50">
           <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-4">Ready to start?</h2>
           <p className="text-gray-400 mb-8 max-w-lg mx-auto">
