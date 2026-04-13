@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -95,6 +95,18 @@ const SparkProgramDetails = () => {
       return data;
     },
     enabled: !!user && !!id,
+  });
+
+  const { data: liveClasses = [] } = useQuery({
+    queryKey: ['program-live-classes', id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('program_live_classes')
+        .select('*')
+        .eq('program_id', id!);
+      return data || [];
+    },
+    enabled: !!id,
   });
 
   const { data: lessonProgress = [] } = useQuery({
