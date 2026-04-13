@@ -69,9 +69,9 @@ export const SparkSubNav: React.FC<SparkSubNavProps> = ({ activeLink }) => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link to={isLoggedIn ? "/spark/my-programs" : "/spark/auth"}
+          <Link to={isLoggedIn ? "/spark/profile" : "/spark/auth"}
             className="hidden md:inline-block bg-[#ec9f00] text-white text-[11px] font-extrabold tracking-[0.12em] uppercase px-5 py-2.5 rounded-full hover:bg-[#d48e00] transition-colors shadow-sm">
-            {isLoggedIn ? 'My Programs' : 'Get Started'}
+            {isLoggedIn ? 'Profile' : 'Get Started'}
           </Link>
           <button onClick={() => setMobileOpen(true)} className="md:hidden p-2 text-gray-700">
             <Menu className="w-5 h-5" />
@@ -99,9 +99,9 @@ export const SparkSubNav: React.FC<SparkSubNavProps> = ({ activeLink }) => {
                 </motion.div>
               ))}
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                <Link to={isLoggedIn ? "/spark/my-programs" : "/spark/auth"} onClick={() => setMobileOpen(false)}
+                <Link to={isLoggedIn ? "/spark/profile" : "/spark/auth"} onClick={() => setMobileOpen(false)}
                   className="mt-4 inline-block bg-[#ec9f00] text-white font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-3 rounded-full">
-                  {isLoggedIn ? 'My Programs' : 'Get Started'}
+                  {isLoggedIn ? 'Profile' : 'Get Started'}
                 </Link>
               </motion.div>
             </div>

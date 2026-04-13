@@ -12,6 +12,7 @@ import SparkAdmin from "./pages/SparkAdmin";
 import SparkAuth from "./pages/SparkAuth";
 import SparkPartners from "./pages/SparkPartners";
 import SparkMyPrograms from "./pages/SparkMyPrograms";
+import SparkProfile from "./pages/SparkProfile";
 import NotFound from "./pages/NotFound";
 const App = () => (
   <TooltipProvider>
@@ -28,6 +29,7 @@ const App = () => (
       <Route path="/spark/my-programs" element={<SparkMyPrograms />} />
       <Route path="/spark/admin" element={<SparkAdmin />} />
       <Route path="/spark/auth" element={<SparkAuth />} />
+      <Route path="/spark/profile" element={<SparkProfile />} />
       <Route path="/spark/partners" element={<SparkPartners />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
