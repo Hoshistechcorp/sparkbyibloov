@@ -130,17 +130,17 @@ export const SparkHero = () => {
         </div>
       </div>
 
-      <div className="absolute inset-0 bg-white/75" />
+      <div className="absolute inset-0 bg-black/65" />
 
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }} className="mb-6">
-          <span className="text-[11px] tracking-[0.4em] uppercase text-[#c48500] font-bold">
+          <span className="text-[11px] tracking-[0.4em] uppercase text-[#f0b840] font-bold">
             Micro-Credentials · Hospitality · Events · Tourism
           </span>
         </motion.div>
 
         <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.7 }}
-          className="text-3xl md:text-5xl lg:text-[5.5rem] font-black leading-[0.92] tracking-tight mb-6 md:mb-8 text-gray-900">
+          className="text-3xl md:text-5xl lg:text-[5.5rem] font-black leading-[0.92] tracking-tight mb-6 md:mb-8 text-white">
           Learn what<br />
           <span className="bg-gradient-to-r from-[#ec9f00] via-[#f0b840] to-[#00C896] bg-clip-text text-transparent">
             actually matters.
@@ -148,7 +148,7 @@ export const SparkHero = () => {
         </motion.h1>
 
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 1 }}
-          className="text-sm md:text-lg text-gray-700 font-medium max-w-xl mx-auto mb-8 md:mb-10 leading-relaxed px-2">
+          className="text-sm md:text-lg text-gray-200 font-medium max-w-xl mx-auto mb-8 md:mb-10 leading-relaxed px-2">
           World-class education meets real-world skills. Stackable credentials for the next generation of industry leaders.
         </motion.p>
 
