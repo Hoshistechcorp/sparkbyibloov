@@ -12,6 +12,7 @@ import SparkAdmin from "./pages/SparkAdmin";
 import SparkAuth from "./pages/SparkAuth";
 import SparkPartners from "./pages/SparkPartners";
 import SparkMyPrograms from "./pages/SparkMyPrograms";
+import SparkProfile from "./pages/SparkProfile";
 import NotFound from "./pages/NotFound";
 const App = () => (
   <TooltipProvider>
