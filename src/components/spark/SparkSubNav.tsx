@@ -31,9 +31,24 @@ export const SparkSubNav: React.FC<SparkSubNavProps> = ({ activeLink }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const allLinks = isLoggedIn
-    ? [...navLinks, { to: '/spark/my-programs', label: 'My Programs' }]
-    : navLinks;
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data } = await supabase.rpc('has_role', { _user_id: session.user.id, _role: 'admin' });
+        setIsAdmin(!!data);
+      }
+    };
+    if (isLoggedIn) checkAdmin();
+  }, [isLoggedIn]);
+
+  const allLinks = [
+    ...navLinks,
+    ...(isLoggedIn ? [{ to: '/spark/my-programs', label: 'My Programs' }] : []),
+    ...(isAdmin ? [{ to: '/spark/admin', label: 'Admin' }] : []),
+  ];
 
   return (
     <>
