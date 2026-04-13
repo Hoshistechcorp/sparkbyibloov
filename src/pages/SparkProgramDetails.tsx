@@ -368,11 +368,6 @@ const SparkProgramDetails = () => {
                   <span className="text-sm font-semibold">{formatDuration(totalDuration)} total</span>
                 </div>
               )}
-              {program.price && (
-                <div className="flex items-center gap-2 text-white">
-                  <span className="text-lg font-extrabold">${Number(program.price).toFixed(0)}</span>
-                </div>
-              )}
             </div>
 
             <div className="flex flex-wrap gap-3">
@@ -647,7 +642,23 @@ const SparkProgramDetails = () => {
                           </span>
                           <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full bg-white/10 text-white/80">
                             <Clock className="w-3.5 h-3.5" />
-                            {lc.time}
+                            {(() => {
+                              const watTimeMatch = lc.time?.match(/(\d{1,2}):(\d{2})\s*(AM|PM)\s*WAT/i);
+                              if (!watTimeMatch) return lc.time;
+                              let hours = parseInt(watTimeMatch[1]);
+                              const mins = watTimeMatch[2];
+                              const ampm = watTimeMatch[3].toUpperCase();
+                              if (ampm === 'PM' && hours !== 12) hours += 12;
+                              if (ampm === 'AM' && hours === 12) hours = 0;
+                              const now = new Date();
+                              const watDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), hours - 1, parseInt(mins)));
+                              const localTime = watDate.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+                              const tz = Intl.DateTimeFormat().resolvedOptions().timeZone.split('/').pop()?.replace(/_/g, ' ') || '';
+                              return `${localTime} (your time)`;
+                            })()}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full bg-white/5 text-white/50">
+                            {lc.time} (original)
                           </span>
                           <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full bg-white/10 text-white/80">
                             <Users className="w-3.5 h-3.5" />
@@ -719,7 +730,7 @@ const SparkProgramDetails = () => {
               <button onClick={handleEnroll} disabled={enrollMutation.isPending}
                 className="text-white font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:scale-105 transition-all shadow-lg disabled:opacity-50"
                 style={{ backgroundColor: program.color, boxShadow: `0 10px 25px -5px ${program.color}40` }}>
-                {enrollMutation.isPending ? 'Enrolling...' : `Enroll Now — $${Number(program.price || 0).toFixed(0)}`}
+                {enrollMutation.isPending ? 'Enrolling...' : 'Enroll Now'}
               </button>
             )}
             <Link to="/spark/programs"
