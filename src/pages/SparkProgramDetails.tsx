@@ -7,7 +7,7 @@ import { SparkSubNav } from '@/components/spark/SparkSubNav';
 import { SparkFooter } from '@/components/spark/SparkFooter';
 import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, BookOpen, ChevronDown, Play, Lock, ArrowLeft, Users, Award, CheckCircle2 } from 'lucide-react';
+import { Clock, BookOpen, ChevronDown, Play, Lock, ArrowLeft, Users, Award, CheckCircle2, Download, Video, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const MODULE_THUMBNAILS = [
@@ -97,6 +97,18 @@ const SparkProgramDetails = () => {
     enabled: !!user && !!id,
   });
 
+  const { data: liveClasses = [] } = useQuery({
+    queryKey: ['program-live-classes', id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('program_live_classes')
+        .select('*')
+        .eq('program_id', id!);
+      return data || [];
+    },
+    enabled: !!id,
+  });
+
   const { data: lessonProgress = [] } = useQuery({
     queryKey: ['my-lesson-progress', id, user?.id],
     queryFn: async () => {
@@ -181,6 +193,95 @@ const SparkProgramDetails = () => {
       case 'exercise': return <Award className="w-3.5 h-3.5" />;
       default: return <BookOpen className="w-3.5 h-3.5" />;
     }
+  };
+
+  const generateCertificate = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1400;
+    canvas.height = 900;
+    const ctx = canvas.getContext('2d')!;
+    
+    // Background
+    ctx.fillStyle = '#0f0f12';
+    ctx.fillRect(0, 0, 1400, 900);
+    
+    // Gold border
+    ctx.strokeStyle = program.color;
+    ctx.lineWidth = 4;
+    ctx.strokeRect(40, 40, 1320, 820);
+    ctx.strokeStyle = program.color + '40';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(55, 55, 1290, 790);
+    
+    // Top badge
+    ctx.fillStyle = program.color;
+    ctx.font = 'bold 11px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('SPARK BY IBLOOV', 700, 120);
+    
+    // Title
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 48px Georgia';
+    ctx.fillText('Certificate of Completion', 700, 200);
+    
+    // Divider
+    ctx.strokeStyle = program.color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(500, 230);
+    ctx.lineTo(900, 230);
+    ctx.stroke();
+    
+    // Subtitle
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '18px Arial';
+    ctx.fillText('This certifies that', 700, 300);
+    
+    // User name
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 40px Georgia';
+    ctx.fillText(user?.email?.split('@')[0] || 'Learner', 700, 370);
+    
+    // Body
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '18px Arial';
+    ctx.fillText('has successfully completed all lessons in', 700, 430);
+    
+    // Program name
+    ctx.fillStyle = program.color;
+    ctx.font = 'bold 36px Georgia';
+    ctx.fillText(program.cool_name, 700, 500);
+    
+    ctx.fillStyle = '#6b7280';
+    ctx.font = '16px Arial';
+    ctx.fillText(program.real_name, 700, 540);
+    
+    // Date
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '16px Arial';
+    ctx.fillText(`Issued on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, 700, 620);
+    
+    // Program details
+    ctx.fillStyle = '#6b7280';
+    ctx.font = '14px Arial';
+    ctx.fillText(`${totalLessons} Lessons · ${formatDuration(totalDuration)} · ${modules.length} Modules`, 700, 660);
+    
+    // Award icon placeholder
+    ctx.fillStyle = program.color + '20';
+    ctx.beginPath();
+    ctx.arc(700, 760, 30, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = program.color;
+    ctx.font = 'bold 24px Arial';
+    ctx.fillText('★', 700, 770);
+    
+    // Download
+    const link = document.createElement('a');
+    link.download = `Spark-Certificate-${program.cool_name.replace(/\s+/g, '-')}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    
+    toast({ title: '🎓 Certificate Downloaded!', description: 'Your certificate of completion has been saved.' });
   };
 
   if (programLoading) {
@@ -507,6 +608,97 @@ const SparkProgramDetails = () => {
             </div>
           )}
         </section>
+
+        {/* Weekly Live Class */}
+        {liveClasses.length > 0 && (
+          <section className="py-16 md:py-20 px-4 md:px-12 bg-gradient-to-br from-gray-900 via-gray-900 to-black">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-12">
+                <span className="text-[11px] tracking-[0.3em] uppercase font-bold mb-3 block" style={{ color: program.color }}>Live Learning</span>
+                <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-3">Weekly Live Class</h2>
+                <p className="text-gray-400 text-base max-w-xl mx-auto">Join your instructor for interactive live sessions every week.</p>
+              </div>
+              
+              {liveClasses.map((lc: any) => (
+                <motion.div key={lc.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="relative rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm max-w-3xl mx-auto">
+                  <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: program.color }} />
+                  <div className="p-6 md:p-10">
+                    <div className="flex flex-col md:flex-row md:items-start gap-6">
+                      {/* Live indicator */}
+                      <div className="flex-shrink-0">
+                        <div className="w-20 h-20 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: program.color + '20' }}>
+                          <Video className="w-7 h-7 mb-1" style={{ color: program.color }} />
+                          <span className="text-[9px] tracking-[0.15em] uppercase font-extrabold" style={{ color: program.color }}>LIVE</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex-1">
+                        <h3 className="text-xl md:text-2xl font-extrabold text-white mb-2">{lc.title}</h3>
+                        <p className="text-gray-400 text-sm mb-4 leading-relaxed">{lc.description}</p>
+                        
+                        <div className="flex flex-wrap gap-3 mb-6">
+                          <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full bg-white/10 text-white/80">
+                            <Calendar className="w-3.5 h-3.5" />
+                            Every {lc.day_of_week}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full bg-white/10 text-white/80">
+                            <Clock className="w-3.5 h-3.5" />
+                            {lc.time}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full bg-white/10 text-white/80">
+                            <Users className="w-3.5 h-3.5" />
+                            {lc.instructor_name}
+                          </span>
+                        </div>
+                        
+                        {enrollment ? (
+                          <a href={lc.meeting_url || '#'} target="_blank" rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase font-extrabold px-6 py-3 rounded-full text-white shadow-lg hover:scale-105 transition-all"
+                            style={{ backgroundColor: program.color }}>
+                            <Play className="w-4 h-4" /> Join Live Class
+                          </a>
+                        ) : (
+                          <p className="text-xs text-gray-500 italic">Enroll in this program to join the weekly live class.</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Certificate Section */}
+        {enrollment && progressPercentage === 100 && (
+          <section className="py-16 md:py-20 px-4 md:px-12">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="max-w-3xl mx-auto text-center bg-gradient-to-br from-[#0f0f12] to-gray-900 rounded-3xl p-10 md:p-16 border border-white/10 relative overflow-hidden">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full blur-[80px]" style={{ backgroundColor: program.color + '30' }} />
+              <div className="relative z-10">
+                <div className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center" style={{ backgroundColor: program.color + '20' }}>
+                  <Award className="w-10 h-10" style={{ color: program.color }} />
+                </div>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-3">🎉 Congratulations!</h2>
+                <p className="text-gray-400 mb-2">You've completed all {totalLessons} lessons in</p>
+                <p className="text-xl font-extrabold mb-6" style={{ color: program.color }}>{program.cool_name}</p>
+                <button onClick={generateCertificate}
+                  className="inline-flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase font-extrabold px-8 py-4 rounded-full text-white shadow-lg hover:scale-105 transition-all"
+                  style={{ backgroundColor: program.color, boxShadow: `0 10px 25px -5px ${program.color}40` }}>
+                  <Download className="w-5 h-5" /> Download Certificate
+                </button>
+              </div>
+            </motion.div>
+          </section>
+        )}
+
         <section className="py-16 md:py-20 px-4 md:px-6 text-center bg-gray-50">
           <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-4">Ready to start?</h2>
           <p className="text-gray-400 mb-8 max-w-lg mx-auto">

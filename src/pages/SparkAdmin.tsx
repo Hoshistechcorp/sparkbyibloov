@@ -187,27 +187,82 @@ const eventTypeData = [
   { name: 'Meetup', value: 15, color: '#00C896' },
 ];
 
-const programEnrollmentData = [
-  { name: 'Architect', enrolled: 245 },
-  { name: 'Plotter', enrolled: 189 },
-  { name: 'Alchemist', enrolled: 312 },
-  { name: 'Gatekeeper', enrolled: 156 },
-  { name: 'Voice', enrolled: 278 },
-  { name: 'Narrator', enrolled: 420 },
-  { name: 'Lens', enrolled: 198 },
-  { name: 'Selector', enrolled: 267 },
-];
-
 const DashboardTab = () => {
   const { data: eventsCount = 0 } = useQuery({ queryKey: ['admin-events-count'], queryFn: async () => { const { count } = await supabase.from('spark_events').select('*', { count: 'exact', head: true }); return count || 0; } });
   const { data: postsCount = 0 } = useQuery({ queryKey: ['admin-posts-count'], queryFn: async () => { const { count } = await supabase.from('blog_posts').select('*', { count: 'exact', head: true }); return count || 0; } });
   const { data: usersCount = 0 } = useQuery({ queryKey: ['admin-users-count'], queryFn: async () => { const { count } = await supabase.from('profiles').select('*', { count: 'exact', head: true }); return count || 0; } });
 
+  // Real enrollment data
+  const { data: enrollments = [] } = useQuery({
+    queryKey: ['admin-all-enrollments'],
+    queryFn: async () => {
+      const { data } = await supabase.from('program_enrollments').select('*, spark_programs(cool_name)');
+      return data || [];
+    },
+  });
+
+  const { data: allPrograms = [] } = useQuery({
+    queryKey: ['admin-all-programs'],
+    queryFn: async () => {
+      const { data } = await supabase.from('spark_programs').select('id, cool_name, color');
+      return data || [];
+    },
+  });
+
+  const { data: allModules = [] } = useQuery({
+    queryKey: ['admin-all-modules'],
+    queryFn: async () => {
+      const { data } = await supabase.from('spark_program_modules').select('id, program_id');
+      return data || [];
+    },
+  });
+
+  const { data: allLessons = [] } = useQuery({
+    queryKey: ['admin-all-lessons'],
+    queryFn: async () => {
+      const { data } = await supabase.from('spark_program_lessons').select('id, module_id');
+      return data || [];
+    },
+  });
+
+  const { data: allProgress = [] } = useQuery({
+    queryKey: ['admin-all-progress'],
+    queryFn: async () => {
+      const { data } = await supabase.from('lesson_progress').select('user_id, lesson_id, completed').eq('completed', true);
+      return data || [];
+    },
+  });
+
+  // Build real enrollment chart data
+  const enrollmentChartData = allPrograms.map((p: any) => {
+    const count = enrollments.filter((e: any) => e.program_id === p.id).length;
+    const mods = allModules.filter((m: any) => m.program_id === p.id);
+    const modIds = mods.map((m: any) => m.id);
+    const programLessons = allLessons.filter((l: any) => modIds.includes(l.module_id));
+    const totalLessons = programLessons.length;
+    
+    // Calculate avg completion rate
+    const enrolledUserIds = [...new Set(enrollments.filter((e: any) => e.program_id === p.id).map((e: any) => e.user_id))];
+    let avgCompletion = 0;
+    if (enrolledUserIds.length > 0 && totalLessons > 0) {
+      const lessonIds = programLessons.map((l: any) => l.id);
+      const totalCompleted = enrolledUserIds.reduce((acc: number, uid: string) => {
+        const userCompleted = allProgress.filter((pr: any) => pr.user_id === uid && lessonIds.includes(pr.lesson_id)).length;
+        return acc + userCompleted;
+      }, 0);
+      avgCompletion = Math.round((totalCompleted / (enrolledUserIds.length * totalLessons)) * 100);
+    }
+    
+    return { name: p.cool_name?.replace('The ', ''), enrolled: count, completion: avgCompletion, color: p.color };
+  });
+
+  const totalEnrollments = enrollments.length;
+
   const stats = [
     { label: 'Total Learners', value: usersCount, change: '+18%', up: true, icon: Users, color: '#ec9f00' },
+    { label: 'Enrollments', value: totalEnrollments, change: `${allPrograms.length} programs`, up: true, icon: BookOpen, color: '#00C896' },
     { label: 'Active Events', value: eventsCount, change: '+12%', up: true, icon: Calendar, color: '#7B61FF' },
     { label: 'Blog Posts', value: postsCount, change: '+24%', up: true, icon: FileText, color: '#FF6B35' },
-    { label: 'Programs', value: 8, change: '0%', up: true, icon: BookOpen, color: '#00C896' },
   ];
 
   return (
@@ -225,7 +280,7 @@ const DashboardTab = () => {
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: s.color + '15' }}>
                 <s.icon className="w-4 h-4" style={{ color: s.color }} />
               </div>
-              <div className={`flex items-center gap-0.5 text-[11px] font-bold ${s.up ? 'text-emerald-400' : 'text-red-400'}`}>
+              <div className="flex items-center gap-0.5 text-[11px] font-bold text-emerald-400">
                 {s.up ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
                 {s.change}
               </div>
@@ -291,16 +346,17 @@ const DashboardTab = () => {
         </div>
       </div>
 
-      {/* Program enrollments bar chart */}
+      {/* Program enrollments bar chart - REAL DATA */}
       <div className="bg-[#1c1c26] rounded-xl p-5 border border-white/5">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-sm font-bold text-white">Program Enrollments</h3>
-            <p className="text-[11px] text-gray-500">Total enrolled per program</p>
+            <p className="text-[11px] text-gray-500">Real enrollment data per program</p>
           </div>
+          <span className="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded">LIVE DATA</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
-          <BarChart data={programEnrollmentData}>
+          <BarChart data={enrollmentChartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#ffffff08" />
             <XAxis dataKey="name" tick={{ fill: '#666', fontSize: 10 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: '#666', fontSize: 11 }} axisLine={false} tickLine={false} />
@@ -308,6 +364,28 @@ const DashboardTab = () => {
             <Bar dataKey="enrolled" fill="#ec9f00" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* Completion Rates Table */}
+      <div className="bg-[#1c1c26] rounded-xl p-5 border border-white/5">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="text-sm font-bold text-white">Completion Rates</h3>
+            <p className="text-[11px] text-gray-500">Average learner progress per program</p>
+          </div>
+        </div>
+        <div className="space-y-3">
+          {enrollmentChartData.map((p: any) => (
+            <div key={p.name} className="flex items-center gap-4">
+              <span className="text-xs font-bold text-gray-400 w-24 truncate">{p.name}</span>
+              <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
+                <div className="h-full rounded-full transition-all" style={{ width: `${p.completion}%`, backgroundColor: p.color || '#ec9f00' }} />
+              </div>
+              <span className="text-xs font-extrabold text-white w-12 text-right">{p.completion}%</span>
+              <span className="text-[10px] text-gray-500 w-20 text-right">{p.enrolled} enrolled</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Quick actions */}
@@ -323,7 +401,6 @@ const DashboardTab = () => {
     </div>
   );
 };
-
 /* ─── EVENTS ─── */
 const EventsTab = () => {
   const queryClient = useQueryClient();

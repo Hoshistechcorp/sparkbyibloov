@@ -227,6 +227,59 @@ export type Database = {
           },
         ]
       }
+      program_live_classes: {
+        Row: {
+          created_at: string
+          day_of_week: string
+          description: string | null
+          id: string
+          instructor_name: string
+          is_recurring: boolean
+          meeting_url: string | null
+          next_session_date: string | null
+          program_id: string
+          time: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          day_of_week?: string
+          description?: string | null
+          id?: string
+          instructor_name?: string
+          is_recurring?: boolean
+          meeting_url?: string | null
+          next_session_date?: string | null
+          program_id: string
+          time?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          day_of_week?: string
+          description?: string | null
+          id?: string
+          instructor_name?: string
+          is_recurring?: boolean
+          meeting_url?: string | null
+          next_session_date?: string | null
+          program_id?: string
+          time?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "program_live_classes_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "spark_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       spark_events: {
         Row: {
           cover_image_url: string | null

@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { SparkSubNav } from '@/components/spark/SparkSubNav';
 import { SparkFooter } from '@/components/spark/SparkFooter';
 import { motion } from 'framer-motion';
-import { BookOpen, Clock, Play, CheckCircle2, ArrowRight, GraduationCap, TrendingUp } from 'lucide-react';
+import { BookOpen, Clock, CheckCircle2, ArrowRight, GraduationCap, TrendingUp, Award } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const SparkMyPrograms = () => {
@@ -247,9 +247,15 @@ const SparkMyPrograms = () => {
                                 <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {program.duration}</span>
                               )}
                               <span className="flex items-center gap-1"><BookOpen className="w-3 h-3" /> {progress.total} lessons</span>
-                              <span className="ml-auto text-[#c48500] font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
-                                Continue <ArrowRight className="w-3.5 h-3.5" />
-                              </span>
+                              {progress.percentage === 100 ? (
+                                <span className="ml-auto flex items-center gap-1 font-bold text-emerald-500">
+                                  <Award className="w-3.5 h-3.5" /> Certificate Ready
+                                </span>
+                              ) : (
+                                <span className="ml-auto text-[#c48500] font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
+                                  Continue <ArrowRight className="w-3.5 h-3.5" />
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
