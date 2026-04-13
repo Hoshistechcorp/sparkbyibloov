@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { SparkSubNav } from '@/components/spark/SparkSubNav';
 import { supabase } from '@/integrations/supabase/client';
-import { User, LogOut, Mail, Calendar, BookOpen, Loader2 } from 'lucide-react';
+import { LogOut, Mail, Calendar, BookOpen, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
