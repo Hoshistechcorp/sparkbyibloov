@@ -653,7 +653,7 @@ const SparkProgramDetails = () => {
                               const now = new Date();
                               const watDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), hours - 1, parseInt(mins)));
                               const localTime = watDate.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
-                              const tz = Intl.DateTimeFormat().resolvedOptions().timeZone.split('/').pop()?.replace(/_/g, ' ') || '';
+                              
                               return `${localTime} (your time)`;
                             })()}
                           </span>
