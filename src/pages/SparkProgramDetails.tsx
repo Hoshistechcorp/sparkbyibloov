@@ -195,6 +195,95 @@ const SparkProgramDetails = () => {
     }
   };
 
+  const generateCertificate = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1400;
+    canvas.height = 900;
+    const ctx = canvas.getContext('2d')!;
+    
+    // Background
+    ctx.fillStyle = '#0f0f12';
+    ctx.fillRect(0, 0, 1400, 900);
+    
+    // Gold border
+    ctx.strokeStyle = program.color;
+    ctx.lineWidth = 4;
+    ctx.strokeRect(40, 40, 1320, 820);
+    ctx.strokeStyle = program.color + '40';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(55, 55, 1290, 790);
+    
+    // Top badge
+    ctx.fillStyle = program.color;
+    ctx.font = 'bold 11px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('SPARK BY IBLOOV', 700, 120);
+    
+    // Title
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 48px Georgia';
+    ctx.fillText('Certificate of Completion', 700, 200);
+    
+    // Divider
+    ctx.strokeStyle = program.color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(500, 230);
+    ctx.lineTo(900, 230);
+    ctx.stroke();
+    
+    // Subtitle
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '18px Arial';
+    ctx.fillText('This certifies that', 700, 300);
+    
+    // User name
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 40px Georgia';
+    ctx.fillText(user?.email?.split('@')[0] || 'Learner', 700, 370);
+    
+    // Body
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '18px Arial';
+    ctx.fillText('has successfully completed all lessons in', 700, 430);
+    
+    // Program name
+    ctx.fillStyle = program.color;
+    ctx.font = 'bold 36px Georgia';
+    ctx.fillText(program.cool_name, 700, 500);
+    
+    ctx.fillStyle = '#6b7280';
+    ctx.font = '16px Arial';
+    ctx.fillText(program.real_name, 700, 540);
+    
+    // Date
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '16px Arial';
+    ctx.fillText(`Issued on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, 700, 620);
+    
+    // Program details
+    ctx.fillStyle = '#6b7280';
+    ctx.font = '14px Arial';
+    ctx.fillText(`${totalLessons} Lessons · ${formatDuration(totalDuration)} · ${modules.length} Modules`, 700, 660);
+    
+    // Award icon placeholder
+    ctx.fillStyle = program.color + '20';
+    ctx.beginPath();
+    ctx.arc(700, 760, 30, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = program.color;
+    ctx.font = 'bold 24px Arial';
+    ctx.fillText('★', 700, 770);
+    
+    // Download
+    const link = document.createElement('a');
+    link.download = `Spark-Certificate-${program.cool_name.replace(/\s+/g, '-')}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    
+    toast({ title: '🎓 Certificate Downloaded!', description: 'Your certificate of completion has been saved.' });
+  };
+
   if (programLoading) {
     return (
       <div className="bg-white min-h-screen font-[Nunito]">
