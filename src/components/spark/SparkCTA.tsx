@@ -19,7 +19,7 @@ export const SparkCTA = () => {
         <motion.h2 initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           className="text-3xl md:text-6xl font-extrabold tracking-tight mb-4 md:mb-6 text-gray-900">
           The industry is changing.<br />
-          <span className="bg-gradient-to-r from-[#ec9f00] to-[#00C896] bg-clip-text text-transparent">Are you?</span>
+          <span className="text-[#ec9f00]">Are you?</span>
         </motion.h2>
         <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}
           className="text-base md:text-lg text-gray-400 mb-8 md:mb-10 max-w-xl mx-auto">
