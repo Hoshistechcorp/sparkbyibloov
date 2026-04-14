@@ -1,5 +1,6 @@
 import React from 'react';
 import { SEOHead } from '@/components/SEOHead';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -46,26 +47,28 @@ const SparkNews = () => {
               {posts.map((post: any, i: number) => (
                 <motion.article key={post.id} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
                   whileHover={{ y: -6 }}
-                  className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all cursor-pointer">
-                  {post.cover_image_url && (
-                    <div className="h-40 md:h-48 overflow-hidden">
-                      <img src={post.cover_image_url} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all">
+                  <Link to={`/spark/news/${post.slug}`} className="block">
+                    {post.cover_image_url && (
+                      <div className="h-40 md:h-48 overflow-hidden">
+                        <img src={post.cover_image_url} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                    )}
+                    <div className="p-4 md:p-6">
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-[9px] tracking-[0.15em] uppercase font-bold px-2.5 py-1 rounded-full bg-[#ec9f00]/10 text-[#c48500] border border-[#ec9f00]/20">{post.category}</span>
+                        {post.published_at && <span className="text-[11px] text-gray-300">{format(new Date(post.published_at), 'MMM dd, yyyy')}</span>}
+                      </div>
+                      <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2 group-hover:text-[#c48500] transition-colors">{post.title}</h3>
+                      {post.excerpt && <p className="text-sm text-gray-400 line-clamp-3 mb-4">{post.excerpt}</p>}
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] text-gray-400">By {post.author_name}</span>
+                        <span className="text-[10px] tracking-[0.12em] uppercase font-bold text-[#c48500] flex items-center gap-1 group-hover:gap-2 transition-all">
+                          Read <ArrowRight className="w-3 h-3" />
+                        </span>
+                      </div>
                     </div>
-                  )}
-                  <div className="p-4 md:p-6">
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="text-[9px] tracking-[0.15em] uppercase font-bold px-2.5 py-1 rounded-full bg-[#ec9f00]/10 text-[#c48500] border border-[#ec9f00]/20">{post.category}</span>
-                      {post.published_at && <span className="text-[11px] text-gray-300">{format(new Date(post.published_at), 'MMM dd, yyyy')}</span>}
-                    </div>
-                    <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2 group-hover:text-[#c48500] transition-colors">{post.title}</h3>
-                    {post.excerpt && <p className="text-sm text-gray-400 line-clamp-3 mb-4">{post.excerpt}</p>}
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-gray-400">By {post.author_name}</span>
-                      <span className="text-[10px] tracking-[0.12em] uppercase font-bold text-[#c48500] flex items-center gap-1 group-hover:gap-2 transition-all">
-                        Read <ArrowRight className="w-3 h-3" />
-                      </span>
-                    </div>
-                  </div>
+                  </Link>
                 </motion.article>
               ))}
             </div>
