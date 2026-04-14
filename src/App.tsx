@@ -13,7 +13,9 @@ import SparkAuth from "./pages/SparkAuth";
 import SparkPartners from "./pages/SparkPartners";
 import SparkMyPrograms from "./pages/SparkMyPrograms";
 import SparkProfile from "./pages/SparkProfile";
+import SparkResetPassword from "./pages/SparkResetPassword";
 import NotFound from "./pages/NotFound";
+
 const App = () => (
   <TooltipProvider>
     <Toaster />
@@ -31,7 +33,7 @@ const App = () => (
       <Route path="/spark/auth" element={<SparkAuth />} />
       <Route path="/spark/profile" element={<SparkProfile />} />
       <Route path="/spark/partners" element={<SparkPartners />} />
-      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+      <Route path="/spark/reset-password" element={<SparkResetPassword />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   </TooltipProvider>

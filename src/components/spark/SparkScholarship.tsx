@@ -38,7 +38,7 @@ export const SparkScholarship = () => {
             className="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4"
           >
             Light a{' '}
-            <span className="bg-gradient-to-r from-[#ec9f00] via-[#f59e0b] to-[#00C896] bg-clip-text text-transparent">
+            <span className="text-[#ec9f00]">
               Spark
             </span>
           </motion.h2>
@@ -64,7 +64,7 @@ export const SparkScholarship = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-[#ec9f00]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="relative z-10">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#ec9f00] to-[#f59e0b] flex items-center justify-center mb-6 shadow-lg shadow-[#ec9f00]/20">
+              <div className="w-14 h-14 rounded-xl bg-[#ec9f00] flex items-center justify-center mb-6 shadow-lg shadow-[#ec9f00]/20">
                 <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" />
@@ -80,7 +80,7 @@ export const SparkScholarship = () => {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#ec9f00] to-[#f59e0b] text-white font-bold text-sm tracking-[0.06em] uppercase px-6 py-3 rounded-full shadow-lg shadow-[#ec9f00]/25 hover:shadow-[#ec9f00]/40 transition-shadow"
+                className="inline-flex items-center gap-2 bg-[#ec9f00] text-white font-bold text-sm tracking-[0.06em] uppercase px-6 py-3 rounded-full shadow-sm hover:bg-[#d48e00] transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
@@ -100,7 +100,7 @@ export const SparkScholarship = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-[#00C896]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="relative z-10">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#00C896] to-[#10b981] flex items-center justify-center mb-6 shadow-lg shadow-[#00C896]/20">
+              <div className="w-14 h-14 rounded-xl bg-[#00C896] flex items-center justify-center mb-6 shadow-lg shadow-[#00C896]/20">
                 <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
                 </svg>
@@ -113,7 +113,7 @@ export const SparkScholarship = () => {
                 onClick={() => setSponsorOpen(true)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00C896] to-[#10b981] text-white font-bold text-sm tracking-[0.06em] uppercase px-6 py-3 rounded-full shadow-lg shadow-[#00C896]/25 hover:shadow-[#00C896]/40 transition-shadow"
+                className="inline-flex items-center gap-2 bg-[#00C896] text-white font-bold text-sm tracking-[0.06em] uppercase px-6 py-3 rounded-full shadow-sm hover:bg-[#00b585] transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />

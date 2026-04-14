@@ -142,7 +142,7 @@ export const SparkHero = () => {
         <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.7 }}
           className="text-3xl md:text-5xl lg:text-[5.5rem] font-black leading-[0.92] tracking-tight mb-6 md:mb-8 text-white">
           Learn what<br />
-          <span className="bg-gradient-to-r from-[#ec9f00] via-[#f0b840] to-[#00C896] bg-clip-text text-transparent">
+          <span className="text-[#ec9f00]">
             actually matters.
           </span>
         </motion.h1>
