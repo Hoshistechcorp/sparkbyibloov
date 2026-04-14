@@ -8,6 +8,7 @@ import SparkProgramDetails from "./pages/SparkProgramDetails";
 import SparkMedia from "./pages/SparkMedia";
 import SparkEvents from "./pages/SparkEvents";
 import SparkNews from "./pages/SparkNews";
+import SparkBlogPost from "./pages/SparkBlogPost";
 import SparkAdmin from "./pages/SparkAdmin";
 import SparkAuth from "./pages/SparkAuth";
 import SparkPartners from "./pages/SparkPartners";
@@ -28,6 +29,7 @@ const App = () => (
       <Route path="/spark/media" element={<SparkMedia />} />
       <Route path="/spark/events" element={<SparkEvents />} />
       <Route path="/spark/news" element={<SparkNews />} />
+      <Route path="/spark/news/:slug" element={<SparkBlogPost />} />
       <Route path="/spark/my-programs" element={<SparkMyPrograms />} />
       <Route path="/spark/admin" element={<SparkAdmin />} />
       <Route path="/spark/auth" element={<SparkAuth />} />
