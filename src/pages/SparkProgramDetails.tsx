@@ -9,6 +9,7 @@ import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, BookOpen, ChevronDown, Play, Lock, ArrowLeft, Users, Award, CheckCircle2, Download, Video, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { ModuleQuiz, ModuleLockOverlay } from '@/components/spark/ModuleQuiz';
 
 const MODULE_THUMBNAILS = [
   'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=250&fit=crop',
