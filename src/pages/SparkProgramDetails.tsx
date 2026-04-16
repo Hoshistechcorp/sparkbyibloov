@@ -126,7 +126,41 @@ const SparkProgramDetails = () => {
     enabled: !!user && lessons.length > 0,
   });
 
-  
+  // Quiz data
+  const { data: moduleQuizzes = [] } = useQuery({
+    queryKey: ['module-quizzes', id],
+    queryFn: async () => {
+      const modIds = modules.map((m: any) => m.id);
+      if (modIds.length === 0) return [];
+      const { data } = await supabase.from('module_quizzes').select('*').in('module_id', modIds);
+      return data || [];
+    },
+    enabled: modules.length > 0,
+  });
+
+  const { data: quizAttempts = [] } = useQuery({
+    queryKey: ['all-quiz-attempts', id, user?.id],
+    queryFn: async () => {
+      const quizIds = moduleQuizzes.map((q: any) => q.id);
+      if (quizIds.length === 0) return [];
+      const { data } = await supabase.from('quiz_attempts').select('*').eq('user_id', user!.id).in('quiz_id', quizIds);
+      return data || [];
+    },
+    enabled: !!user && moduleQuizzes.length > 0,
+  });
+
+  const hasPassedModuleQuiz = (modId: string) => {
+    const quiz = moduleQuizzes.find((q: any) => q.module_id === modId);
+    if (!quiz) return true; // no quiz = auto-pass
+    return quizAttempts.some((a: any) => a.quiz_id === quiz.id && a.passed);
+  };
+
+  const isModuleUnlocked = (modIdx: number) => {
+    if (modIdx === 0) return true;
+    const prevMod = modules[modIdx - 1];
+    return hasPassedModuleQuiz(prevMod.id);
+  };
+
   const completedLessonIds = new Set(lessonProgress.map((p: any) => p.lesson_id));
   const progressPercentage = lessons.length > 0 ? Math.round((completedLessonIds.size / lessons.length) * 100) : 0;
 
