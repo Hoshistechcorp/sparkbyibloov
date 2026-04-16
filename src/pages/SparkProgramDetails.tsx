@@ -9,6 +9,7 @@ import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, BookOpen, ChevronDown, Play, Lock, ArrowLeft, Users, Award, CheckCircle2, Download, Video, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { ModuleQuiz, ModuleLockOverlay } from '@/components/spark/ModuleQuiz';
 
 const MODULE_THUMBNAILS = [
   'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=250&fit=crop',
@@ -125,7 +126,41 @@ const SparkProgramDetails = () => {
     enabled: !!user && lessons.length > 0,
   });
 
-  
+  // Quiz data
+  const { data: moduleQuizzes = [] } = useQuery({
+    queryKey: ['module-quizzes', id],
+    queryFn: async () => {
+      const modIds = modules.map((m: any) => m.id);
+      if (modIds.length === 0) return [];
+      const { data } = await supabase.from('module_quizzes').select('*').in('module_id', modIds);
+      return data || [];
+    },
+    enabled: modules.length > 0,
+  });
+
+  const { data: quizAttempts = [] } = useQuery({
+    queryKey: ['all-quiz-attempts', id, user?.id],
+    queryFn: async () => {
+      const quizIds = moduleQuizzes.map((q: any) => q.id);
+      if (quizIds.length === 0) return [];
+      const { data } = await supabase.from('quiz_attempts').select('*').eq('user_id', user!.id).in('quiz_id', quizIds);
+      return data || [];
+    },
+    enabled: !!user && moduleQuizzes.length > 0,
+  });
+
+  const hasPassedModuleQuiz = (modId: string) => {
+    const quiz = moduleQuizzes.find((q: any) => q.module_id === modId);
+    if (!quiz) return true; // no quiz = auto-pass
+    return quizAttempts.some((a: any) => a.quiz_id === quiz.id && a.passed);
+  };
+
+  const isModuleUnlocked = (modIdx: number) => {
+    if (modIdx === 0) return true;
+    const prevMod = modules[modIdx - 1];
+    return hasPassedModuleQuiz(prevMod.id);
+  };
+
   const completedLessonIds = new Set(lessonProgress.map((p: any) => p.lesson_id));
   const progressPercentage = lessons.length > 0 ? Math.round((completedLessonIds.size / lessons.length) * 100) : 0;
 
@@ -447,39 +482,47 @@ const SparkProgramDetails = () => {
                 const modDuration = modLessons.reduce((a: number, l: any) => a + (l.duration_minutes || 0), 0);
                 const isExpanded = expandedModule === mod.id;
                 const modThumb = MODULE_THUMBNAILS[idx % MODULE_THUMBNAILS.length];
+                const unlocked = isModuleUnlocked(idx);
 
                 return (
                   <motion.div key={mod.id}
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.07, duration: 0.4 }}
-                    className="rounded-2xl overflow-hidden bg-white border border-gray-100 hover:shadow-xl transition-all duration-300"
-                    style={{ boxShadow: isExpanded ? `0 8px 32px -8px ${program.color}25` : undefined }}>
+                    className={`rounded-2xl overflow-hidden bg-white border transition-all duration-300 ${unlocked ? 'border-gray-100 hover:shadow-xl' : 'border-gray-200 opacity-60'}`}
+                    style={{ boxShadow: isExpanded && unlocked ? `0 8px 32px -8px ${program.color}25` : undefined }}>
                     
                     <button
-                      onClick={() => setExpandedModule(isExpanded ? null : mod.id)}
-                      className="w-full flex items-stretch text-left group">
-                      {/* Module thumbnail */}
+                      onClick={() => unlocked && setExpandedModule(isExpanded ? null : mod.id)}
+                      className={`w-full flex items-stretch text-left group ${!unlocked ? 'cursor-not-allowed' : ''}`}>
                       <div className="hidden md:block w-40 lg:w-48 flex-shrink-0 relative overflow-hidden">
-                        <img src={modThumb} alt={mod.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <img src={modThumb} alt={mod.title} className={`w-full h-full object-cover transition-transform duration-500 ${unlocked ? 'group-hover:scale-110' : 'grayscale'}`} />
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/20" />
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
-                            <span className="text-lg font-extrabold" style={{ color: program.color }}>
-                              {String(idx + 1).padStart(2, '0')}
-                            </span>
-                          </div>
+                          {unlocked ? (
+                            <div className="w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                              <span className="text-lg font-extrabold" style={{ color: program.color }}>
+                                {String(idx + 1).padStart(2, '0')}
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                              <Lock className="w-5 h-5 text-gray-400" />
+                            </div>
+                          )}
                         </div>
                       </div>
 
                       <div className="flex-1 flex items-center gap-4 p-5 md:p-6">
-                        {/* Mobile number badge */}
                         <div className="md:hidden w-11 h-11 rounded-xl flex items-center justify-center text-sm font-extrabold text-white flex-shrink-0 shadow-md"
-                          style={{ backgroundColor: program.color }}>
-                          {String(idx + 1).padStart(2, '0')}
+                          style={{ backgroundColor: unlocked ? program.color : '#9ca3af' }}>
+                          {unlocked ? String(idx + 1).padStart(2, '0') : <Lock className="w-4 h-4" />}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-base md:text-lg font-bold text-gray-900 group-hover:text-gray-700 transition-colors">{mod.title}</h3>
+                          <h3 className="text-base md:text-lg font-bold text-gray-900 group-hover:text-gray-700 transition-colors">
+                            {mod.title}
+                            {!unlocked && <span className="ml-2 text-xs text-gray-400 font-normal">(Locked)</span>}
+                          </h3>
                           {mod.description && (
                             <p className="text-xs md:text-sm text-gray-400 mt-1 line-clamp-1">{mod.description}</p>
                           )}
@@ -505,14 +548,19 @@ const SparkProgramDetails = () => {
                     </button>
 
                     <AnimatePresence>
-                      {isExpanded && (
+                      {isExpanded && unlocked && (
                         <motion.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
                           transition={{ duration: 0.35, ease: 'easeInOut' }}
                           className="overflow-hidden">
-                          <div className="px-5 md:px-6 pb-5 md:pb-6 pt-2 space-y-2">
+                          
+                          {!unlocked && (
+                            <ModuleLockOverlay moduleIndex={idx} programColor={program.color} />
+                          )}
+
+                          <div className="px-5 md:px-6 pb-2 md:pb-2 pt-2 space-y-2">
                             {modLessons.map((lesson: any, lIdx: number) => {
                               const lessonThumb = LESSON_THUMBNAILS[lIdx % LESSON_THUMBNAILS.length];
                               const isLessonCompleted = completedLessonIds.has(lesson.id);
@@ -528,7 +576,6 @@ const SparkProgramDetails = () => {
                                         ? 'bg-gradient-to-r from-emerald-50/80 to-white hover:from-emerald-50 border border-emerald-100/50' 
                                         : 'bg-gray-50/60 hover:bg-gray-50 border border-transparent hover:border-gray-100'
                                   }`}>
-                                  {/* Lesson thumbnail */}
                                   <div className="relative w-16 h-12 md:w-20 md:h-14 rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
                                     <img src={lessonThumb} alt={lesson.title} className="w-full h-full object-cover group-hover/lesson:scale-110 transition-transform duration-300" />
                                     <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover/lesson:opacity-100 transition-opacity">
@@ -586,6 +633,19 @@ const SparkProgramDetails = () => {
                               );
                             })}
                           </div>
+
+                          {/* Module Quiz */}
+                          <ModuleQuiz
+                            moduleId={mod.id}
+                            moduleName={mod.title}
+                            moduleIndex={idx}
+                            programColor={program.color}
+                            userId={user?.id}
+                            isEnrolled={!!enrollment}
+                            onQuizPassed={() => {
+                              queryClient.invalidateQueries({ queryKey: ['all-quiz-attempts', id] });
+                            }}
+                          />
                         </motion.div>
                       )}
                     </AnimatePresence>

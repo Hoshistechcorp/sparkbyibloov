@@ -837,6 +837,11 @@ const CurriculumManager = ({ programId, programName, programColor, onBack }: { p
   const [showLessonForm, setShowLessonForm] = useState<string | null>(null);
   const [editingLesson, setEditingLesson] = useState<any>(null);
   const [lessonForm, setLessonForm] = useState({ title: '', description: '', duration_minutes: 0, lesson_type: 'video', content_url: '', sort_order: 0, is_free_preview: false });
+  const [showQuizForm, setShowQuizForm] = useState<string | null>(null);
+  const [quizForm, setQuizForm] = useState({ title: 'Module Quiz', passing_score: 70, max_attempts: 3 });
+  const [showQuestionForm, setShowQuestionForm] = useState<string | null>(null);
+  const [questionForm, setQuestionForm] = useState({ question_text: '', options: ['', '', '', ''], correct_answer_index: 0, sort_order: 0 });
+  const [editingQuestion, setEditingQuestion] = useState<any>(null);
 
   const { data: modules = [] } = useQuery({
     queryKey: ['admin-modules', programId],
@@ -857,7 +862,31 @@ const CurriculumManager = ({ programId, programName, programColor, onBack }: { p
     enabled: modules.length > 0,
   });
 
+  const { data: quizzes = [] } = useQuery({
+    queryKey: ['admin-quizzes', programId],
+    queryFn: async () => {
+      const moduleIds = modules.map((m: any) => m.id);
+      if (moduleIds.length === 0) return [];
+      const { data } = await supabase.from('module_quizzes').select('*').in('module_id', moduleIds);
+      return data || [];
+    },
+    enabled: modules.length > 0,
+  });
+
+  const { data: allQuestions = [] } = useQuery({
+    queryKey: ['admin-quiz-questions', programId],
+    queryFn: async () => {
+      const quizIds = quizzes.map((q: any) => q.id);
+      if (quizIds.length === 0) return [];
+      const { data } = await supabase.from('quiz_questions').select('*').in('quiz_id', quizIds).order('sort_order');
+      return data || [];
+    },
+    enabled: quizzes.length > 0,
+  });
+
   const getLessonsForModule = (moduleId: string) => lessons.filter((l: any) => l.module_id === moduleId);
+  const getQuizForModule = (moduleId: string) => quizzes.find((q: any) => q.module_id === moduleId);
+  const getQuestionsForQuiz = (quizId: string) => allQuestions.filter((q: any) => q.quiz_id === quizId);
 
   const saveModuleMutation = useMutation({
     mutationFn: async () => {
@@ -876,7 +905,7 @@ const CurriculumManager = ({ programId, programName, programColor, onBack }: { p
 
   const deleteModuleMutation = useMutation({
     mutationFn: async (id: string) => { const { error } = await supabase.from('spark_program_modules').delete().eq('id', id); if (error) throw error; },
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-modules', programId] }); queryClient.invalidateQueries({ queryKey: ['admin-lessons', programId] }); toast.success('Module deleted'); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-modules', programId] }); queryClient.invalidateQueries({ queryKey: ['admin-lessons', programId] }); queryClient.invalidateQueries({ queryKey: ['admin-quizzes', programId] }); toast.success('Module deleted'); },
   });
 
   const saveLessonMutation = useMutation({
@@ -899,6 +928,46 @@ const CurriculumManager = ({ programId, programName, programColor, onBack }: { p
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-lessons', programId] }); toast.success('Lesson deleted'); },
   });
 
+  const saveQuizMutation = useMutation({
+    mutationFn: async (moduleId: string) => {
+      const existing = getQuizForModule(moduleId);
+      if (existing) {
+        const { error } = await supabase.from('module_quizzes').update({ title: quizForm.title, passing_score: quizForm.passing_score, max_attempts: quizForm.max_attempts }).eq('id', existing.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('module_quizzes').insert({ module_id: moduleId, ...quizForm });
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-quizzes', programId] }); setShowQuizForm(null); toast.success('Quiz saved!'); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const deleteQuizMutation = useMutation({
+    mutationFn: async (id: string) => { const { error } = await supabase.from('module_quizzes').delete().eq('id', id); if (error) throw error; },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-quizzes', programId] }); queryClient.invalidateQueries({ queryKey: ['admin-quiz-questions', programId] }); toast.success('Quiz deleted'); },
+  });
+
+  const saveQuestionMutation = useMutation({
+    mutationFn: async (quizId: string) => {
+      const payload = { quiz_id: quizId, question_text: questionForm.question_text, options: questionForm.options.filter(o => o.trim()), correct_answer_index: questionForm.correct_answer_index, sort_order: questionForm.sort_order };
+      if (editingQuestion) {
+        const { error } = await supabase.from('quiz_questions').update(payload).eq('id', editingQuestion.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('quiz_questions').insert(payload);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-quiz-questions', programId] }); setShowQuestionForm(null); setEditingQuestion(null); setQuestionForm({ question_text: '', options: ['', '', '', ''], correct_answer_index: 0, sort_order: 0 }); toast.success('Question saved!'); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const deleteQuestionMutation = useMutation({
+    mutationFn: async (id: string) => { const { error } = await supabase.from('quiz_questions').delete().eq('id', id); if (error) throw error; },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-quiz-questions', programId] }); toast.success('Question deleted'); },
+  });
+
   const inputCls = "px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-gray-600 focus:border-[#ec9f00]/50 outline-none w-full";
 
   return (
@@ -907,7 +976,7 @@ const CurriculumManager = ({ programId, programName, programColor, onBack }: { p
         <button onClick={onBack} className="text-gray-500 hover:text-white transition-colors text-sm font-bold">← Back</button>
         <div>
           <h2 className="text-xl font-extrabold text-white">Curriculum: {programName}</h2>
-          <p className="text-sm text-gray-500">{modules.length} modules · {lessons.length} lessons</p>
+          <p className="text-sm text-gray-500">{modules.length} modules · {lessons.length} lessons · {quizzes.length} quizzes</p>
         </div>
       </div>
 
@@ -948,6 +1017,8 @@ const CurriculumManager = ({ programId, programName, programColor, onBack }: { p
       <div className="space-y-4">
         {modules.map((mod: any, idx: number) => {
           const modLessons = getLessonsForModule(mod.id);
+          const quiz = getQuizForModule(mod.id);
+          const quizQuestions = quiz ? getQuestionsForQuiz(quiz.id) : [];
           return (
             <div key={mod.id} className="bg-[#1c1c26] rounded-xl border border-white/5 overflow-hidden">
               <div className="flex items-center justify-between p-4 border-b border-white/5">
@@ -957,7 +1028,7 @@ const CurriculumManager = ({ programId, programName, programColor, onBack }: { p
                   </div>
                   <div>
                     <p className="text-sm font-bold text-white">{mod.title}</p>
-                    <p className="text-[11px] text-gray-500">{modLessons.length} lessons{mod.description ? ` · ${mod.description.substring(0, 50)}...` : ''}</p>
+                    <p className="text-[11px] text-gray-500">{modLessons.length} lessons{quiz ? ` · Quiz (${quizQuestions.length} questions)` : ''}{mod.description ? ` · ${mod.description.substring(0, 50)}...` : ''}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
@@ -965,6 +1036,12 @@ const CurriculumManager = ({ programId, programName, programColor, onBack }: { p
                     className="text-[10px] uppercase tracking-[0.1em] font-bold px-3 py-1.5 rounded-lg bg-[#ec9f00]/10 text-[#ec9f00] hover:bg-[#ec9f00]/20 transition-colors">
                     + Lesson
                   </button>
+                  {!quiz && (
+                    <button onClick={() => { setQuizForm({ title: 'Module Quiz', passing_score: 70, max_attempts: 3 }); setShowQuizForm(mod.id); }}
+                      className="text-[10px] uppercase tracking-[0.1em] font-bold px-3 py-1.5 rounded-lg bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20 transition-colors">
+                      + Quiz
+                    </button>
+                  )}
                   <button onClick={() => { setEditingModule(mod); setModuleForm({ title: mod.title, description: mod.description || '', sort_order: mod.sort_order }); setShowModuleForm(true); }}
                     className="p-2 hover:bg-white/5 rounded-lg transition-colors"><Pencil className="w-3.5 h-3.5 text-gray-400" /></button>
                   <button onClick={() => { if (confirm('Delete this module and all its lessons?')) deleteModuleMutation.mutate(mod.id); }}
@@ -1039,6 +1116,105 @@ const CurriculumManager = ({ programId, programName, programColor, onBack }: { p
 
               {modLessons.length === 0 && !showLessonForm && (
                 <p className="text-center text-gray-600 py-6 text-xs">No lessons yet. Click "+ Lesson" to add one.</p>
+              )}
+
+              {/* Quiz Section */}
+              {quiz && (
+                <div className="border-t border-white/5">
+                  <div className="flex items-center justify-between px-4 py-3 bg-emerald-400/5">
+                    <div className="flex items-center gap-3">
+                      <span className="text-[9px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-400/10 px-2.5 py-1 rounded-full">Quiz</span>
+                      <div>
+                        <p className="text-sm font-semibold text-white">{quiz.title}</p>
+                        <p className="text-[10px] text-gray-500">Pass: {quiz.passing_score}% · Max attempts: {quiz.max_attempts} · {quizQuestions.length} questions</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => { setShowQuestionForm(quiz.id); setEditingQuestion(null); setQuestionForm({ question_text: '', options: ['', '', '', ''], correct_answer_index: 0, sort_order: quizQuestions.length }); }}
+                        className="text-[10px] uppercase tracking-[0.1em] font-bold px-3 py-1.5 rounded-lg bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20 transition-colors">
+                        + Question
+                      </button>
+                      <button onClick={() => { setQuizForm({ title: quiz.title, passing_score: quiz.passing_score, max_attempts: quiz.max_attempts }); setShowQuizForm(mod.id); }}
+                        className="p-2 hover:bg-white/5 rounded-lg transition-colors"><Pencil className="w-3.5 h-3.5 text-gray-400" /></button>
+                      <button onClick={() => { if (confirm('Delete this quiz and all questions?')) deleteQuizMutation.mutate(quiz.id); }}
+                        className="p-2 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 className="w-3.5 h-3.5 text-red-400" /></button>
+                    </div>
+                  </div>
+
+                  {showQuestionForm === quiz.id && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 border-t border-white/[0.03] bg-white/[0.02]">
+                      <h4 className="text-xs font-bold text-white mb-3">{editingQuestion ? 'Edit Question' : 'Add Question'}</h4>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Question</label>
+                          <textarea placeholder="Enter the question..." value={questionForm.question_text} onChange={e => setQuestionForm({ ...questionForm, question_text: e.target.value })} className={inputCls} rows={2} />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {questionForm.options.map((opt, i) => (
+                            <div key={i} className="flex items-center gap-2">
+                              <button onClick={() => setQuestionForm({ ...questionForm, correct_answer_index: i })}
+                                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 text-[10px] font-extrabold ${questionForm.correct_answer_index === i ? 'border-emerald-400 bg-emerald-400 text-white' : 'border-gray-600 text-gray-500'}`}>
+                                {String.fromCharCode(65 + i)}
+                              </button>
+                              <input placeholder={`Option ${String.fromCharCode(65 + i)}`} value={opt} onChange={e => { const newOpts = [...questionForm.options]; newOpts[i] = e.target.value; setQuestionForm({ ...questionForm, options: newOpts }); }} className={inputCls} />
+                            </div>
+                          ))}
+                        </div>
+                        <p className="text-[10px] text-gray-500">Click the letter circle to mark the correct answer (currently: <span className="text-emerald-400 font-bold">{String.fromCharCode(65 + questionForm.correct_answer_index)}</span>)</p>
+                        <div className="flex gap-3">
+                          <button onClick={() => saveQuestionMutation.mutate(quiz.id)} disabled={!questionForm.question_text || questionForm.options.filter(o => o.trim()).length < 2}
+                            className="bg-emerald-500 text-white text-[10px] font-extrabold tracking-[0.08em] uppercase px-5 py-2 rounded-lg hover:bg-emerald-600 transition-colors disabled:opacity-50">
+                            {editingQuestion ? 'Update' : 'Add Question'}
+                          </button>
+                          <button onClick={() => { setShowQuestionForm(null); setEditingQuestion(null); }} className="text-gray-500 text-[10px] font-bold uppercase px-3 py-2 hover:text-white">Cancel</button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {quizQuestions.map((q: any, qIdx: number) => (
+                    <div key={q.id} className="flex items-center justify-between px-4 py-2.5 border-t border-white/[0.03] hover:bg-white/[0.02]">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="text-[10px] text-gray-600 font-mono w-4">Q{qIdx + 1}</span>
+                        <p className="text-xs text-white/70 truncate">{q.question_text}</p>
+                        <span className="text-[9px] text-emerald-400 font-bold flex-shrink-0">{(q.options as string[])?.[q.correct_answer_index] ? `✓ ${String.fromCharCode(65 + q.correct_answer_index)}` : ''}</span>
+                      </div>
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <button onClick={() => { setEditingQuestion(q); setQuestionForm({ question_text: q.question_text, options: [...(q.options as string[]), '', '', '', ''].slice(0, 4), correct_answer_index: q.correct_answer_index, sort_order: q.sort_order }); setShowQuestionForm(quiz.id); }}
+                          className="p-1.5 hover:bg-white/5 rounded transition-colors"><Pencil className="w-3 h-3 text-gray-500" /></button>
+                        <button onClick={() => { if (confirm('Delete?')) deleteQuestionMutation.mutate(q.id); }}
+                          className="p-1.5 hover:bg-red-500/10 rounded transition-colors"><Trash2 className="w-3 h-3 text-red-400" /></button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Quiz create form */}
+              {showQuizForm === mod.id && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 border-t border-white/5 bg-emerald-400/5">
+                  <h4 className="text-xs font-bold text-white mb-3">{quiz ? 'Edit Quiz Settings' : 'Create Module Quiz'}</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Quiz Title</label>
+                      <input value={quizForm.title} onChange={e => setQuizForm({ ...quizForm, title: e.target.value })} className={inputCls} />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Passing Score (%)</label>
+                      <input type="number" min={0} max={100} value={quizForm.passing_score} onChange={e => setQuizForm({ ...quizForm, passing_score: parseInt(e.target.value) || 70 })} className={inputCls} />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-1">Max Attempts</label>
+                      <input type="number" min={1} max={10} value={quizForm.max_attempts} onChange={e => setQuizForm({ ...quizForm, max_attempts: parseInt(e.target.value) || 3 })} className={inputCls} />
+                    </div>
+                  </div>
+                  <div className="flex gap-3 mt-3">
+                    <button onClick={() => saveQuizMutation.mutate(mod.id)} className="bg-emerald-500 text-white text-[10px] font-extrabold tracking-[0.08em] uppercase px-5 py-2 rounded-lg hover:bg-emerald-600 transition-colors">
+                      {quiz ? 'Update Quiz' : 'Create Quiz'}
+                    </button>
+                    <button onClick={() => setShowQuizForm(null)} className="text-gray-500 text-[10px] font-bold uppercase px-3 py-2 hover:text-white">Cancel</button>
+                  </div>
+                </motion.div>
               )}
             </div>
           );

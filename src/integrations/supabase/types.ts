@@ -168,6 +168,44 @@ export type Database = {
           },
         ]
       }
+      module_quizzes: {
+        Row: {
+          created_at: string
+          id: string
+          max_attempts: number
+          module_id: string
+          passing_score: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          max_attempts?: number
+          module_id: string
+          passing_score?: number
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          max_attempts?: number
+          module_id?: string
+          passing_score?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "module_quizzes_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: true
+            referencedRelation: "spark_program_modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -276,6 +314,85 @@ export type Database = {
             columns: ["program_id"]
             isOneToOne: false
             referencedRelation: "spark_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_attempts: {
+        Row: {
+          answers: Json | null
+          attempted_at: string
+          id: string
+          passed: boolean
+          quiz_id: string
+          score: number
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          answers?: Json | null
+          attempted_at?: string
+          id?: string
+          passed?: boolean
+          quiz_id: string
+          score?: number
+          total_questions?: number
+          user_id: string
+        }
+        Update: {
+          answers?: Json | null
+          attempted_at?: string
+          id?: string
+          passed?: boolean
+          quiz_id?: string
+          score?: number
+          total_questions?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_attempts_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "module_quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_questions: {
+        Row: {
+          correct_answer_index: number
+          created_at: string
+          id: string
+          options: Json
+          question_text: string
+          quiz_id: string
+          sort_order: number
+        }
+        Insert: {
+          correct_answer_index?: number
+          created_at?: string
+          id?: string
+          options?: Json
+          question_text: string
+          quiz_id: string
+          sort_order?: number
+        }
+        Update: {
+          correct_answer_index?: number
+          created_at?: string
+          id?: string
+          options?: Json
+          question_text?: string
+          quiz_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_questions_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "module_quizzes"
             referencedColumns: ["id"]
           },
         ]
