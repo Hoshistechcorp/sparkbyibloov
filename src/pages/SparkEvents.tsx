@@ -77,6 +77,7 @@ const SparkEvents = () => {
                 <motion.div key={event.id} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
                   whileHover={{ y: -6 }}
                   className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all">
+                  <Link to={event.source === 'spark' ? `/spark/events/${event.id}` : event.registrationUrl} className="block">
                   <div className="relative h-40 md:h-48 overflow-hidden bg-gray-100">
                     {event.image ? (
                       <img src={event.image} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -95,12 +96,11 @@ const SparkEvents = () => {
                     <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2 group-hover:text-[#c48500] transition-colors">{event.title}</h3>
                     {event.description && <p className="text-sm text-gray-400 line-clamp-2 mb-3">{event.description}</p>}
                     {event.location && <p className="text-[11px] text-gray-400 flex items-center gap-1"><MapPin className="w-3 h-3" />{event.location}</p>}
-                    {event.registrationUrl && (
-                      <Link to={event.registrationUrl} className="mt-3 inline-flex items-center gap-1 text-[10px] tracking-[0.12em] uppercase font-extrabold text-[#c48500] hover:text-[#a06d00] transition-colors">
-                        Register <ExternalLink className="w-3 h-3" />
-                      </Link>
-                    )}
+                    <span className="mt-3 inline-flex items-center gap-1 text-[10px] tracking-[0.12em] uppercase font-extrabold text-[#c48500] group-hover:gap-2 transition-all">
+                      View Details <ExternalLink className="w-3 h-3" />
+                    </span>
                   </div>
+                  </Link>
                 </motion.div>
               ))}
             </div>
