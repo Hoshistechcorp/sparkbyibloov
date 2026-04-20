@@ -1427,72 +1427,408 @@ const UsersTab = () => {
 };
 
 /* ─── SETTINGS ─── */
-const SettingsTab = () => {
-  const [siteName, setSiteName] = useState('Spark by iBloov');
-  const [contactEmail, setContactEmail] = useState('hello@spark.ibloov.com');
-  const [notifications, setNotifications] = useState({ registrations: true, events: true, comments: false, analytics: true });
-  const [saved, setSaved] = useState(false);
+type Role = 'admin' | 'moderator' | 'user';
 
-  const handleSave = () => {
-    setSaved(true);
-    toast.success('Settings saved!');
-    setTimeout(() => setSaved(false), 2000);
-  };
+const SettingsTab = () => {
+  const queryClient = useQueryClient();
+  const [section, setSection] = useState<'profile' | 'security' | 'roles' | 'general' | 'notifications' | 'danger'>('profile');
+  const [user, setUser] = useState<any>(null);
+
+  React.useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+  }, []);
+
+  const sections: { id: typeof section; label: string; icon: any; desc: string }[] = [
+    { id: 'profile', label: 'My Profile', icon: UserCog, desc: 'Display name & email' },
+    { id: 'security', label: 'Security', icon: Shield, desc: 'Password & sessions' },
+    { id: 'roles', label: 'Roles & Permissions', icon: Users, desc: 'Manage admins & moderators' },
+    { id: 'general', label: 'General', icon: Settings, desc: 'Site preferences' },
+    { id: 'notifications', label: 'Notifications', icon: TrendingUp, desc: 'Alert preferences' },
+    { id: 'danger', label: 'Danger Zone', icon: Trash2, desc: 'Irreversible actions' },
+  ];
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-extrabold text-white">Settings</h2>
-          <p className="text-sm text-gray-500">Configure your Spark admin panel</p>
-        </div>
-        <button onClick={handleSave} className="bg-[#ec9f00] text-gray-900 text-[11px] font-extrabold tracking-[0.08em] uppercase px-6 py-2.5 rounded-lg hover:bg-[#d48e00] transition-colors">
-          {saved ? '✓ Saved' : 'Save Changes'}
-        </button>
+      <div>
+        <h2 className="text-xl font-extrabold text-white">Settings</h2>
+        <p className="text-sm text-gray-500">Manage your account, team and site configuration</p>
       </div>
 
-      <div className="space-y-4">
-        <div className="bg-[#1c1c26] rounded-xl p-5 border border-white/5">
-          <h3 className="text-sm font-bold text-white mb-4">General</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-[11px] uppercase tracking-wider font-bold text-gray-500 mb-1.5">Site Name</label>
-              <input value={siteName} onChange={e => setSiteName(e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:border-[#ec9f00]/50 outline-none" />
-            </div>
-            <div>
-              <label className="block text-[11px] uppercase tracking-wider font-bold text-gray-500 mb-1.5">Contact Email</label>
-              <input value={contactEmail} onChange={e => setContactEmail(e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:border-[#ec9f00]/50 outline-none" />
-            </div>
-          </div>
+      <div className="grid lg:grid-cols-[240px_1fr] gap-4">
+        {/* Side nav */}
+        <div className="bg-[#1c1c26] rounded-xl border border-white/5 p-2 h-fit">
+          {sections.map(s => {
+            const Icon = s.icon;
+            const active = section === s.id;
+            return (
+              <button key={s.id} onClick={() => setSection(s.id)}
+                className={`w-full flex items-start gap-3 px-3 py-2.5 rounded-lg text-left transition-colors ${active ? 'bg-[#ec9f00]/10 text-[#ec9f00]' : 'text-gray-400 hover:bg-white/[0.03] hover:text-white'}`}>
+                <Icon className="w-4 h-4 mt-0.5 shrink-0" />
+                <div className="min-w-0">
+                  <div className="text-[12px] font-bold">{s.label}</div>
+                  <div className="text-[10px] text-gray-500 truncate">{s.desc}</div>
+                </div>
+              </button>
+            );
+          })}
         </div>
 
-        <div className="bg-[#1c1c26] rounded-xl p-5 border border-white/5">
-          <h3 className="text-sm font-bold text-white mb-4">Notifications</h3>
-          <div className="space-y-3">
-            {([
-              ['registrations', 'New user registrations'],
-              ['events', 'Event sign-ups'],
-              ['comments', 'Blog post comments'],
-              ['analytics', 'Weekly analytics digest'],
-            ] as const).map(([key, label]) => (
-              <label key={key} className="flex items-center justify-between cursor-pointer group">
-                <span className="text-sm text-gray-400">{label}</span>
-                <button onClick={() => setNotifications(n => ({ ...n, [key]: !n[key as keyof typeof n] }))}
-                  className={`w-10 h-5 rounded-full relative transition-colors ${notifications[key as keyof typeof notifications] ? 'bg-[#ec9f00]' : 'bg-white/10'}`}>
-                  <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${notifications[key as keyof typeof notifications] ? 'left-[22px]' : 'left-0.5'}`} />
-                </button>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-[#1c1c26] rounded-xl p-5 border border-red-500/10">
-          <h3 className="text-sm font-bold text-red-400 mb-2">Danger Zone</h3>
-          <p className="text-[12px] text-gray-500 mb-4">Irreversible actions that affect your entire Spark instance.</p>
-          <button className="text-[11px] tracking-[0.08em] uppercase font-bold px-4 py-2 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors">Reset All Data</button>
+        {/* Content */}
+        <div>
+          {section === 'profile' && <ProfileSection user={user} />}
+          {section === 'security' && <SecuritySection user={user} />}
+          {section === 'roles' && <RolesSection currentUserId={user?.id} />}
+          {section === 'general' && <GeneralSection />}
+          {section === 'notifications' && <NotificationsSection />}
+          {section === 'danger' && <DangerSection />}
         </div>
       </div>
     </div>
+  );
+};
+
+const Card: React.FC<{ title: string; desc?: string; children: React.ReactNode; tone?: 'default' | 'danger' }> = ({ title, desc, children, tone }) => (
+  <div className={`bg-[#1c1c26] rounded-xl p-5 border ${tone === 'danger' ? 'border-red-500/20' : 'border-white/5'}`}>
+    <h3 className={`text-sm font-bold mb-1 ${tone === 'danger' ? 'text-red-400' : 'text-white'}`}>{title}</h3>
+    {desc && <p className="text-[12px] text-gray-500 mb-4">{desc}</p>}
+    {!desc && <div className="mb-4" />}
+    {children}
+  </div>
+);
+
+const Field: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
+  <div>
+    <label className="block text-[11px] uppercase tracking-wider font-bold text-gray-500 mb-1.5">{label}</label>
+    {children}
+  </div>
+);
+
+const inputCls = "w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:border-[#ec9f00]/50 outline-none";
+const btnPrimary = "bg-[#ec9f00] text-gray-900 text-[11px] font-extrabold tracking-[0.08em] uppercase px-5 py-2.5 rounded-lg hover:bg-[#d48e00] transition-colors disabled:opacity-50";
+
+/* Profile */
+const ProfileSection = ({ user }: { user: any }) => {
+  const queryClient = useQueryClient();
+  const [displayName, setDisplayName] = useState('');
+  const [email, setEmail] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  React.useEffect(() => {
+    if (!user) return;
+    setEmail(user.email || '');
+    supabase.from('profiles').select('display_name').eq('user_id', user.id).maybeSingle().then(({ data }) => {
+      setDisplayName(data?.display_name || '');
+    });
+  }, [user]);
+
+  const saveProfile = async () => {
+    if (!user) return;
+    setSaving(true);
+    try {
+      const { error: pErr } = await supabase.from('profiles').upsert({ user_id: user.id, display_name: displayName }, { onConflict: 'user_id' });
+      if (pErr) throw pErr;
+      if (email && email !== user.email) {
+        const { error: eErr } = await supabase.auth.updateUser({ email });
+        if (eErr) throw eErr;
+        toast.success('Profile saved. Check your inbox to confirm new email.');
+      } else {
+        toast.success('Profile saved');
+      }
+      queryClient.invalidateQueries({ queryKey: ['admin-profiles'] });
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally { setSaving(false); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Card title="My Profile" desc="Update how your name and email appear across the admin.">
+        <div className="space-y-4">
+          <Field label="Display Name">
+            <input value={displayName} onChange={e => setDisplayName(e.target.value)} className={inputCls} placeholder="Your name" />
+          </Field>
+          <Field label="Email">
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} className={inputCls} />
+          </Field>
+          <button onClick={saveProfile} disabled={saving} className={btnPrimary}>{saving ? 'Saving...' : 'Save Profile'}</button>
+        </div>
+      </Card>
+
+      <Card title="Account">
+        <div className="grid sm:grid-cols-2 gap-3 text-[12px]">
+          <div className="bg-white/[0.03] rounded-lg px-3 py-2">
+            <div className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">User ID</div>
+            <div className="text-gray-300 font-mono text-[11px] truncate">{user?.id || '—'}</div>
+          </div>
+          <div className="bg-white/[0.03] rounded-lg px-3 py-2">
+            <div className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Last sign-in</div>
+            <div className="text-gray-300">{user?.last_sign_in_at ? format(new Date(user.last_sign_in_at), 'MMM dd, yyyy HH:mm') : '—'}</div>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+/* Security */
+const SecuritySection = ({ user }: { user: any }) => {
+  const [pwd, setPwd] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [resetEmail, setResetEmail] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  React.useEffect(() => { setResetEmail(user?.email || ''); }, [user]);
+
+  const changePassword = async () => {
+    if (pwd.length < 8) return toast.error('Password must be at least 8 characters');
+    if (pwd !== confirm) return toast.error('Passwords do not match');
+    setBusy(true);
+    const { error } = await supabase.auth.updateUser({ password: pwd });
+    setBusy(false);
+    if (error) return toast.error(error.message);
+    setPwd(''); setConfirm('');
+    toast.success('Password updated');
+  };
+
+  const sendReset = async () => {
+    if (!resetEmail) return toast.error('Email required');
+    setBusy(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: `${window.location.origin}/spark/reset-password`,
+    });
+    setBusy(false);
+    if (error) return toast.error(error.message);
+    toast.success('Reset link sent to ' + resetEmail);
+  };
+
+  const signOutAll = async () => {
+    await supabase.auth.signOut({ scope: 'global' });
+    toast.success('Signed out of all sessions');
+    window.location.href = '/spark/auth';
+  };
+
+  return (
+    <div className="space-y-4">
+      <Card title="Change Password" desc="Use at least 8 characters with a mix of letters and numbers.">
+        <div className="space-y-3">
+          <Field label="New Password">
+            <input type="password" value={pwd} onChange={e => setPwd(e.target.value)} className={inputCls} />
+          </Field>
+          <Field label="Confirm Password">
+            <input type="password" value={confirm} onChange={e => setConfirm(e.target.value)} className={inputCls} />
+          </Field>
+          <button onClick={changePassword} disabled={busy} className={btnPrimary}>Update Password</button>
+        </div>
+      </Card>
+
+      <Card title="Send Password Reset" desc="Email a reset link to any account email (yours or another admin's).">
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input type="email" value={resetEmail} onChange={e => setResetEmail(e.target.value)} className={inputCls} placeholder="email@example.com" />
+          <button onClick={sendReset} disabled={busy} className={btnPrimary + ' whitespace-nowrap'}>Send Link</button>
+        </div>
+      </Card>
+
+      <Card title="Active Sessions">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-[13px] text-gray-300">Sign out from every device</p>
+            <p className="text-[11px] text-gray-500">Useful if you suspect unauthorized access.</p>
+          </div>
+          <button onClick={signOutAll} className="text-[11px] tracking-[0.08em] uppercase font-bold px-4 py-2 rounded-lg border border-white/10 text-gray-300 hover:bg-white/5">
+            <LogOut className="w-3 h-3 inline mr-1.5" /> Sign Out All
+          </button>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+/* Roles & Permissions */
+const RolesSection = ({ currentUserId }: { currentUserId?: string }) => {
+  const queryClient = useQueryClient();
+  const [search, setSearch] = useState('');
+
+  const { data: profiles = [] } = useQuery({
+    queryKey: ['settings-profiles'],
+    queryFn: async () => (await supabase.from('profiles').select('*').order('created_at', { ascending: false })).data || [],
+  });
+  const { data: roles = [] } = useQuery({
+    queryKey: ['settings-roles'],
+    queryFn: async () => (await supabase.from('user_roles').select('*')).data || [],
+  });
+
+  const setRole = useMutation({
+    mutationFn: async ({ userId, role }: { userId: string; role: Role }) => {
+      // Remove existing admin/moderator role rows for this user, then insert chosen one (unless 'user')
+      const { error: delErr } = await supabase.from('user_roles').delete().eq('user_id', userId).in('role', ['admin', 'moderator'] as any);
+      if (delErr) throw delErr;
+      if (role !== 'user') {
+        const { error } = await supabase.from('user_roles').insert({ user_id: userId, role: role as any });
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['settings-roles'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-user-roles'] });
+      toast.success('Role updated');
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const getRole = (uid: string): Role => {
+    const r = roles.find((x: any) => x.user_id === uid && (x.role === 'admin' || x.role === 'moderator'));
+    return (r?.role as Role) || 'user';
+  };
+
+  const counts = {
+    admin: roles.filter((r: any) => r.role === 'admin').length,
+    moderator: roles.filter((r: any) => r.role === 'moderator').length,
+    user: profiles.length - roles.filter((r: any) => r.role === 'admin' || r.role === 'moderator').length,
+  };
+
+  const filtered = profiles.filter((p: any) => (p.display_name || '').toLowerCase().includes(search.toLowerCase()));
+
+  const roleBadge = (r: Role) => {
+    const cls = r === 'admin' ? 'text-[#ec9f00] bg-[#ec9f00]/10'
+              : r === 'moderator' ? 'text-sky-400 bg-sky-400/10'
+              : 'text-gray-400 bg-gray-400/10';
+    return <span className={`text-[9px] uppercase tracking-[0.1em] font-bold px-2.5 py-1 rounded-full ${cls}`}>{r}</span>;
+  };
+
+  return (
+    <div className="space-y-4">
+      <Card title="Permission Tiers" desc="Spark uses three permission levels. Only super-admins can promote or demote teammates.">
+        <div className="grid sm:grid-cols-3 gap-3">
+          {([
+            { role: 'admin' as Role, label: 'Admin', count: counts.admin, perms: ['Full access', 'Manage roles', 'Delete data'] },
+            { role: 'moderator' as Role, label: 'Moderator', count: counts.moderator, perms: ['Edit content', 'Publish posts', 'Manage events'] },
+            { role: 'user' as Role, label: 'User', count: counts.user, perms: ['Browse programs', 'Enroll', 'Submit progress'] },
+          ]).map(t => (
+            <div key={t.role} className="bg-white/[0.03] rounded-lg p-3 border border-white/5">
+              <div className="flex items-center justify-between mb-2">{roleBadge(t.role)}<span className="text-[18px] font-extrabold text-white">{t.count}</span></div>
+              <ul className="space-y-1 text-[11px] text-gray-400">
+                {t.perms.map(p => <li key={p}>• {p}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      <Card title="Team Members" desc="Promote users to moderator or admin. Demoting yourself will lock you out.">
+        <div className="flex items-center gap-2 bg-white/[0.03] rounded-lg px-3 py-2 mb-3 border border-white/5">
+          <Search className="w-4 h-4 text-gray-500" />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name..." className="bg-transparent text-sm text-white outline-none flex-1 placeholder:text-gray-600" />
+        </div>
+        <div className="space-y-2 max-h-[440px] overflow-y-auto pr-1">
+          {filtered.map((p: any) => {
+            const role = getRole(p.user_id);
+            const isSelf = p.user_id === currentUserId;
+            return (
+              <div key={p.id} className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/[0.02] border border-white/5">
+                <div className="w-8 h-8 rounded-full bg-[#ec9f00]/15 flex items-center justify-center text-[11px] font-bold text-[#ec9f00] shrink-0">
+                  {(p.display_name || 'U')[0].toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-[13px] font-semibold text-white truncate">{p.display_name || 'Anonymous'} {isSelf && <span className="text-[10px] text-gray-500">(you)</span>}</div>
+                  <div className="text-[10px] text-gray-500">Joined {format(new Date(p.created_at), 'MMM dd, yyyy')}</div>
+                </div>
+                {roleBadge(role)}
+                <select
+                  value={role}
+                  onChange={e => setRole.mutate({ userId: p.user_id, role: e.target.value as Role })}
+                  className="bg-white/5 border border-white/10 text-white text-[11px] rounded-lg px-2 py-1.5 outline-none focus:border-[#ec9f00]/50"
+                >
+                  <option value="user">User</option>
+                  <option value="moderator">Moderator</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+            );
+          })}
+          {filtered.length === 0 && <p className="text-center text-gray-600 py-8 text-sm">No users found.</p>}
+        </div>
+      </Card>
+
+      <Card title="Invite an Admin" desc="Send a password reset to an existing user's email so they can claim the account, then promote them above.">
+        <p className="text-[11px] text-gray-500">New admins must first sign up at <code className="text-[#ec9f00]">/spark/auth</code>. Once they have an account, find them in the list above and switch their role to <strong className="text-white">Admin</strong>.</p>
+      </Card>
+    </div>
+  );
+};
+
+/* General */
+const GeneralSection = () => {
+  const [siteName, setSiteName] = useState('Spark by iBloov');
+  const [contactEmail, setContactEmail] = useState('hello@spark.ibloov.com');
+  const [tagline, setTagline] = useState('Where African creatives ignite their next chapter.');
+  return (
+    <Card title="Site Preferences" desc="Public-facing brand metadata used across the Spark site.">
+      <div className="space-y-4">
+        <Field label="Site Name"><input value={siteName} onChange={e => setSiteName(e.target.value)} className={inputCls} /></Field>
+        <Field label="Contact Email"><input value={contactEmail} onChange={e => setContactEmail(e.target.value)} className={inputCls} /></Field>
+        <Field label="Tagline"><input value={tagline} onChange={e => setTagline(e.target.value)} className={inputCls} /></Field>
+        <button onClick={() => toast.success('Preferences saved')} className={btnPrimary}>Save Preferences</button>
+      </div>
+    </Card>
+  );
+};
+
+/* Notifications */
+const NotificationsSection = () => {
+  const [n, setN] = useState({ registrations: true, events: true, comments: false, analytics: true, security: true });
+  return (
+    <Card title="Notifications" desc="Choose which events trigger an admin email or in-app alert.">
+      <div className="space-y-3">
+        {([
+          ['registrations', 'New user registrations'],
+          ['events', 'Event sign-ups'],
+          ['comments', 'Blog post comments'],
+          ['analytics', 'Weekly analytics digest'],
+          ['security', 'Security alerts (failed logins)'],
+        ] as const).map(([key, label]) => (
+          <label key={key} className="flex items-center justify-between cursor-pointer group py-1">
+            <span className="text-sm text-gray-300">{label}</span>
+            <button onClick={() => setN(s => ({ ...s, [key]: !s[key as keyof typeof s] }))}
+              className={`w-10 h-5 rounded-full relative transition-colors ${n[key as keyof typeof n] ? 'bg-[#ec9f00]' : 'bg-white/10'}`}>
+              <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${n[key as keyof typeof n] ? 'left-[22px]' : 'left-0.5'}`} />
+            </button>
+          </label>
+        ))}
+      </div>
+    </Card>
+  );
+};
+
+/* Danger */
+const DangerSection = () => {
+  const [confirm, setConfirm] = useState('');
+  return (
+    <Card title="Danger Zone" desc="Irreversible actions that affect your entire Spark instance." tone="danger">
+      <div className="space-y-4">
+        <div className="flex items-center justify-between gap-4 p-3 rounded-lg bg-red-500/5 border border-red-500/10">
+          <div>
+            <div className="text-[13px] font-bold text-white">Reset all unpublished drafts</div>
+            <div className="text-[11px] text-gray-500">Removes every blog post and event marked as draft.</div>
+          </div>
+          <button onClick={() => toast.error('This is a demo — no data was deleted.')} className="text-[11px] tracking-[0.08em] uppercase font-bold px-4 py-2 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10">Reset Drafts</button>
+        </div>
+        <div className="flex items-center justify-between gap-4 p-3 rounded-lg bg-red-500/5 border border-red-500/10">
+          <div>
+            <div className="text-[13px] font-bold text-white">Purge media library</div>
+            <div className="text-[11px] text-gray-500">Deletes every uploaded file. This cannot be undone.</div>
+          </div>
+          <button onClick={() => toast.error('This is a demo — no media was purged.')} className="text-[11px] tracking-[0.08em] uppercase font-bold px-4 py-2 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10">Purge Media</button>
+        </div>
+        <div className="p-3 rounded-lg bg-red-500/5 border border-red-500/10">
+          <div className="text-[13px] font-bold text-white mb-1">Type <code className="text-red-400">DELETE</code> to enable factory reset</div>
+          <div className="text-[11px] text-gray-500 mb-2">Wipes every user, role, program and analytics record.</div>
+          <div className="flex gap-2">
+            <input value={confirm} onChange={e => setConfirm(e.target.value)} placeholder="Type DELETE" className={inputCls} />
+            <button disabled={confirm !== 'DELETE'} onClick={() => { toast.error('Demo mode — factory reset is disabled.'); setConfirm(''); }} className="text-[11px] tracking-[0.08em] uppercase font-bold px-4 py-2 rounded-lg bg-red-500/20 text-red-300 hover:bg-red-500/30 disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap">Factory Reset</button>
+          </div>
+        </div>
+      </div>
+    </Card>
   );
 };
 
