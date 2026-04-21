@@ -1372,7 +1372,6 @@ const MediaTab = () => {
 
 /* ─── USERS (with role management) ─── */
 const UsersTab = () => {
-  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data: profiles = [] } = useQuery({
@@ -1383,31 +1382,20 @@ const UsersTab = () => {
     },
   });
 
-  const { data: roles = [] } = useQuery({
-    queryKey: ['admin-user-roles'],
+  const { data: enrollments = [] } = useQuery({
+    queryKey: ['admin-all-enrollments'],
     queryFn: async () => {
-      const { data } = await supabase.from('user_roles').select('*');
+      const { data } = await supabase.from('program_enrollments').select('user_id, program_id');
       return data || [];
     },
   });
 
-  const toggleAdmin = useMutation({
-    mutationFn: async ({ userId, isCurrentlyAdmin }: { userId: string; isCurrentlyAdmin: boolean }) => {
-      if (isCurrentlyAdmin) {
-        const { error } = await supabase.from('user_roles').delete().eq('user_id', userId).eq('role', 'admin');
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.from('user_roles').insert({ user_id: userId, role: 'admin' });
-        if (error) throw error;
-      }
-    },
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-user-roles'] }); toast.success('Role updated'); },
-    onError: (e: any) => toast.error(e.message),
+  const enrollmentCount = (userId: string) => enrollments.filter((e: any) => e.user_id === userId).length;
+
+  const filtered = profiles.filter((p: any) => {
+    const q = searchQuery.toLowerCase();
+    return (p.display_name || '').toLowerCase().includes(q) || (p.email || '').toLowerCase().includes(q);
   });
-
-  const getUserRole = (userId: string) => roles.some((r: any) => r.user_id === userId && r.role === 'admin');
-
-  const filtered = profiles.filter((p: any) => (p.display_name || '').toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <div className="space-y-4">
@@ -1418,35 +1406,34 @@ const UsersTab = () => {
 
       <div className="flex items-center gap-2 bg-[#1c1c26] rounded-lg px-3 py-2 border border-white/5">
         <Search className="w-4 h-4 text-gray-500" />
-        <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search users..." className="bg-transparent text-sm text-white outline-none flex-1 placeholder:text-gray-600" />
+        <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search by name or email..." className="bg-transparent text-sm text-white outline-none flex-1 placeholder:text-gray-600" />
       </div>
 
       <div className="bg-[#1c1c26] rounded-xl border border-white/5 overflow-hidden">
-        <div className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 px-4 py-3 border-b border-white/5 text-[10px] uppercase tracking-wider font-bold text-gray-500">
+        <div className="grid grid-cols-[1.3fr_1.5fr_1fr_auto_auto] gap-4 px-4 py-3 border-b border-white/5 text-[10px] uppercase tracking-wider font-bold text-gray-500">
           <span>Name</span>
+          <span>Email</span>
           <span>Joined</span>
-          <span>Role</span>
+          <span className="text-center">Courses</span>
           <span>Actions</span>
         </div>
         {filtered.map((p: any) => {
-          const isAdmin = getUserRole(p.user_id);
+          const courses = enrollmentCount(p.user_id);
           return (
-            <div key={p.id} className="grid grid-cols-[1fr_1fr_auto_auto] gap-4 px-4 py-3 border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors items-center">
+            <div key={p.id} className="grid grid-cols-[1.3fr_1.5fr_1fr_auto_auto] gap-4 px-4 py-3 border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors items-center">
               <div className="flex items-center gap-3">
                 <div className="w-7 h-7 rounded-full bg-[#ec9f00]/15 flex items-center justify-center text-[10px] font-bold text-[#ec9f00]">
                   {(p.display_name || 'U')[0].toUpperCase()}
                 </div>
                 <span className="text-sm font-semibold text-white truncate">{p.display_name || 'Anonymous'}</span>
               </div>
+              <span className="text-[11px] text-gray-400 truncate">{p.email || '—'}</span>
               <span className="text-[11px] text-gray-500">{format(new Date(p.created_at), 'MMM dd, yyyy')}</span>
-              <span className={`text-[9px] uppercase tracking-[0.1em] font-bold px-2.5 py-1 rounded-full ${isAdmin ? 'text-[#ec9f00] bg-[#ec9f00]/10' : 'text-gray-400 bg-gray-400/10'}`}>
-                {isAdmin ? 'Admin' : 'User'}
-              </span>
-              <button onClick={() => toggleAdmin.mutate({ userId: p.user_id, isCurrentlyAdmin: isAdmin })}
-                className={`flex items-center gap-1.5 text-[10px] uppercase tracking-[0.1em] font-bold px-3 py-1.5 rounded-lg transition-colors ${isAdmin ? 'text-red-400 hover:bg-red-400/10' : 'text-emerald-400 hover:bg-emerald-400/10'}`}>
-                <Shield className="w-3 h-3" />
-                {isAdmin ? 'Remove Admin' : 'Make Admin'}
-              </button>
+              <span className="text-center text-sm font-bold text-white">{courses}</span>
+              <Link to={`/spark/admin/users/${p.user_id}`}
+                className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.1em] font-bold px-3 py-1.5 rounded-lg text-[#ec9f00] hover:bg-[#ec9f00]/10 transition-colors">
+                <Eye className="w-3 h-3" /> View
+              </Link>
             </div>
           );
         })}
