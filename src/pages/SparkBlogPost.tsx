@@ -1,23 +1,84 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';
 import { motion } from 'framer-motion';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
-import { ArrowLeft, Calendar, User } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Pencil, Save, X, Trash2 } from 'lucide-react';
 import { SparkSubNav } from '@/components/spark/SparkSubNav';
 import { SparkFooter } from '@/components/spark/SparkFooter';
+import { toast } from 'sonner';
 
 const SparkBlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState<any>(null);
+
+  useEffect(() => {
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data } = await supabase.rpc('has_role', { _user_id: session.user.id, _role: 'admin' });
+        setIsAdmin(!!data);
+      }
+    })();
+  }, []);
 
   const { data: post, isLoading } = useQuery({
-    queryKey: ['blog-post', slug],
+    queryKey: ['blog-post', slug, isAdmin],
     queryFn: async () => {
-      const { data, error } = await supabase.from('blog_posts').select('*').eq('slug', slug).eq('published', true).single();
+      const query = supabase.from('blog_posts').select('*').eq('slug', slug);
+      const { data, error } = isAdmin ? await query.maybeSingle() : await query.eq('published', true).maybeSingle();
       if (error) throw error;
       return data;
+    },
+  });
+
+  useEffect(() => {
+    if (post && !form) {
+      setForm({
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt || '',
+        content: post.content,
+        cover_image_url: post.cover_image_url || '',
+        author_name: post.author_name,
+        category: post.category,
+        published: post.published,
+      });
+    }
+  }, [post, form]);
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const payload = { ...form, published_at: form.published ? (post?.published_at || new Date().toISOString()) : null };
+      const { error } = await supabase.from('blog_posts').update(payload).eq('id', post!.id);
+      if (error) throw error;
+      return form.slug;
+    },
+    onSuccess: (newSlug) => {
+      queryClient.invalidateQueries({ queryKey: ['blog-post'] });
+      queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-blog-posts'] });
+      setEditing(false);
+      toast.success('Post updated!');
+      if (newSlug && newSlug !== slug) navigate(`/spark/news/${newSlug}`);
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from('blog_posts').delete().eq('id', post!.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success('Post deleted');
+      navigate('/spark/news');
     },
   });
 
