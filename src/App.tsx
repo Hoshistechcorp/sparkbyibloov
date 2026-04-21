@@ -11,6 +11,7 @@ import SparkEventDetails from "./pages/SparkEventDetails";
 import SparkNews from "./pages/SparkNews";
 import SparkBlogPost from "./pages/SparkBlogPost";
 import SparkAdmin from "./pages/SparkAdmin";
+import SparkAdminUserDetails from "./pages/SparkAdminUserDetails";
 import SparkAuth from "./pages/SparkAuth";
 import SparkPartners from "./pages/SparkPartners";
 import SparkMyPrograms from "./pages/SparkMyPrograms";
@@ -34,6 +35,7 @@ const App = () => (
       <Route path="/spark/news/:slug" element={<SparkBlogPost />} />
       <Route path="/spark/my-programs" element={<SparkMyPrograms />} />
       <Route path="/spark/admin" element={<SparkAdmin />} />
+      <Route path="/spark/admin/users/:userId" element={<SparkAdminUserDetails />} />
       <Route path="/spark/auth" element={<SparkAuth />} />
       <Route path="/spark/profile" element={<SparkProfile />} />
       <Route path="/spark/partners" element={<SparkPartners />} />
