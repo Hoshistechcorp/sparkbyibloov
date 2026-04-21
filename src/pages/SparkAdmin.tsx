@@ -499,28 +499,42 @@ const EventsTab = () => {
         </motion.div>
       )}
 
-      <div className="space-y-1.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map((e: any) => (
-          <div key={e.id} className="bg-[#1c1c26] rounded-xl px-4 py-3 border border-white/5 flex items-center justify-between gap-3 hover:border-white/10 transition-colors group">
-            <div className="flex items-center gap-3 min-w-0">
-              <button onClick={() => togglePublish.mutate({ id: e.id, published: e.published })} className="p-1 hover:bg-white/5 rounded transition-colors">
-                {e.published ? <Eye className="w-4 h-4 text-emerald-400" /> : <EyeOff className="w-4 h-4 text-gray-600" />}
-              </button>
-              <div className="min-w-0">
-                <p className="font-bold text-sm text-white truncate">{e.title}</p>
-                <p className="text-[11px] text-gray-500 truncate">
-                  <span className="text-[#ec9f00]/60">{e.event_type}</span> · {e.date ? format(new Date(e.date), 'MMM dd, yyyy') : 'No date'}
-                  {e.location && <> · <MapPin className="w-3 h-3 inline" /> {e.location}</>}
-                </p>
+          <div key={e.id} className="group bg-[#1c1c26] rounded-2xl overflow-hidden border border-white/5 hover:border-[#ec9f00]/30 hover:shadow-2xl hover:shadow-[#ec9f00]/5 transition-all">
+            <div className="relative h-40 overflow-hidden bg-white/5">
+              {e.cover_image_url ? (
+                <img src={e.cover_image_url} alt={e.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-[#ec9f00]/20 to-[#7B61FF]/10 flex items-center justify-center">
+                  <Calendar className="w-10 h-10 text-[#ec9f00]/40" />
+                </div>
+              )}
+              <div className="absolute top-2 left-2 flex flex-wrap gap-1.5">
+                <span className="text-[9px] tracking-[0.15em] uppercase font-bold px-2 py-0.5 rounded-full bg-black/60 text-white backdrop-blur-sm">{e.event_type}</span>
+                {e.is_virtual && <span className="text-[9px] tracking-[0.15em] uppercase font-bold px-2 py-0.5 rounded-full bg-[#ec9f00] text-gray-900">Virtual</span>}
               </div>
+              <button onClick={() => togglePublish.mutate({ id: e.id, published: e.published })} title={e.published ? 'Published' : 'Draft'} className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] tracking-[0.15em] uppercase font-bold flex items-center gap-1 backdrop-blur-sm ${e.published ? 'bg-emerald-500/90 text-white' : 'bg-gray-700/90 text-gray-300'}`}>
+                {e.published ? <><Eye className="w-3 h-3" /> Live</> : <><EyeOff className="w-3 h-3" /> Draft</>}
+              </button>
             </div>
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button onClick={() => openEdit(e)} className="p-2 hover:bg-white/5 rounded-lg transition-colors"><Pencil className="w-4 h-4 text-gray-400" /></button>
-              <button onClick={() => { if (confirm('Delete this event?')) deleteMutation.mutate(e.id); }} className="p-2 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 className="w-4 h-4 text-red-400" /></button>
+            <div className="p-4">
+              <p className="text-[10px] text-[#ec9f00] font-bold mb-1">{e.date ? format(new Date(e.date), 'MMM dd, yyyy · h:mm a') : 'No date'}</p>
+              <h3 className="text-sm font-bold text-white mb-1 line-clamp-2">{e.title}</h3>
+              {e.location && <p className="text-[11px] text-gray-500 flex items-center gap-1 mb-3"><MapPin className="w-3 h-3" /> {e.location}</p>}
+              <div className="flex items-center justify-between pt-3 border-t border-white/5">
+                <Link to={`/spark/events/${e.id}`} target="_blank" className="text-[10px] tracking-[0.1em] uppercase font-bold text-[#ec9f00] hover:text-[#d48e00] flex items-center gap-1">
+                  View <ExternalLink className="w-3 h-3" />
+                </Link>
+                <div className="flex items-center gap-1">
+                  <button onClick={() => openEdit(e)} className="p-1.5 hover:bg-white/5 rounded-lg transition-colors"><Pencil className="w-3.5 h-3.5 text-gray-400" /></button>
+                  <button onClick={() => { if (confirm('Delete this event?')) deleteMutation.mutate(e.id); }} className="p-1.5 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 className="w-3.5 h-3.5 text-red-400" /></button>
+                </div>
+              </div>
             </div>
           </div>
         ))}
-        {filtered.length === 0 && <p className="text-center text-gray-600 py-12 text-sm">No events found.</p>}
+        {filtered.length === 0 && <p className="col-span-full text-center text-gray-600 py-12 text-sm">No events found.</p>}
       </div>
     </div>
   );
