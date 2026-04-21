@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import learnerEventCoordinator from '@/assets/learner-event-coordinator.png';
+import learnerMcHost from '@/assets/learner-mc-host.png';
+import learnerContentCreator from '@/assets/learner-content-creator.png';
+import learnerBartender from '@/assets/learner-bartender.png';
 
 const audiences = [
   {
     id: 'learners', label: 'Learners', tagline: 'Skip the boring. Learn by doing.',
     people: [
-      { name: 'Amara Osei', role: 'Event Coordinator, Accra', image: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=400&fit=crop', quote: 'Spark gave me skills my degree never did.' },
-      { name: 'Jabari Mensah', role: 'Freelance MC & Host', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop', quote: 'I booked 3 gigs within a month of completing The Voice.' },
-      { name: 'Nia Abrams', role: 'Content Creator', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop', quote: 'The Narrator program changed how I shoot events forever.' },
-      { name: 'Kwesi Appiah', role: 'Bartender & Mixologist', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop', quote: 'From amateur to head bartender in 10 weeks.' },
+      { name: 'Amara Osei', role: 'Event Coordinator, Accra', image: learnerEventCoordinator, quote: 'Spark gave me skills my degree never did.' },
+      { name: 'Jabari Mensah', role: 'Freelance MC & Host', image: learnerMcHost, quote: 'I booked 3 gigs within a month of completing The Voice.' },
+      { name: 'Nia Abrams', role: 'Content Creator', image: learnerContentCreator, quote: 'The Narrator program changed how I shoot events forever.' },
+      { name: 'Kwesi Appiah', role: 'Bartender & Mixologist', image: learnerBartender, quote: 'From amateur to head bartender in 10 weeks.' },
     ],
   },
   {
