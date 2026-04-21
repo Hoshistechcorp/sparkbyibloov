@@ -13,6 +13,7 @@ import {
   Globe, MapPin, ArrowUpRight, ArrowDownRight, Search, Filter,
   Play, Link as LinkIcon, ExternalLink, Upload, Shield, UserCog
 } from 'lucide-react';
+import { Link as RouterLink } from 'react-router-dom';
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
