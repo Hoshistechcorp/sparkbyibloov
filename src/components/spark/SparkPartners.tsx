@@ -40,6 +40,12 @@ export const SparkPartners = () => (
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = p.accent; }}>
             Learn More
           </motion.button>
+          {p.type === 'Academic Partners' && (
+            <a href="https://forms.gle/VYXTkw35G9gMQvpCA" target="_blank" rel="noopener noreferrer"
+              className="mt-3 text-[11px] tracking-[0.12em] uppercase font-extrabold px-5 py-3 rounded-full bg-[#ec9f00] text-white text-center hover:bg-[#d48e00] transition-all">
+              Sign Up as a Tutor
+            </a>
+          )}
         </motion.div>
       ))}
     </div>

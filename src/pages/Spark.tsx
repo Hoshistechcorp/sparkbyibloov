@@ -40,11 +40,16 @@ const Spark = () => {
             className="text-base md:text-lg text-gray-400 max-w-xl mx-auto mb-6 md:mb-8">
             Stackable micro-credentials in hospitality, events & tourism. Each one designed to be your unfair advantage.
           </motion.p>
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }}>
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Link to="/spark/programs"
               className="inline-block bg-[#ec9f00] text-white font-extrabold text-sm tracking-[0.08em] uppercase px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-[#d48e00] transition-all shadow-sm hover:scale-105">
               Explore All Programs →
             </Link>
+            <a href="https://forms.gle/VYXTkw35G9gMQvpCA" target="_blank" rel="noopener noreferrer"
+              className="inline-block bg-gray-900 text-white font-extrabold text-sm tracking-[0.08em] uppercase px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-gray-800 transition-all shadow-sm hover:scale-105">
+              Sign Up as a Tutor
+            </a>
           </motion.div>
         </section>
 
