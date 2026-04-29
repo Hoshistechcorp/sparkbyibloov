@@ -46,8 +46,13 @@ const Spark = () => {
               className="inline-block bg-[#ec9f00] text-white font-extrabold text-sm tracking-[0.08em] uppercase px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-[#d48e00] transition-all shadow-sm hover:scale-105">
               Explore All Programs →
             </Link>
-            <a href="https://forms.gle/VYXTkw35G9gMQvpCA" target="_blank" rel="noopener noreferrer"
-              className="inline-block bg-gray-900 text-white font-extrabold text-sm tracking-[0.08em] uppercase px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-gray-800 transition-all shadow-sm hover:scale-105">
+            <a
+              href="https://forms.gle/VYXTkw35G9gMQvpCA"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Sign up as a tutor (opens Google Form in a new tab)"
+              className="inline-block bg-gray-900 text-white font-extrabold text-sm tracking-[0.08em] uppercase px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-gray-800 hover:scale-105 transition-all shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#ec9f00]"
+            >
               Sign Up as a Tutor
             </a>
           </motion.div>
