@@ -60,11 +60,14 @@ const SparkPartners = () => {
                     </motion.button>
                   </a>
                   {partner.title === 'Academic Partners' && (
-                    <a href="https://forms.gle/VYXTkw35G9gMQvpCA" target="_blank" rel="noopener noreferrer">
-                      <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                        className="flex items-center gap-2 bg-[#ec9f00] text-white font-bold text-sm tracking-wide uppercase px-5 md:px-6 py-2.5 md:py-3 rounded-full hover:bg-[#d48e00] transition-all w-full md:w-auto justify-center md:justify-start">
-                        Sign Up as a Tutor<ArrowRight className="w-4 h-4" />
-                      </motion.button>
+                    <a
+                      href="https://forms.gle/VYXTkw35G9gMQvpCA"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Sign up as a tutor (opens Google Form in a new tab)"
+                      className="inline-flex items-center gap-2 bg-[#ec9f00] text-white font-bold text-sm tracking-wide uppercase px-5 md:px-6 py-2.5 md:py-3 rounded-full hover:bg-[#d48e00] hover:scale-[1.03] active:scale-[0.97] transition-all w-full md:w-auto justify-center md:justify-start focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#ec9f00]"
+                    >
+                      Sign Up as a Tutor<ArrowRight className="w-4 h-4" aria-hidden="true" />
                     </a>
                   )}
                 </div>
