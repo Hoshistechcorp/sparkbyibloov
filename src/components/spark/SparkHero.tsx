@@ -130,17 +130,17 @@ export const SparkHero = () => {
         </div>
       </div>
 
-      <div className="absolute inset-0 bg-black/65" />
+      <div className="absolute inset-0 bg-black/75" />
 
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }} className="mb-6">
-          <span className="text-[11px] tracking-[0.4em] uppercase text-[#f0b840] font-bold">
+          <span className="text-xs md:text-sm tracking-[0.4em] uppercase text-[#ffc149] font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
             Micro-Credentials · Hospitality · Events · Tourism
           </span>
         </motion.div>
 
         <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.7 }}
-          className="text-3xl md:text-5xl lg:text-[5.5rem] font-black leading-[0.92] tracking-tight mb-6 md:mb-8 text-white">
+          className="text-3xl md:text-5xl lg:text-[5.5rem] font-black leading-[0.92] tracking-tight mb-6 md:mb-8 text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">
           Learn what<br />
           <span className="text-[#ec9f00]">
             actually matters.
@@ -148,7 +148,7 @@ export const SparkHero = () => {
         </motion.h1>
 
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 1 }}
-          className="text-sm md:text-lg text-gray-200 font-medium max-w-xl mx-auto mb-8 md:mb-10 leading-relaxed px-2">
+          className="text-base md:text-lg text-white font-medium max-w-xl mx-auto mb-8 md:mb-10 leading-relaxed px-2 drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
           World-class education meets real-world skills. Stackable credentials for the next generation of industry leaders.
         </motion.p>
 
@@ -160,12 +160,15 @@ export const SparkHero = () => {
               Start Learning Free →
             </motion.button>
           </Link>
-          <Link to="/spark/partners">
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-              className="border-2 border-white/40 text-white font-bold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-white/20 transition-all">
-              Partner With Us
-            </motion.button>
-          </Link>
+          <a
+            href="https://forms.gle/VYXTkw35G9gMQvpCA"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Join us as a tutor (opens Google Form in a new tab)"
+            className="inline-block border-2 border-white text-white font-bold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-white hover:text-gray-900 hover:scale-105 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#ec9f00]"
+          >
+            Join Us as a Tutor
+          </a>
         </motion.div>
       </div>
     </section>
