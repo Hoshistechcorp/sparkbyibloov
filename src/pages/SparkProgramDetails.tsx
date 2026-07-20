@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { SparkSubNav } from '@/components/spark/SparkSubNav';
 import { SparkFooter } from '@/components/spark/SparkFooter';
 import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
+import { SparkInterestDialog } from '@/components/spark/SparkInterestDialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, BookOpen, ChevronDown, Play, Lock, ArrowLeft, Users, Award, CheckCircle2, Download, Video, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -34,6 +35,7 @@ const SparkProgramDetails = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [referOpen, setReferOpen] = useState(false);
+  const [interestOpen, setInterestOpen] = useState(false);
   const [expandedModule, setExpandedModule] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
 
@@ -201,6 +203,10 @@ const SparkProgramDetails = () => {
   });
 
   const handleEnroll = () => {
+    if (!hasVideos) {
+      setInterestOpen(true);
+      return;
+    }
     if (!user) {
       navigate('/spark/auth');
       return;
