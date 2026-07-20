@@ -808,6 +808,15 @@ const SparkProgramDetails = () => {
         </section>
 
         <SparkReferDialog open={referOpen} onClose={() => setReferOpen(false)} />
+        <SparkInterestDialog
+          open={interestOpen}
+          onClose={() => setInterestOpen(false)}
+          programId={program?.id || ''}
+          programName={program?.cool_name || program?.real_name || 'this program'}
+          programColor={program?.color || '#ec9f00'}
+          defaultEmail={user?.email || ''}
+          userId={user?.id || null}
+        />
         <SparkFooter />
       </div>
     </>
