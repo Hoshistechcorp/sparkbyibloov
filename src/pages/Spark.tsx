@@ -6,11 +6,8 @@ import { SparkMarquee } from '@/components/spark/SparkMarquee';
 import { SparkAudience } from '@/components/spark/SparkAudience';
 import { SparkDNA } from '@/components/spark/SparkDNA';
 import { SparkPartners } from '@/components/spark/SparkPartners';
-import { SparkScholarship } from '@/components/spark/SparkScholarship';
 import { SparkCTA } from '@/components/spark/SparkCTA';
 import { SparkFooter } from '@/components/spark/SparkFooter';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 
 const Spark = () => {
   return (
