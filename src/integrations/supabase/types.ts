@@ -268,6 +268,44 @@ export type Database = {
           },
         ]
       }
+      program_interest: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          location: string
+          name: string
+          program_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          location: string
+          name: string
+          program_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          location?: string
+          name?: string
+          program_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "program_interest_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "spark_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       program_live_classes: {
         Row: {
           created_at: string
