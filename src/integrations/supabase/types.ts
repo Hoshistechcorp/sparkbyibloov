@@ -100,6 +100,7 @@ export type Database = {
           date: string
           description: string
           id: string
+          is_published: boolean
           target_date: string
           time: string
           title: string
@@ -112,6 +113,7 @@ export type Database = {
           date: string
           description: string
           id?: string
+          is_published?: boolean
           target_date: string
           time: string
           title: string
@@ -124,6 +126,7 @@ export type Database = {
           date?: string
           description?: string
           id?: string
+          is_published?: boolean
           target_date?: string
           time?: string
           title?: string
