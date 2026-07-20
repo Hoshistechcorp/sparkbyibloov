@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { SparkSubNav } from '@/components/spark/SparkSubNav';
 import { SparkFooter } from '@/components/spark/SparkFooter';
 import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
+import { SparkInterestDialog } from '@/components/spark/SparkInterestDialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, BookOpen, ChevronDown, Play, Lock, ArrowLeft, Users, Award, CheckCircle2, Download, Video, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -34,6 +35,7 @@ const SparkProgramDetails = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [referOpen, setReferOpen] = useState(false);
+  const [interestOpen, setInterestOpen] = useState(false);
   const [expandedModule, setExpandedModule] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
 
@@ -163,6 +165,7 @@ const SparkProgramDetails = () => {
 
   const completedLessonIds = new Set(lessonProgress.map((p: any) => p.lesson_id));
   const progressPercentage = lessons.length > 0 ? Math.round((completedLessonIds.size / lessons.length) * 100) : 0;
+  const hasVideos = lessons.some((l: any) => l.lesson_type === 'video' && (l.video_url || l.video_id));
 
   const enrollMutation = useMutation({
     mutationFn: async () => {
@@ -201,6 +204,10 @@ const SparkProgramDetails = () => {
   });
 
   const handleEnroll = () => {
+    if (!hasVideos) {
+      setInterestOpen(true);
+      return;
+    }
     if (!user) {
       navigate('/spark/auth');
       return;
@@ -801,6 +808,15 @@ const SparkProgramDetails = () => {
         </section>
 
         <SparkReferDialog open={referOpen} onClose={() => setReferOpen(false)} />
+        <SparkInterestDialog
+          open={interestOpen}
+          onClose={() => setInterestOpen(false)}
+          programId={program?.id || ''}
+          programName={program?.cool_name || program?.real_name || 'this program'}
+          programColor={program?.color || '#ec9f00'}
+          defaultEmail={user?.email || ''}
+          userId={user?.id || null}
+        />
         <SparkFooter />
       </div>
     </>
