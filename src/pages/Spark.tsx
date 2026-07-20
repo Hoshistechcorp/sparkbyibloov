@@ -6,11 +6,8 @@ import { SparkMarquee } from '@/components/spark/SparkMarquee';
 import { SparkAudience } from '@/components/spark/SparkAudience';
 import { SparkDNA } from '@/components/spark/SparkDNA';
 import { SparkPartners } from '@/components/spark/SparkPartners';
-import { SparkScholarship } from '@/components/spark/SparkScholarship';
 import { SparkCTA } from '@/components/spark/SparkCTA';
 import { SparkFooter } from '@/components/spark/SparkFooter';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 
 const Spark = () => {
   return (
@@ -25,43 +22,9 @@ const Spark = () => {
         <SparkHero />
         <SparkMarquee />
 
-        {/* Programs teaser */}
-        <section className="py-12 md:py-20 px-4 md:px-12 max-w-7xl mx-auto text-center">
-          <motion.span initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="text-[11px] tracking-[0.3em] uppercase text-[#c48500] font-bold mb-3 block">
-            Programs
-          </motion.span>
-          <motion.h2 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4">
-            <span className="text-[#ec9f00]">Spark Programs.</span>{' '}
-            <span className="text-gray-900">Zero fluff.</span>
-          </motion.h2>
-          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-base md:text-lg text-gray-400 max-w-xl mx-auto mb-6 md:mb-8">
-            Stackable micro-credentials in hospitality, events & tourism. Each one designed to be your unfair advantage.
-          </motion.p>
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Link to="/spark/programs"
-              className="inline-block bg-[#ec9f00] text-white font-extrabold text-sm tracking-[0.08em] uppercase px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-[#d48e00] transition-all shadow-sm hover:scale-105">
-              Explore All Programs →
-            </Link>
-            <a
-              href="https://forms.gle/VYXTkw35G9gMQvpCA"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Sign up as a tutor (opens Google Form in a new tab)"
-              className="inline-block bg-gray-900 text-white font-extrabold text-sm tracking-[0.08em] uppercase px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-gray-800 hover:scale-105 transition-all shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#ec9f00]"
-            >
-              Sign Up as a Tutor
-            </a>
-          </motion.div>
-        </section>
-
         <SparkAudience />
         <SparkDNA />
         <SparkPartners />
-        <SparkScholarship />
         <SparkCTA />
         <SparkFooter />
       </div>
