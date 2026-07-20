@@ -165,6 +165,7 @@ const SparkProgramDetails = () => {
 
   const completedLessonIds = new Set(lessonProgress.map((p: any) => p.lesson_id));
   const progressPercentage = lessons.length > 0 ? Math.round((completedLessonIds.size / lessons.length) * 100) : 0;
+  const hasVideos = lessons.some((l: any) => l.lesson_type === 'video' && (l.video_url || l.video_id));
 
   const enrollMutation = useMutation({
     mutationFn: async () => {
