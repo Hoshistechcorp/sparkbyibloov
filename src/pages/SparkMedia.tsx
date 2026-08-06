@@ -14,7 +14,10 @@ const SparkMedia = () => {
   const { data: media = [] } = useQuery({
     queryKey: ['public-spark-media'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('spark_media').select('*').order('created_at', { ascending: false });
+      const { data, error } = await supabase
+        .from('spark_media')
+        .select('id, title, file_url, file_type, file_size, created_at')
+        .order('created_at', { ascending: false });
       if (error) throw error;
       return data;
     },
