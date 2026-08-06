@@ -908,7 +908,8 @@ const CurriculumManager = ({ programId, programName, programColor, onBack }: { p
     queryFn: async () => {
       const quizIds = quizzes.map((q: any) => q.id);
       if (quizIds.length === 0) return [];
-      const { data } = await supabase.from('quiz_questions').select('*').in('quiz_id', quizIds).order('sort_order');
+      const { data, error } = await (supabase as any).rpc('admin_get_quiz_questions', { _quiz_ids: quizIds });
+      if (error) throw error;
       return data || [];
     },
     enabled: quizzes.length > 0,
@@ -1264,7 +1265,10 @@ const MediaTab = () => {
   const { data: media = [] } = useQuery({
     queryKey: ['admin-spark-media'],
     queryFn: async () => {
-      const { data } = await supabase.from('spark_media').select('*').order('created_at', { ascending: false });
+      const { data } = await supabase
+        .from('spark_media')
+        .select('id, title, file_url, file_type, file_size, created_at')
+        .order('created_at', { ascending: false });
       return data || [];
     },
   });

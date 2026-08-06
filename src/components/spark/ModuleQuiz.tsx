@@ -33,7 +33,11 @@ export const ModuleQuiz = ({ moduleId, moduleName, moduleIndex, programColor, us
   const { data: questions = [] } = useQuery({
     queryKey: ['quiz-questions', quiz?.id],
     queryFn: async () => {
-      const { data } = await supabase.from('quiz_questions').select('*').eq('quiz_id', quiz!.id).order('sort_order');
+      const { data } = await supabase
+        .from('quiz_questions')
+        .select('id, quiz_id, question_text, options, sort_order')
+        .eq('quiz_id', quiz!.id)
+        .order('sort_order');
       return data || [];
     },
     enabled: !!quiz?.id,
@@ -56,23 +60,13 @@ export const ModuleQuiz = ({ moduleId, moduleName, moduleIndex, programColor, us
 
   const submitMutation = useMutation({
     mutationFn: async () => {
-      let correct = 0;
-      questions.forEach((q: any, i: number) => {
-        if (selectedAnswers[i] === q.correct_answer_index) correct++;
-      });
-      const percentage = Math.round((correct / questions.length) * 100);
-      const passed = percentage >= (quiz?.passing_score || 70);
-
-      const { error } = await supabase.from('quiz_attempts').insert({
-        quiz_id: quiz!.id,
-        user_id: userId!,
-        score: correct,
-        total_questions: questions.length,
-        passed,
-        answers: selectedAnswers,
+      const { data, error } = await (supabase as any).rpc('submit_quiz_attempt', {
+        _quiz_id: quiz!.id,
+        _answers: selectedAnswers,
       });
       if (error) throw error;
-      return { score: correct, total: questions.length, passed, percentage };
+      const result = data as { score: number; total: number; passed: boolean; percentage: number };
+      return result;
     },
     onSuccess: (result) => {
       setLastResult(result);
