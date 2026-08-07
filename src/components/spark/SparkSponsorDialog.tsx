@@ -13,6 +13,7 @@ export const SparkSponsorDialog = ({ open, onClose }: SparkSponsorDialogProps) =
   const [step, setStep] = useState(1);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [location, setLocation] = useState('');
   const [selectedPrograms, setSelectedPrograms] = useState<string[]>([]);
   const [studentCounts, setStudentCounts] = useState<Record<string, number>>({});
@@ -53,7 +54,8 @@ export const SparkSponsorDialog = ({ open, onClose }: SparkSponsorDialogProps) =
     0
   );
 
-  const canProceedStep1 = email.trim().length > 0 && location.trim().length > 0;
+  const canProceedStep1 =
+    email.trim().length > 0 && phone.trim().length >= 7 && location.trim().length > 0;
   const canProceedStep2 = selectedPrograms.length > 0;
 
   const handleSubmit = () => {
@@ -64,6 +66,7 @@ export const SparkSponsorDialog = ({ open, onClose }: SparkSponsorDialogProps) =
     setStep(1);
     setName('');
     setEmail('');
+    setPhone('');
     setLocation('');
     setSelectedPrograms([]);
     setStudentCounts({});
@@ -169,6 +172,18 @@ export const SparkSponsorDialog = ({ open, onClose }: SparkSponsorDialogProps) =
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@company.com"
+                      className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus-visible:ring-[#00C896]/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] tracking-[0.2em] uppercase text-gray-400 font-bold mb-2 block">
+                      Phone Number <span className="text-red-400">*</span>
+                    </label>
+                    <Input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+234 800 000 0000"
                       className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus-visible:ring-[#00C896]/50"
                     />
                   </div>
@@ -312,6 +327,7 @@ export const SparkSponsorDialog = ({ open, onClose }: SparkSponsorDialogProps) =
                     <p className="text-[10px] tracking-[0.2em] uppercase text-gray-500 font-bold mb-2">Sponsor Details</p>
                     {name && <p className="text-white text-sm font-medium">{name}</p>}
                     <p className="text-gray-400 text-sm">{email}</p>
+                    <p className="text-gray-400 text-sm">{phone}</p>
                     <p className="text-gray-500 text-xs mt-1">Learners from: <span className="text-gray-300">{location}</span></p>
                   </div>
 
@@ -361,7 +377,7 @@ export const SparkSponsorDialog = ({ open, onClose }: SparkSponsorDialogProps) =
                       whileTap={{ scale: 0.95 }}
                       className="bg-gradient-to-r from-[#00C896] to-[#10b981] text-white font-extrabold text-sm tracking-[0.06em] uppercase px-8 py-3 rounded-full shadow-lg shadow-[#00C896]/25"
                     >
-                      Confirm Scholarship ✨
+                      Confirm Scholarship
                     </motion.button>
                   </div>
                 </motion.div>

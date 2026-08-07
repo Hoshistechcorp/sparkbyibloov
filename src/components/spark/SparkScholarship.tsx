@@ -80,11 +80,8 @@ export const SparkScholarship = () => {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-2 bg-[#ec9f00] text-white font-bold text-sm tracking-[0.06em] uppercase px-6 py-3 rounded-full shadow-sm hover:bg-[#d48e00] transition-colors"
+                className="inline-flex items-center bg-[#ec9f00] text-white font-bold text-sm tracking-[0.06em] uppercase px-6 py-3 rounded-full shadow-sm hover:bg-[#d48e00] transition-colors"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                </svg>
                 Donate Now
               </motion.a>
             </div>
@@ -113,11 +110,8 @@ export const SparkScholarship = () => {
                 onClick={() => setSponsorOpen(true)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-2 bg-[#00C896] text-white font-bold text-sm tracking-[0.06em] uppercase px-6 py-3 rounded-full shadow-sm hover:bg-[#00b585] transition-colors"
+                className="inline-flex items-center bg-[#00C896] text-white font-bold text-sm tracking-[0.06em] uppercase px-6 py-3 rounded-full shadow-sm hover:bg-[#00b585] transition-colors"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
-                </svg>
                 Design Your Scholarship
               </motion.button>
             </div>
