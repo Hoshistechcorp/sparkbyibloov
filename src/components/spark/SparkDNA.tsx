@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const pillars = [
-  { source: 'Coursera', quality: 'Scale & Accessibility', desc: 'World-class content available to anyone, anywhere. No gatekeeping — just pure, democratized learning at scale.', accent: '#ec9f00' },
+  { source: 'Coursera', quality: 'Scale & Accessibility', desc: 'World-class content available to anyone, anywhere. No gatekeeping just pure, democratized learning at scale.', accent: '#ec9f00' },
   { source: 'Guild', quality: 'Employer Alignment', desc: 'Every program maps to real employer needs. Tuition support, career pathways, and outcomes that matter to hiring managers.', accent: '#7B61FF' },
   { source: 'Yellowbrick', quality: 'Industry Production', desc: 'Celebrity instructors, immersive video, and brand-name partnerships that make learning feel premium and aspirational.', accent: '#FF6B35' },
   { source: 'Harvard Online', quality: 'Academic Rigor', desc: 'Research-backed curriculum, peer-reviewed content, and credentials that carry weight in any boardroom.', accent: '#00C896' },
@@ -16,7 +16,7 @@ export const SparkDNA = () => (
         <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 text-gray-900">
           Four giants.<br /><span className="text-gray-300">One Spark.</span>
         </h2>
-        <p className="text-base md:text-lg text-gray-400 max-w-2xl">We studied what makes the world's best learning platforms great — then built something purpose-made for hospitality, events & tourism.</p>
+        <p className="text-base md:text-lg text-gray-400 max-w-2xl">We studied what makes the world's best learning platforms great then built something purpose-made for hospitality, events & tourism.</p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">

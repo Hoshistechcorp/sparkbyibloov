@@ -49,7 +49,7 @@ export const SparkScholarship = () => {
             transition={{ delay: 0.2 }}
             className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto"
           >
-            Education should never be out of reach. Fund a dream, sponsor a learner, or power a scholarship — and help shape the next generation of industry leaders.
+            Education should never be out of reach. Fund a dream, sponsor a learner, or power a scholarship and help shape the next generation of industry leaders.
           </motion.p>
         </div>
 
@@ -72,7 +72,7 @@ export const SparkScholarship = () => {
               </div>
               <h3 className="text-xl md:text-2xl font-extrabold text-white mb-3">Light a Spark Fund</h3>
               <p className="text-gray-400 text-sm md:text-base mb-6 leading-relaxed">
-                Contribute to our open scholarship pool. Every donation directly funds a learner's journey through a Spark program — no strings attached.
+                Contribute to our open scholarship pool. Every donation directly funds a learner's journey through a Spark program\u00a0 no strings attached.
               </p>
               <motion.a
                 href="https://flex.ibloov.com/Spark-fund/payment"
@@ -107,7 +107,7 @@ export const SparkScholarship = () => {
               </div>
               <h3 className="text-xl md:text-2xl font-extrabold text-white mb-3">Sponsor Your Orbit</h3>
               <p className="text-gray-400 text-sm md:text-base mb-6 leading-relaxed">
-                Design your own scholarship. Choose the location, programs, and number of learners you want to empower — and see your impact in real-time.
+                Design your own scholarship. Choose the location, programs, and number of learners you want to empower\u00a0 and see your impact in real-time.
               </p>
               <motion.button
                 onClick={() => setSponsorOpen(true)}

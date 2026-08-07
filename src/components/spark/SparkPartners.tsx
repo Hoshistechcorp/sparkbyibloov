@@ -2,10 +2,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const partnerTypes = [
-  { type: 'Academic Partners', desc: 'Universities, colleges, and training institutes — co-develop curriculum and offer accredited micro-credentials.', benefits: ['Co-branded certificates', 'Revenue share model', 'Curriculum co-development'], accent: '#7B61FF' },
-  { type: 'Employer Partners', desc: 'Hotels, event companies, tourism boards — sponsor learners, access pre-vetted talent, and upskill your workforce.', benefits: ['Talent pipeline access', 'Custom upskilling tracks', 'Workforce analytics'], accent: '#c48500' },
-  { type: 'Icon Partners', desc: 'Celebrity chefs, renowned DJs, top photographers — teach what you know, earn while you impact.', benefits: ['Personal brand amplification', 'Passive income stream', 'Global audience reach'], accent: '#FF6B35' },
-  { type: 'Municipal Partners', desc: 'City governments, FIFA host cities, tourism authorities — train your citizens for the opportunities coming to your city.', benefits: ['City-wide training rollout', 'FIFA readiness programs', 'Youth employment pipeline'], accent: '#00C896' },
+  { type: 'Academic Partners', desc: 'Universities, colleges, and training institutes co-develop curriculum and offer accredited micro-credentials.', benefits: ['Co-branded certificates', 'Revenue share model', 'Curriculum co-development'], accent: '#7B61FF' },
+  { type: 'Employer Partners', desc: 'Hotels, event companies, tourism boards sponsor learners, access pre-vetted talent, and upskill your workforce.', benefits: ['Talent pipeline access', 'Custom upskilling tracks', 'Workforce analytics'], accent: '#c48500' },
+  { type: 'Icon Partners', desc: 'Celebrity chefs, renowned DJs, top photographers teach what you know, earn while you impact.', benefits: ['Personal brand amplification', 'Passive income stream', 'Global audience reach'], accent: '#FF6B35' },
+  { type: 'Municipal Partners', desc: 'City governments, FIFA host cities, tourism authorities train your citizens for the opportunities coming to your city.', benefits: ['City-wide training rollout', 'FIFA readiness programs', 'Youth employment pipeline'], accent: '#00C896' },
 ];
 
 export const SparkPartners = () => (
