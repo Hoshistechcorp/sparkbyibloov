@@ -72,7 +72,7 @@ export const SparkScholarship = () => {
               </div>
               <h3 className="text-xl md:text-2xl font-extrabold text-white mb-3">Light a Spark Fund</h3>
               <p className="text-gray-400 text-sm md:text-base mb-6 leading-relaxed">
-                Contribute to our open scholarship pool. Every donation directly funds a learner's journey through a Spark program  no strings attached.
+                Contribute to our open scholarship pool. Every donation directly funds a learner's journey through a Spark program  no strings attached.
               </p>
               <motion.a
                 href="https://flex.ibloov.com/Spark-fund/payment"
@@ -107,7 +107,7 @@ export const SparkScholarship = () => {
               </div>
               <h3 className="text-xl md:text-2xl font-extrabold text-white mb-3">Sponsor Your Orbit</h3>
               <p className="text-gray-400 text-sm md:text-base mb-6 leading-relaxed">
-                Design your own scholarship. Choose the location, programs, and number of learners you want to empower  and see your impact in real-time.
+                Design your own scholarship. Choose the location, programs, and number of learners you want to empower  and see your impact in real-time.
               </p>
               <motion.button
                 onClick={() => setSponsorOpen(true)}
