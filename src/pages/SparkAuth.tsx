@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import sparkLogo from '@/assets/spark-logo.svg';
 import { SparkReferDialog } from '@/components/spark/SparkReferDialog';
 import { Eye, EyeOff } from 'lucide-react';
+import { z } from 'zod';
 
 const INTEREST_OPTIONS = [
   'Advanced Event Planning and Management with Creative Event Organizing',
@@ -19,6 +20,19 @@ const INTEREST_OPTIONS = [
   'DJ/Music Production',
   'Other (Please specify below)',
 ];
+
+const LANGUAGES = ['English', 'French', 'Portuguese', 'Arabic', 'Swahili', 'Hausa', 'Yoruba', 'Igbo', 'Amharic', 'Other'];
+const DIAL_CODES: [string, string][] = [['+234','NG'],['+233','GH'],['+254','KE'],['+27','ZA'],['+256','UG'],['+255','TZ'],['+250','RW'],['+251','ET'],['+20','EG'],['+212','MA'],['+221','SN'],['+225','CI'],['+237','CM'],['+1','US'],['+44','UK']];
+
+const signupSchema = z.object({
+  fullName: z.string().trim().min(1, 'Please enter your full name').max(100),
+  email: z.string().trim().email('Please enter a valid email').max(255),
+  country: z.string().trim().min(1, 'Please enter your country and city').max(150),
+  language: z.string().min(1, 'Please choose a language'),
+  regType: z.enum(['team', 'individual']),
+  teamName: z.string().trim().max(80),
+  consent: z.literal(true, { errorMap: () => ({ message: 'Please agree to be contacted' }) }),
+}).refine(d => d.regType !== 'team' || d.teamName.length > 0, { message: 'Please enter your team name', path: ['teamName'] });
 
 const bgImages = [
   'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=600&fit=crop&q=80',
@@ -39,6 +53,15 @@ const SparkAuth = () => {
   const [interests, setInterests] = useState<string[]>([]);
   const [otherInterest, setOtherInterest] = useState('');
   const [country, setCountry] = useState('');
+  const initialTeam = searchParams.get('team') || '';
+  const [regType, setRegType] = useState<'team' | 'individual'>(initialTeam || searchParams.get('type') !== 'individual' ? 'team' : 'individual');
+  const [teamName, setTeamName] = useState(initialTeam);
+  const [fullName, setFullName] = useState('');
+  const [dialCode, setDialCode] = useState('+234');
+  const [phone, setPhone] = useState('');
+  const [language, setLanguage] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [submittedTeam, setSubmittedTeam] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [referOpen, setReferOpen] = useState(false);
@@ -77,6 +100,8 @@ const SparkAuth = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    const parsed = signupSchema.safeParse({ fullName, email, country, language, teamName, regType, consent });
+    if (!parsed.success) { toast.error(parsed.error.issues[0].message); return; }
     if (interests.length === 0) {
       toast.error('Please select at least one interest');
       return;
@@ -96,11 +121,21 @@ const SparkAuth = () => {
         email,
         password,
         options: {
-          data: { interest: selectedInterests.join(', '), country: country.trim() },
+          data: {
+            full_name: fullName.trim(),
+            interests: selectedInterests.join(', '),
+            location: country.trim(),
+            language,
+            phone: phone.trim() ? `${dialCode} ${phone.trim()}` : '',
+            registration_type: regType,
+            team_name: regType === 'team' ? teamName.trim() : '',
+            consent_contact: consent,
+          },
           emailRedirectTo: window.location.origin + '/spark',
         },
       });
       if (error) throw error;
+      setSubmittedTeam(regType === 'team' ? teamName.trim() : '');
       setSuccess(true);
     } catch (error: any) {
       toast.error(error.message);
@@ -192,28 +227,75 @@ const SparkAuth = () => {
     }
 
     // Signup mode
+    const isTeam = regType === 'team';
+    const inputCls = "w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-900 focus:border-[#ec9f00] focus:outline-none transition-colors bg-white/80";
+    const labelCls = "block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5";
     return (
       <motion.div key="signup" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full max-w-md">
-        <h1 className="text-2xl md:text-3xl font-black tracking-tight text-gray-900 mb-1">Start your journey</h1>
-        <p className="text-sm text-gray-500 mb-6">Create your free account and start learning.</p>
+        <h1 className="text-2xl md:text-3xl font-black tracking-tight text-gray-900 mb-2">Form Your Team of 7. Get Funded Together.</h1>
+        <p className="text-sm text-gray-600 mb-4 leading-relaxed">Spark is training one million young people across Africa in events, hospitality, tourism, and entertainment. Funding and scholarships of up to 100% go first to complete teams of seven. Gather your crew, pick your crafts, and register together.</p>
+        <div className="rounded-2xl border-2 border-[#ec9f00]/30 bg-[#ec9f00]/5 p-4 mb-6">
+          <p className="text-xs font-bold uppercase tracking-wider text-[#b37800] mb-2">How it works</p>
+          <ol className="space-y-1.5 text-xs text-gray-700 list-decimal list-inside leading-relaxed">
+            <li><b>Gather your 7.</b> Friends, classmates, neighbors who want to build something where you live.</li>
+            <li><b>Each person picks a specialization.</b> Seven crafts, one crew.</li>
+            <li><b>Register with your email</b> under the same team name so we can match you.</li>
+            <li><b>Train, graduate, and work together</b> running real events in your community.</li>
+          </ol>
+          <p className="text-xs text-gray-500 mt-2">Individuals can register interest. Scholarship and funding priority goes to complete teams.</p>
+        </div>
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Email</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-900 focus:border-[#ec9f00] focus:outline-none transition-colors bg-white/80"
-              placeholder="you@example.com" />
+            <label className={labelCls}>Registering as</label>
+            <div className="grid grid-cols-2 gap-2" role="radiogroup">
+              {([['team', 'Team of 7'], ['individual', 'Individual (register interest)']] as const).map(([v, l]) => (
+                <button key={v} type="button" role="radio" aria-checked={regType === v} onClick={() => setRegType(v)}
+                  className={`px-3 py-3 rounded-xl border-2 text-xs font-bold transition-all ${regType === v ? 'border-[#ec9f00] bg-[#ec9f00]/10 text-gray-900' : 'border-gray-200 bg-white/80 text-gray-600 hover:border-gray-300'}`}>{l}</button>
+              ))}
+            </div>
+          </div>
+          {isTeam && (
+            <div>
+              <label className={labelCls}>Team name</label>
+              <input type="text" value={teamName} onChange={e => setTeamName(e.target.value)} required maxLength={80} className={inputCls} placeholder="All seven enter the same name" />
+            </div>
+          )}
+          <div>
+            <label className={labelCls}>Full name</label>
+            <input type="text" value={fullName} onChange={e => setFullName(e.target.value)} required maxLength={100} className={inputCls} placeholder="Your full name" />
           </div>
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Password</label>
+            <label className={labelCls}>Email</label>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required className={inputCls} placeholder="you@example.com" />
+          </div>
+          <div>
+            <label className={labelCls}>Password</label>
             <div className="relative">
-              <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-900 focus:border-[#ec9f00] focus:outline-none transition-colors bg-white/80 pr-12"
-                placeholder="Min. 6 characters" />
-              <button type="button" onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+              <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} required minLength={6} className={inputCls + ' pr-12'} placeholder="Min. 6 characters" />
+              <button type="button" aria-label="Toggle password visibility" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
+          </div>
+          <div>
+            <label className={labelCls}>WhatsApp or phone <span className="normal-case font-normal text-gray-400">(optional)</span></label>
+            <div className="flex gap-2">
+              <select value={dialCode} onChange={e => setDialCode(e.target.value)} className={inputCls + ' !w-28 px-2'} aria-label="Country code">
+                {DIAL_CODES.map(([c, n]) => <option key={c + n} value={c}>{n} {c}</option>)}
+              </select>
+              <input type="tel" value={phone} onChange={e => setPhone(e.target.value.replace(/[^0-9 ]/g, ''))} maxLength={20} className={inputCls} placeholder="801 234 5678" />
+            </div>
+          </div>
+          <div>
+            <label className={labelCls}>Country and city</label>
+            <input type="text" value={country} onChange={e => setCountry(e.target.value)} required maxLength={150} className={inputCls} placeholder="City, Country" />
+          </div>
+          <div>
+            <label className={labelCls}>Preferred language</label>
+            <select value={language} onChange={e => setLanguage(e.target.value)} required className={inputCls}>
+              <option value="">Select a language</option>
+              {LANGUAGES.map(l => <option key={l} value={l}>{l}</option>)}
+            </select>
           </div>
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">What interests you? <span className="normal-case font-normal text-gray-400">(select all)</span></label>
@@ -221,18 +303,11 @@ const SparkAuth = () => {
               {INTEREST_OPTIONS.map(opt => {
                 const selected = interests.includes(opt);
                 return (
-                  <button key={opt} type="button"
+                  <button key={opt} type="button" aria-pressed={selected}
                     onClick={() => setInterests(prev => prev.includes(opt) ? prev.filter(i => i !== opt) : [...prev, opt])}
                     className={`relative text-left px-3 py-2.5 rounded-xl border-2 transition-all text-xs leading-snug font-medium ${
                       selected ? 'border-[#ec9f00] bg-[#ec9f00]/10 text-gray-900 shadow-sm' : 'border-gray-200 bg-white/80 text-gray-600 hover:border-gray-300'
                     }`}>
-                    {selected && (
-                      <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-[#ec9f00] flex items-center justify-center">
-                        <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      </span>
-                    )}
                     {opt}
                   </button>
                 );
@@ -240,23 +315,20 @@ const SparkAuth = () => {
             </div>
           </div>
           {interests.includes('Other (Please specify below)') && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Please specify</label>
-              <input type="text" value={otherInterest} onChange={e => setOtherInterest(e.target.value)} required
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-900 focus:border-[#ec9f00] focus:outline-none transition-colors bg-white/80"
-                placeholder="Tell us what interests you" />
-            </motion.div>
+            <div>
+              <label className={labelCls}>Please specify</label>
+              <input type="text" value={otherInterest} onChange={e => setOtherInterest(e.target.value)} required maxLength={200} className={inputCls} placeholder="Tell us what interests you" />
+            </div>
           )}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Location</label>
-            <input type="text" value={country} onChange={e => setCountry(e.target.value)} required
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-900 focus:border-[#ec9f00] focus:outline-none transition-colors bg-white/80"
-              placeholder="City, Country" />
-          </div>
+          <label className="flex items-start gap-2 text-xs text-gray-600 cursor-pointer">
+            <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} required className="mt-0.5 accent-[#ec9f00]" />
+            I agree to be contacted about Spark training and funding
+          </label>
           <button type="submit" disabled={loading}
             className="w-full bg-[#ec9f00] text-white font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-[#d48e00] transition-all disabled:opacity-50">
-            {loading ? 'Please wait…' : 'Get Started'}
+            {loading ? 'Please wait…' : isTeam ? 'Register My Team' : 'Register Interest'}
           </button>
+          <p className="text-center text-xs text-gray-500">Registering alone? You can still sign up. We will help you find your seven.</p>
           <p className="text-center text-sm text-gray-500">
             Already have an account?{' '}
             <button type="button" onClick={() => setMode('login')} className="text-[#ec9f00] font-bold hover:underline">Log in</button>
@@ -322,10 +394,20 @@ const SparkAuth = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h1 className="text-2xl md:text-4xl font-black tracking-tight text-gray-900 mb-3">You're in! 🎉</h1>
-                  <p className="text-sm md:text-base text-gray-500 mb-8 leading-relaxed">
-                    We've sent a confirmation to <span className="font-bold text-gray-900">{email}</span>. Check your inbox to get started.
+                  <h1 className="text-2xl md:text-4xl font-black tracking-tight text-gray-900 mb-3">You are in.</h1>
+                  <p className="text-sm md:text-base text-gray-500 mb-6 leading-relaxed">
+                    {submittedTeam ? 'Share your team name with your seven so they can register under it. ' : ''}Watch your email (<span className="font-bold text-gray-900">{email}</span>) for your cohort details.
                   </p>
+                  {submittedTeam && (
+                    <div className="rounded-2xl border-2 border-[#ec9f00]/30 bg-[#ec9f00]/5 p-4 mb-6 text-left">
+                      <p className="text-xs font-bold uppercase tracking-wider text-gray-500">Team name</p>
+                      <p className="text-lg font-black text-gray-900 mb-3 break-words">{submittedTeam}</p>
+                      <button type="button" onClick={() => { const url = `${window.location.origin}/spark/auth?team=${encodeURIComponent(submittedTeam)}`; navigator.clipboard.writeText(url).then(() => toast.success('Team invite link copied')); }}
+                        className="w-full bg-[#ec9f00] text-white font-extrabold text-xs tracking-[0.08em] uppercase px-6 py-3 rounded-full hover:bg-[#d48e00] transition-all">
+                        Copy Team Invite Link
+                      </button>
+                    </div>
+                  )}
                   <button onClick={() => setReferOpen(true)}
                     className="w-full bg-gray-900 text-white font-extrabold text-sm tracking-[0.08em] uppercase px-8 py-4 rounded-full hover:bg-gray-800 transition-all mb-4 flex items-center justify-center gap-3">
                     Refer a Friend
