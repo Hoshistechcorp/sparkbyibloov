@@ -116,6 +116,18 @@ const SparkAdminUserDetails = () => {
                       <span className="flex items-center gap-1.5"><Mail className="w-4 h-4" /> {profile.email || '—'}</span>
                       <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> Joined {format(new Date(profile.created_at), 'MMMM dd, yyyy')}</span>
                     </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4 text-sm">
+                      {[
+                        ['Registered as', profile.registration_type === 'team' ? 'Team of 7' : profile.registration_type === 'individual' ? 'Individual' : '—'],
+                        ['Team name', profile.team_name || '—'],
+                        ['Language', profile.language || '—'],
+                        ['Phone', profile.phone || '—'],
+                        ['Location', profile.location || '—'],
+                        ['Interests', profile.interests || '—'],
+                      ].map(([k, v]) => (
+                        <div key={k}><p className="text-[10px] uppercase tracking-[0.12em] text-gray-500 font-bold">{k}</p><p className="text-gray-200 break-words">{v}</p></div>
+                      ))}
+                    </div>
                     <div className="flex flex-wrap gap-2 mt-4">
                       {roles.length > 0 ? roles.map((r: any) => (
                         <span key={r.role} className="text-[10px] uppercase tracking-[0.12em] font-bold px-3 py-1 rounded-full bg-[#ec9f00]/15 text-[#ec9f00] border border-[#ec9f00]/30 flex items-center gap-1">
