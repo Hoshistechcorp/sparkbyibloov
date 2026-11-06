@@ -130,7 +130,12 @@ export const SparkHero = () => {
         </div>
       </div>
 
-      <div className="absolute inset-0 bg-black/75" />
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        src="https://d2ol7oe51mr4n9.cloudfront.net/user_3CoHelT0wA0vAQSh1UeuVUL90wA/01dbfa82-f117-4718-9626-990462a386d7.mp4"
+        autoPlay muted loop playsInline preload="auto" aria-hidden="true"
+      />
+      <div className="absolute inset-0 bg-black/70" />
 
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }} className="mb-6">
