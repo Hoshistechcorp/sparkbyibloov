@@ -211,26 +211,50 @@ export type Database = {
       }
       profiles: {
         Row: {
+          consent_contact: boolean
           created_at: string
           display_name: string | null
           email: string | null
+          full_name: string | null
           id: string
+          interests: string | null
+          language: string | null
+          location: string | null
+          phone: string | null
+          registration_type: string | null
+          team_name: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          consent_contact?: boolean
           created_at?: string
           display_name?: string | null
           email?: string | null
+          full_name?: string | null
           id?: string
+          interests?: string | null
+          language?: string | null
+          location?: string | null
+          phone?: string | null
+          registration_type?: string | null
+          team_name?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          consent_contact?: boolean
           created_at?: string
           display_name?: string | null
           email?: string | null
+          full_name?: string | null
           id?: string
+          interests?: string | null
+          language?: string | null
+          location?: string | null
+          phone?: string | null
+          registration_type?: string | null
+          team_name?: string | null
           updated_at?: string
           user_id?: string
         }
